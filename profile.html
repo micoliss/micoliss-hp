@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロフィール｜山田 良美 | Seed of Color -Micoliss-</title>
+<meta name="description" content="Seed of Color -Micoliss- 主宰 山田良美のプロフィール。パーソナルカラー診断士／イメージコンサルタント。新潟市で約9年・延べ5,000名以上を診断。">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Zen+Maru+Gothic:wght@300;400;500;700&family=Zen+Old+Mincho:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#faf7f2; --bg-soft:#f3ede4; --ink:#4a443c; --ink-soft:#7d756a;
+  --accent:#b99a6b; --accent-dk:#a07f4f; --line:#e3dccf; --white:#fff;
+  --radius:18px; --shadow:0 18px 40px -24px rgba(74,68,60,.45);
+  --serif:"Zen Old Mincho",serif; --en:"Cormorant Garamond",serif; --sans:"Zen Maru Gothic",sans-serif;
+}
+:root{ --ink-soft:#6a6256; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:2;font-weight:400;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.en{font-family:var(--en);letter-spacing:.12em}
+.wrap{width:min(760px,90%);margin-inline:auto}
+
+/* ヘッダー */
+header{background:rgba(250,247,242,.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.head-inner{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,40px)}
+.brand{display:flex;align-items:center}
+.brand-logo{height:40px;width:auto;display:block;mix-blend-mode:multiply}
+.back{font-size:.82rem;color:var(--ink-soft)}
+
+/* タイトル */
+.page-head{text-align:center;padding:clamp(48px,8vw,80px) 0 0}
+.page-head .en{display:block;font-size:.82rem;letter-spacing:.35em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.08em}
+
+/* プロフィール上部 */
+.intro{display:grid;grid-template-columns:.85fr 1.15fr;gap:40px;align-items:start;margin:clamp(36px,6vw,56px) 0}
+.intro-photo{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.intro-photo img{width:100%;height:100%;object-fit:cover;object-position:60% 40%}
+.intro-info .role{color:var(--accent);font-size:.82rem;letter-spacing:.2em;text-transform:uppercase}
+.intro-info h2{font-family:var(--serif);font-weight:500;font-size:1.9rem;margin:10px 0 4px;letter-spacing:.06em}
+.intro-info .name-en{font-family:var(--en);color:var(--ink-soft);letter-spacing:.16em;margin-bottom:20px}
+.skill-groups{display:grid;gap:18px}
+.sg-label{display:inline-block;font-family:var(--serif);font-size:.95rem;color:var(--accent-dk);letter-spacing:.12em;margin-bottom:9px;padding-left:15px;position:relative}
+.sg-label::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.tags{list-style:none;display:flex;flex-wrap:wrap;gap:9px}
+.tags li{background:var(--bg-soft);border:1px solid var(--line);border-radius:999px;padding:6px 15px;font-size:.78rem;color:var(--ink-soft)}
+
+/* 本文 */
+article{padding-bottom:80px}
+article h3{
+  font-family:var(--serif);font-weight:600;font-size:1.4rem;letter-spacing:.06em;color:var(--accent-dk);
+  margin:50px 0 20px;padding-bottom:14px;border-bottom:3px solid var(--accent);position:relative;
+}
+article h3::before{content:"";position:absolute;left:0;bottom:-3px;width:80px;height:5px;border-radius:3px;background:var(--accent-dk)}
+article p{margin:0 0 18px;font-size:1rem}
+article p.lead{font-family:var(--serif);font-size:1.12rem;line-height:2.1;color:var(--ink)}
+article b{color:var(--accent-dk);font-weight:500}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:40px 0}
+
+/* チェックリスト */
+.checklist{list-style:none;margin:6px 0 22px}
+.checklist li{padding:8px 0 8px 34px;position:relative;border-bottom:1px dashed var(--line);font-size:.98rem}
+.checklist li:last-child{border-bottom:0}
+.checklist li::before{content:"✓";position:absolute;left:4px;top:8px;color:var(--accent);font-weight:700}
+
+/* 実績ピン */
+.pins{list-style:none;margin:6px 0 22px}
+.pins li{padding:6px 0 6px 30px;position:relative;font-size:.98rem}
+.pins li::before{content:"📍";position:absolute;left:0;top:6px;font-size:.9rem}
+
+/* ネーミング */
+.naming{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:28px 30px;margin:8px 0 22px}
+.naming dl{display:grid;grid-template-columns:auto 1fr;gap:14px 18px;align-items:baseline}
+.naming dt{font-family:var(--en);font-size:1.1rem;color:var(--accent-dk);letter-spacing:.08em;white-space:nowrap}
+.naming dd{font-size:.95rem;color:var(--ink-soft)}
+
+/* 引用風 */
+.quote{font-family:var(--serif);font-size:1.15rem;text-align:center;color:var(--accent-dk);margin:32px 0;line-height:1.9;letter-spacing:.04em}
+
+/* 締め */
+.closing{text-align:center;background:var(--bg-soft);border-radius:var(--radius);padding:40px 28px;margin-top:40px}
+.closing .seed{font-size:1.6rem;margin-bottom:8px}
+.closing .cn{font-family:var(--en);font-size:1.3rem;letter-spacing:.16em;margin-bottom:14px}
+.closing p{font-family:var(--serif);font-size:1.05rem;color:var(--ink);margin:0}
+
+/* CTA */
+.cta{text-align:center;margin:44px 0 10px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:999px;font-size:.9rem;letter-spacing:.06em;transition:transform .25s,background .25s}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{background:var(--accent-dk);transform:translateY(-2px)}
+.btn-ghost{border:1px solid var(--accent);color:var(--accent-dk)}
+.btn-ghost:hover{background:var(--accent);color:#fff}
+
+/* フッター */
+footer{background:var(--ink);color:#e9e3d8;padding:50px 0 28px;text-align:center;margin-top:60px}
+footer .f-logo{display:inline-block;width:200px;max-width:60%;background:#fff;border-radius:14px;padding:14px 22px;margin-bottom:20px}
+footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
+
+@media(max-width:680px){
+  .intro{grid-template-columns:1fr;gap:26px}
+  .intro-photo{max-width:300px;margin-inline:auto;width:100%}
+  body{line-height:1.95}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <a href="index.html" class="brand" aria-label="Seed of Color -Micoliss-"><img src="img/logo.jpg" alt="Seed of Color -Micoliss-" class="brand-logo"></a>
+    <a href="index.html" class="back">← サイトに戻る</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <span class="en">Profile</span>
+  <h1>わたしのこと</h1>
+</div>
+
+<div class="wrap">
+
+  <!-- プロフィール上部 -->
+  <div class="intro">
+    <div class="intro-photo"><img src="img/hero-staff.jpg" alt="山田 良美"></div>
+    <div class="intro-info">
+      <span class="role">Personal Color &amp; Image Consultant</span>
+      <h2>山田 良美</h2>
+      <p class="name-en">Yoshimi Yamada ／ 新潟市西区</p>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <span class="sg-label">外見を整える</span>
+          <ul class="tags">
+            <li>パーソナルカラー診断</li>
+            <li>メンズパーソナルカラー診断</li>
+            <li>骨格診断</li>
+            <li>顔タイプ診断</li>
+            <li>顔タイプメガネ診断</li>
+            <li>イメージコンサルティング</li>
+            <li>ショッピング同行</li>
+            <li>ブライダルコース</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <span class="sg-label">内面を整える</span>
+          <ul class="tags">
+            <li>パーソナルシード</li>
+            <li>数秘＆カラー</li>
+            <li>誕生花セラピー</li>
+            <li>天体色数</li>
+          </ul>
+        </div>
+        <div class="skill-group">
+          <span class="sg-label">健康を整える</span>
+          <ul class="tags">
+            <li>かっさセラピー</li>
+            <li>PEMF × テラヘルツ搭載機器</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <article>
+
+    <p class="lead">はじめまして。ご覧いただきありがとうございます。<br>
+    私は「似合う色を知る」ことをゴールにするのではなく、<b>迷わず選べる自分になる</b>ことを大切にした、外見と内面の両方から整える診断・セッションを行っています。</p>
+
+    <h3>“似合う” も “好き” も、大切に</h3>
+    <p>私がいちばん大切にしているのは、<b>「似合う」と「好き」、その両方を大切にする</b>こと。この想いは、私自身の経験から生まれました。</p>
+    <p>かつての私は、自分が受けた診断で導かれた“似合う”を忠実に活かし、凛として“かっこいい女性”でいることを心がけていました。「似合う」に整えれば間違いない——そう信じていたんです。でも心の奥では、本当は<b>「可愛い」も好き</b>——そんな気持ちに、そっと蓋をしていたことに、あるとき気づいたんです。</p>
+    <p>そして実感したのは、<b>心が「好き」を許せていないと、本当に似合うものさえ、どこかしっくり来にくい</b>ということ。似合うを突き詰めるほど、自分の心の声を置き去りにはできない——そう感じるようになりました。</p>
+    <p>たくさんの診断を重ね、<b>“似合う”を知り尽くしたからこそ</b>、今は<b>あなたの“好き”も上手に組み込みながら</b>、「似合う」と「好き」が両立するスタイルをご提案できます。どちらかを諦めるのではなく、その両方を大切に。それが Seed of Color – Micoliss – の原点です。</p>
+
+    <div class="divider"></div>
+
+    <h3>これまでの経歴</h3>
+    <p>高校卒業後、一部上場企業に就職。社会人として、責任を持って働くことや、人と関わりながら仕事を進める姿勢を学びました。</p>
+    <p>その後、結婚・出産を経て一度仕事を離れ、専業主婦として子育てに専念。家族中心の生活の中で、<b>「私はこれから、どんな自分でいたいんだろう」</b>と考える時間が増えていきました。</p>
+    <p>ドラッグストアでのパート勤務を経て、営業事務として約7年間勤務。第3子の妊娠・出産をきっかけに育休に入り、その期間に<b>パーソナルカラーと出会います</b>。鏡に映る自分の表情が明るく変わったことに、心を動かされました。</p>
+    <p class="quote">「色には、人の気持ちや行動まで変える力がある」</p>
+    <p>その体験から、育休中の時間を学びにあて、理論・配色・実践を夢中で学び続けます。その後、新潟市内のサロンにて認定講師として8年間活動。多くの方が自分を肯定し、表情が変わっていく瞬間に立ち会ってきました。</p>
+    <p>そして現在、新潟市西区にて <b>Seed of Color – Micoliss –</b> を主宰しています。</p>
+
+    <h3>実績・活動内容</h3>
+    <ul class="pins">
+      <li>パーソナルカラー・骨格・顔タイプ診断を中心に活動</li>
+      <li>新潟市で約10年間、延べ<b>5,000名以上</b>を診断</li>
+      <li>成人式・卒業式・婚活・起業女性・男性など幅広くサポート</li>
+      <li>近年は、個人サロンのお客様や<b>企業とのコラボ講座</b>も開催</li>
+      <li><b>県内のイベント出店</b>では、カラー診断やかっさセラピーなどを提供</li>
+      <li><b>TV・雑誌で特集される方々のスタイリスト</b>としても活動</li>
+    </ul>
+    <p>現在は、内面に向き合う<b>パーソナルシード／数秘＆カラー／誕生花セラピー／天体色数</b>に加え、体を整える<b>かっさセラピー／PEMF × テラヘルツ搭載機器</b>も取り入れ、<b>外見 × 内面 × 健康</b>の3つの視点からの統合セッションを提供しています。</p>
+
+    <div class="divider"></div>
+
+    <h3>なぜ「色 × 内面」なのか</h3>
+    <p>正直に言うと、最初は「パーソナルカラーだけで十分じゃない？」と思っていました。でも、たくさんの方を診断する中で、こんな声を何度も聞くようになったんです。</p>
+    <ul class="checklist">
+      <li>似合うはずなのに、しっくりこない</li>
+      <li>自信が持てない</li>
+      <li>選べるようになったのに、心がついてこない</li>
+    </ul>
+    <p>そこで気づいたのが、<b>外見（カラー・骨格・顔タイプ）と内面は切り離せない</b>ということ。色は印象、行動、自信、人間関係——すべてに影響します。だから私は、外見 × 内面を組み合わせた診断も行っています。</p>
+
+    <h3>そして、土台となる「健康」へ</h3>
+    <p>たくさんの方と向き合う中で、もうひとつ大切なことに気づきました。どんなに似合う色や、整った内面があっても、<b>健やかな体がなければ、毎日を心から楽しむことはできない</b>——ということ。</p>
+    <p>そこで、体の巡りから整える <b>かっさセラピー</b> や、<b>PEMF × テラヘルツ搭載機器</b>も導入しました。<b>色・心・体</b>の三方向から、あなたらしい毎日をまるごと支えられるサロンを目指しています。</p>
+
+    <h3>私の診断でできること</h3>
+    <ul class="checklist">
+      <li>似合う色・形・テイストが明確になる</li>
+      <li><b>「似合う」に“好き”を上手に重ねられる</b></li>
+      <li>自分の強み・魅力を言語化できる</li>
+      <li>迷わず選べる「自分の基準」ができる</li>
+      <li>外見だけでなく、<b>内面や体の調子まで含めて</b>整う</li>
+      <li>年齢や環境の変化にも、無理なく“自分らしく”いられる</li>
+    </ul>
+    <p>一時的な流行ではなく、<b>一生使える「自分の軸」</b>をお伝えします。</p>
+
+    <h3>仕事のスタンス</h3>
+    <p>診断は「受けて終わり」ではありません。<b>「似合う」も「好き」も大切に</b>しながら、その後の<b>「どう活かすか」「どう選び続けるか」「どう変化に対応していくか」</b>までを一緒に考えます。</p>
+    <p>外見・内面・体——あなたを丸ごと見つめ、ペースや価値観を尊重しながら、<b>寄り添うパートナー</b>として長くサポートしていけたら。それが私の変わらないスタンスです。</p>
+
+    <div class="divider"></div>
+
+    <h3>なぜ「Seed of Color – Micoliss –」なのか</h3>
+    <div class="naming">
+      <dl>
+        <dt>SEED</dt><dd>（種）一人ひとりが生まれ持っている本質や個性。</dd>
+        <dt>COLOR</dt><dd>（色）その種に気づくためのきっかけ。</dd>
+        <dt>MICO × BLISS</dt><dd>（輝く × 喜び・幸せ）その人自身が輝き、人生を「幸せだ」と感じられる時間を増やしたい。</dd>
+      </dl>
+    </div>
+    <p>この想いを込めて、<b>Seed of Color – Micoliss –</b> と名付けました。ここは、完成された自分になる場所ではなく、あなたの中にある“色の種”がゆっくり育っていく場所です。</p>
+
+    <h3>最後に</h3>
+    <p>専門用語を並べるよりも、<b>「話しやすさ」「安心感」</b>を大切にしています。かしこまらず、まずは今のモヤモヤを聞かせてください。あなたの中にある、まだ言葉になっていない魅力を、一緒に見つけていけたら嬉しいです。</p>
+
+    <div class="closing">
+      <div class="seed">🌱</div>
+      <div class="cn en">Seed of Color – Micoliss –</div>
+      <p>個性の種を大切に、色とともに、<br>あなたらしい輝きと幸せへ。</p>
+    </div>
+
+    <div class="cta">
+      <a href="reserve.html" class="btn btn-primary">ご予約・空き状況を見る</a>
+      <a href="index.html#menu" class="btn btn-ghost">メニューを見る</a>
+    </div>
+
+  </article>
+</div>
+
+<footer>
+  <img src="img/logo.jpg" alt="Seed of Color -Micoliss-" class="f-logo">
+  <p class="copy">© 2026 Seed of Color -Micoliss-. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

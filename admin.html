@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>予約管理 | Seed of Color -Micoliss-</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Zen+Maru+Gothic:wght@300;400;500;700&family=Zen+Old+Mincho:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#faf7f2; --bg-soft:#f3ede4; --ink:#4a443c; --ink-soft:#7d756a;
+  --accent:#b99a6b; --accent-dk:#a07f4f; --line:#e3dccf; --white:#fff;
+  --radius:16px; --shadow:0 18px 40px -24px rgba(74,68,60,.45);
+  --serif:"Zen Old Mincho",serif; --en:"Cormorant Garamond",serif; --sans:"Zen Maru Gothic",sans-serif;
+  --ok:#7aa37a; --ng:#c98a8a;
+}
+:root{ --ink-soft:#6a6256; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.7;font-weight:400}
+a{color:inherit;text-decoration:none}
+.en{font-family:var(--en);letter-spacing:.12em}
+.wrap{width:min(1040px,94%);margin-inline:auto}
+
+header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
+.head-inner{display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,40px)}
+.brand{font-family:var(--en);font-size:1.05rem;letter-spacing:.18em;font-weight:500;display:flex;align-items:center;gap:12px}
+.brand span{display:block;font-family:var(--sans);font-size:.58rem;letter-spacing:.3em;color:#b9b0a2}
+.brand-logo{height:32px;width:auto;display:block;background:#fff;border-radius:9px;padding:6px 12px}
+.head-inner .role{font-size:.78rem;color:#b9b0a2}
+
+.demo-badge{background:#fff4d6;border:1px solid #e8d59a;color:#8a6d2f;font-size:.78rem;border-radius:10px;padding:10px 14px;text-align:center;margin:18px auto 0}
+
+/* タブ */
+.tabs{display:flex;gap:8px;margin:24px 0 18px;flex-wrap:wrap}
+.tabs button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 22px;font-family:var(--sans);font-size:.88rem;color:var(--ink-soft);cursor:pointer;transition:all .2s}
+.tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* 集計カード */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.stat .lbl{font-size:.78rem;color:var(--ink-soft)}
+.stat .v{font-family:var(--serif);font-size:1.7rem;margin-top:4px}
+.stat .v small{font-size:.8rem;color:var(--ink-soft)}
+
+.tabpanel{display:none}
+.tabpanel.show{display:block}
+
+/* 予約一覧 */
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.toolbar select,.toolbar input{border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-family:var(--sans);font-size:.86rem;background:#fff;color:var(--ink)}
+.resv-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;display:grid;grid-template-columns:auto 1fr auto;gap:6px 18px;align-items:center}
+.resv-when{text-align:center;border-right:1px solid var(--line);padding-right:18px}
+.resv-when .d{font-family:var(--serif);font-size:1.05rem}
+.resv-when .t{font-family:var(--en);font-size:1.2rem;color:var(--accent-dk)}
+.resv-when .wd{font-size:.72rem;color:var(--ink-soft)}
+.resv-body .nm{font-size:1.02rem}
+.resv-body .nm .kana{font-size:.76rem;color:var(--ink-soft);margin-left:8px}
+.resv-body .mn{font-size:.84rem;color:var(--accent-dk);margin-top:2px}
+.resv-body .meta{font-size:.78rem;color:var(--ink-soft);margin-top:4px}
+.resv-body .note{font-size:.78rem;color:var(--ink-soft);margin-top:6px;background:var(--bg-soft);border-radius:8px;padding:6px 10px}
+.resv-side{text-align:right}
+.tag{display:inline-block;font-size:.72rem;border-radius:999px;padding:3px 12px;margin-bottom:8px}
+.tag.confirmed{background:#e7f0e7;color:#4a7a4a}
+.tag.cancelled{background:#f6e6e6;color:#a85b5b}
+.tag.first{background:#fbeede;color:#9a7333;margin-left:6px}
+.btn-sm{display:block;width:100%;margin-top:6px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;font-size:.78rem;color:var(--ink-soft);cursor:pointer;font-family:var(--sans)}
+.btn-sm:hover{background:var(--bg-soft)}
+.btn-sm.danger:hover{background:#f6e6e6;color:#a85b5b;border-color:#e6c4c4}
+.empty{text-align:center;color:var(--ink-soft);padding:50px 0;font-size:.9rem}
+
+/* カレンダー（枠の開閉） */
+.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cal-nav button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-family:var(--sans);font-size:.82rem;color:var(--ink);cursor:pointer}
+.cal-nav button:hover:not(:disabled){background:var(--bg-soft)}
+.cal-month{font-family:var(--serif);font-size:1rem}
+.cal-help{font-size:.8rem;color:var(--ink-soft);margin-bottom:12px}
+.cal-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table.cal{border-collapse:collapse;width:100%;min-width:620px;font-size:.8rem}
+table.cal th,table.cal td{border:1px solid var(--line);text-align:center;padding:7px 4px;white-space:nowrap}
+table.cal thead th{background:var(--bg-soft);font-weight:400;color:var(--ink-soft)}
+table.cal thead th.sat{color:#6f86b8}table.cal thead th.sun{color:var(--ng)}
+table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:var(--en)}
+.cell{cursor:pointer;font-size:.95rem;line-height:1;display:block;border-radius:6px;padding:3px 0}
+.cell.open{color:var(--ok)}
+.cell.closed{color:var(--line);background:repeating-linear-gradient(45deg,#f3ede4,#f3ede4 4px,#ece3d4 4px,#ece3d4 8px)}
+.cell.booked{color:#fff;background:var(--accent);cursor:default;font-size:.66rem}
+.cell.open:hover,.cell.closed:hover{background:#f0e7d6}
+.cal-legend{display:flex;gap:18px;justify-content:center;margin-top:12px;font-size:.78rem;color:var(--ink-soft);flex-wrap:wrap}
+.cal-legend i{font-style:normal}
+
+/* 設定 */
+.settings-box{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;max-width:560px}
+.settings-box h3{font-family:var(--serif);font-weight:500;margin-bottom:12px}
+.settings-box p{font-size:.84rem;color:var(--ink-soft);margin-bottom:14px}
+.danger-btn{background:#fff;border:1px solid #e6c4c4;color:#a85b5b;border-radius:10px;padding:10px 20px;font-family:var(--sans);font-size:.86rem;cursor:pointer}
+.danger-btn:hover{background:#f6e6e6}
+
+@media(max-width:600px){
+  .resv-card{grid-template-columns:1fr;gap:10px}
+  .resv-when{border-right:0;border-bottom:1px solid var(--line);padding:0 0 10px;display:flex;gap:10px;align-items:baseline;justify-content:flex-start}
+  .resv-side{text-align:left}
+  .btn-sm{display:inline-block;width:auto;margin-right:8px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="brand"><img src="img/logo.jpg" alt="Seed of Color -Micoliss-" class="brand-logo"><span>RESERVATION ADMIN</span></div>
+    <div class="role">🔐 管理ページ（お店用）</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="demo-badge">🔧 試作版：このブラウザに保存された予約を表示しています。お客さんの reserve.html と同じデータを見ています。</div>
+
+  <div class="tabs">
+    <button class="active" data-t="list" onclick="switchTab('list')">📋 予約一覧</button>
+    <button data-t="cal" onclick="switchTab('cal')">🗓️ 空き枠の管理</button>
+    <button data-t="set" onclick="switchTab('set')">⚙️ 設定</button>
+  </div>
+
+  <!-- 予約一覧 -->
+  <div class="tabpanel show" id="tab-list">
+    <div class="stats" id="stats"></div>
+    <div class="toolbar">
+      <label style="font-size:.82rem;color:var(--ink-soft)">表示：</label>
+      <select id="filter" onchange="renderList()">
+        <option value="upcoming">これからの予約</option>
+        <option value="all">すべて</option>
+        <option value="cancelled">キャンセル分</option>
+      </select>
+      <input id="search" placeholder="名前・電話で検索" oninput="renderList()">
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <!-- 空き枠管理 -->
+  <div class="tabpanel" id="tab-cal">
+    <p class="cal-help">マスを<strong>クリック</strong>すると「予約可（◎）↔ 休止（×）」を切り替えられます。お休みの日や、すでに別件がある時間を閉じておくと、お客さんの予約画面でも × になります。</p>
+    <div class="cal-nav">
+      <button id="prevWeek">◀ 前の一週間</button>
+      <span class="cal-month" id="calMonth"></span>
+      <button id="nextWeek">次の一週間 ▶</button>
+    </div>
+    <div class="cal-scroll"><table class="cal" id="calTable"></table></div>
+    <div class="cal-legend">
+      <span><i style="color:var(--ok)">◎</i> 予約可</span>
+      <span><i style="color:#bbb">×</i> 休止（クリックで開閉）</span>
+      <span><i style="color:var(--accent)">●</i> 予約あり</span>
+    </div>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(false)">この週の表示日を全部「休止」に</button>
+      <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(true)">この週の表示日を全部「予約可」に</button>
+    </div>
+  </div>
+
+  <!-- 設定 -->
+  <div class="tabpanel" id="tab-set">
+    <div class="settings-box">
+      <h3>このページについて</h3>
+      <p>これは試作版の管理ページです。予約データは今お使いのブラウザの中だけに保存されています。別のパソコンやスマホからは見えません。<br><br>本番（②データベース接続）では、どの端末からでも同じ予約が見られるようになり、ログインで保護されます。</p>
+      <h3 style="margin-top:18px">テスト用</h3>
+      <p>動作確認のために、サンプル予約を入れたり消したりできます。</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn-sm" style="width:auto;display:inline-block" onclick="seedDemo()">サンプル予約を3件入れる</button>
+        <button class="danger-btn" onclick="clearAll()">すべての予約を消す</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORE={reservations:'micoliss_reservations',closed:'micoliss_closed'};
+const load=(k,def)=>{try{return JSON.parse(localStorage.getItem(k))??def}catch{return def}};
+const save=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const WD=['日','月','火','水','木','金','土'];
+const OPEN_H=9,CLOSE_H=19,STEP_MIN=30;
+function buildTimes(){const t=[];for(let m=OPEN_H*60;m<=CLOSE_H*60-STEP_MIN;m+=STEP_MIN)t.push(`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`);return t}
+const TIMES=buildTimes();
+const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+/* ===== タブ ===== */
+function switchTab(t){
+  document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('tab-'+t).classList.add('show');
+  if(t==='cal') renderCal();
+  if(t==='list') renderList();
+}
+
+/* ===== 予約一覧 ===== */
+function renderStats(){
+  const all=load(STORE.reservations,[]);
+  const active=all.filter(r=>r.status!=='cancelled');
+  const today=fmtDate(new Date());
+  const upcoming=active.filter(r=>r.date>=today);
+  const sales=active.reduce((s,r)=>s+r.price,0);
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="lbl">これからの予約</div><div class="v">${upcoming.length}<small>件</small></div></div>
+    <div class="stat"><div class="lbl">本日の予約</div><div class="v">${active.filter(r=>r.date===today).length}<small>件</small></div></div>
+    <div class="stat"><div class="lbl">予約 合計</div><div class="v">${active.length}<small>件</small></div></div>
+    <div class="stat"><div class="lbl">売上見込み</div><div class="v"><small>¥</small>${sales.toLocaleString()}</div></div>`;
+}
+function renderList(){
+  renderStats();
+  const filter=document.getElementById('filter').value;
+  const q=document.getElementById('search').value.trim();
+  const today=fmtDate(new Date());
+  let list=load(STORE.reservations,[]);
+  if(filter==='upcoming') list=list.filter(r=>r.status!=='cancelled'&&r.date>=today);
+  else if(filter==='cancelled') list=list.filter(r=>r.status==='cancelled');
+  if(q) list=list.filter(r=>r.name.includes(q)||r.kana.includes(q)||r.tel.includes(q));
+  list.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const el=document.getElementById('list');
+  if(!list.length){el.innerHTML='<div class="empty">該当する予約はありません。</div>';return;}
+  el.innerHTML=list.map(r=>{
+    const wd=WD[new Date(r.date).getDay()];
+    return `<div class="resv-card">
+      <div class="resv-when">
+        <div class="d">${r.date.slice(5).replace('-','/')}</div>
+        <div class="wd">(${wd})</div>
+        <div class="t">${r.time}</div>
+      </div>
+      <div class="resv-body">
+        <div class="nm">${r.name}<span class="kana">${r.kana}</span>
+          ${r.first==='はじめて'?'<span class="tag first">新規</span>':''}</div>
+        <div class="mn">${r.menuName}（約${r.menuMin}分・¥${r.price.toLocaleString()}）</div>
+        <div class="meta">📞 ${r.tel}${r.mail?'　✉️ '+r.mail:''}</div>
+        ${r.note?`<div class="note">📝 ${r.note}</div>`:''}
+      </div>
+      <div class="resv-side">
+        <span class="tag ${r.status}">${r.status==='cancelled'?'キャンセル':'予約確定'}</span>
+        ${r.status!=='cancelled'
+          ?`<button class="btn-sm danger" onclick="cancelResv('${r.id}')">キャンセルにする</button>`
+          :`<button class="btn-sm" onclick="restoreResv('${r.id}')">予約に戻す</button>`}
+        <button class="btn-sm danger" onclick="deleteResv('${r.id}')">削除</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function cancelResv(id){const l=load(STORE.reservations,[]);const r=l.find(x=>x.id===id);if(r&&confirm(`${r.name}様の予約をキャンセル扱いにしますか？\n（本番ではお客様にLINEで通知できます）`)){r.status='cancelled';save(STORE.reservations,l);renderList();}}
+function restoreResv(id){const l=load(STORE.reservations,[]);const r=l.find(x=>x.id===id);if(r){r.status='confirmed';save(STORE.reservations,l);renderList();}}
+function deleteResv(id){const l=load(STORE.reservations,[]);const r=l.find(x=>x.id===id);if(r&&confirm(`${r.name}様の予約を完全に削除しますか？`)){save(STORE.reservations,l.filter(x=>x.id!==id));renderList();}}
+
+/* ===== 空き枠カレンダー ===== */
+let weekStart=new Date();weekStart.setHours(0,0,0,0);
+function bookedMap(){
+  const m={};load(STORE.reservations,[]).filter(r=>r.status!=='cancelled').forEach(r=>{
+    const idx=TIMES.indexOf(r.time),need=Math.ceil(r.menuMin/STEP_MIN);
+    for(let i=0;i<need;i++){const t=TIMES[idx+i];if(t)m[`${r.date}_${t}`]=r.name;}
+  });return m;
+}
+function renderCal(){
+  const days=[...Array(7)].map((_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return d;});
+  const m1=days[0].getMonth()+1,m2=days[6].getMonth()+1;
+  document.getElementById('calMonth').textContent=m1===m2?`${days[0].getFullYear()}年 ${m1}月`:`${m1}月 – ${m2}月`;
+  const today=new Date();today.setHours(0,0,0,0);
+  document.getElementById('prevWeek').disabled=weekStart<=today;
+  const closed=load(STORE.closed,[]),booked=bookedMap();
+  let head='<thead><tr><th></th>'+days.map(d=>{const c=d.getDay()===0?'sun':d.getDay()===6?'sat':'';return `<th class="${c}">${d.getMonth()+1}/${d.getDate()}<br>(${WD[d.getDay()]})</th>`;}).join('')+'</tr></thead>';
+  let body='<tbody>'+TIMES.map(t=>`<tr><td class="time">${t}</td>`+days.map(d=>{
+    const ds=fmtDate(d),key=`${ds}_${t}`;
+    if(booked[key])return `<td><span class="cell booked" title="${booked[key]}様">●予約</span></td>`;
+    const isClosed=closed.includes(key);
+    return `<td><span class="cell ${isClosed?'closed':'open'}" onclick="toggleSlot('${ds}','${t}')">${isClosed?'×':'◎'}</span></td>`;
+  }).join('')+'</tr>').join('')+'</tbody>';
+  document.getElementById('calTable').innerHTML=head+body;
+}
+function toggleSlot(ds,t){
+  const key=`${ds}_${t}`;let closed=load(STORE.closed,[]);
+  if(closed.includes(key))closed=closed.filter(k=>k!==key);else closed.push(key);
+  save(STORE.closed,closed);renderCal();
+}
+function closeDay(open){
+  const days=[...Array(7)].map((_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return fmtDate(d);});
+  let closed=load(STORE.closed,[]);
+  days.forEach(ds=>TIMES.forEach(t=>{const key=`${ds}_${t}`;
+    if(open)closed=closed.filter(k=>k!==key);
+    else if(!closed.includes(key))closed.push(key);
+  }));
+  save(STORE.closed,closed);renderCal();
+}
+function shiftWeek(n){weekStart.setDate(weekStart.getDate()+7*n);renderCal();}
+document.getElementById('prevWeek').onclick=()=>shiftWeek(-1);
+document.getElementById('nextWeek').onclick=()=>shiftWeek(1);
+
+/* ===== 設定：テスト用 ===== */
+function seedDemo(){
+  const base=new Date();base.setHours(0,0,0,0);
+  const d=n=>{const x=new Date(base);x.setDate(x.getDate()+n);return fmtDate(x);};
+  const demo=[
+    {id:'r'+(Date.now()),createdAt:new Date().toISOString(),date:d(1),time:'10:00',menuId:'pc',menuName:'パーソナルカラー診断',menuMin:90,price:11000,name:'佐藤 美咲',kana:'さとう みさき',tel:'090-1111-2222',mail:'misaki@example.com',first:'はじめて',note:'当日の持ち物はありますか？',status:'confirmed'},
+    {id:'r'+(Date.now()+1),createdAt:new Date().toISOString(),date:d(2),time:'13:30',menuId:'total',menuName:'トータル診断',menuMin:150,price:18000,name:'鈴木 あや',kana:'すずき あや',tel:'080-3333-4444',mail:'',first:'2回目以降',note:'',status:'confirmed'},
+    {id:'r'+(Date.now()+2),createdAt:new Date().toISOString(),date:d(4),time:'15:00',menuId:'make',menuName:'メイクレッスン',menuMin:75,price:8000,name:'田中 ゆり',kana:'たなか ゆり',tel:'070-5555-6666',mail:'yuri@example.com',first:'はじめて',note:'駐車場はありますか？',status:'confirmed'},
+  ];
+  save(STORE.reservations,[...load(STORE.reservations,[]),...demo]);
+  alert('サンプル予約を3件入れました。');renderList();switchTab('list');
+}
+function clearAll(){if(confirm('保存されている予約をすべて消します。よろしいですか？')){save(STORE.reservations,[]);save(STORE.closed,[]);renderList();renderCal();}}
+
+renderList();
+</script>
+</body>
+</html>
