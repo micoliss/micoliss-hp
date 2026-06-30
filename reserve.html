@@ -321,7 +321,12 @@ function neededSlots(){ return Math.ceil(state.menu.min/STEP_MIN); }
 /* ある日時から所要時間ぶん、すべて空いているか ===== */
 function isFree(dateStr, time){
   const idx=TIMES.indexOf(time); const need=neededSlots();
-  if(idx<0 || idx+need>TIMES.length) return false;            // 閉店までに収まらない
+  if(idx<0 || idx+need>TIMES.length) return false;            // 枠の範囲外
+  // 曜日ごとの閉店時刻までに施術が終わるか（金土=19時／日〜木=17時）
+  const wd=new Date(`${dateStr}T00:00`).getDay();             // 0=日 … 6=土
+  const closeMin=(wd===5||wd===6)?19*60:17*60;
+  const [hh,mm]=time.split(':').map(Number);
+  if(hh*60+mm + state.menu.min > closeMin) return false;      // 閉店までに終わらない
   // 過去日時は不可
   const slotDate=new Date(`${dateStr}T${time}`);
   if(slotDate < new Date()) return false;
