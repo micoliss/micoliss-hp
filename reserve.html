@@ -262,6 +262,7 @@ function buildTimes(){
 const TIMES=buildTimes();
 const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const WD=['日','月','火','水','木','金','土'];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ===== 状態 ===== */
 let state={menu:null, date:null, time:null, weekStart:null};
@@ -386,11 +387,11 @@ function toConfirm(){
     <dl>
       <dt>メニュー</dt><dd>${m.name}（約${m.min}分）</dd>
       <dt>日時</dt><dd>${state.date.replace(/-/g,'/')}（${WD[new Date(state.date).getDay()]}）${state.time}〜</dd>
-      <dt>お名前</dt><dd>${name}（${kana}）</dd>
-      <dt>電話</dt><dd>${tel}</dd>
-      <dt>メール</dt><dd>${fMail.value.trim()||'—'}</dd>
-      <dt>ご来店</dt><dd>${fFirst.value}</dd>
-      <dt>ご要望</dt><dd>${fNote.value.trim()||'—'}</dd>
+      <dt>お名前</dt><dd>${esc(name)}（${esc(kana)}）</dd>
+      <dt>電話</dt><dd>${esc(tel)}</dd>
+      <dt>メール</dt><dd>${esc(fMail.value.trim())||'—'}</dd>
+      <dt>ご来店</dt><dd>${esc(fFirst.value)}</dd>
+      <dt>ご要望</dt><dd>${esc(fNote.value.trim())||'—'}</dd>
     </dl>
     <div class="total"><span>お支払い目安</span><span class="v">¥${m.price.toLocaleString()}<small style="font-size:.7rem;color:var(--ink-soft)">（税込・当日）</small></span></div>`;
   goStep(4);

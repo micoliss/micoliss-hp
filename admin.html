@@ -228,6 +228,8 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const WD=['日','月','火','水','木','金','土'];
 const OPEN_H=9,CLOSE_H=19,STEP_MIN=30;
+/* お客様が入力した文字を、画面に安全に表示するための無害化（XSS対策） */
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function buildTimes(){const t=[];for(let m=OPEN_H*60;m<=CLOSE_H*60-STEP_MIN;m+=STEP_MIN)t.push(`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`);return t}
 const TIMES=buildTimes();
 const fmtDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -317,11 +319,11 @@ function renderList(){
         <div class="t">${r.time}</div>
       </div>
       <div class="resv-body">
-        <div class="nm">${r.name}<span class="kana">${r.kana||''}</span>
+        <div class="nm">${esc(r.name)}<span class="kana">${esc(r.kana)}</span>
           ${r.first==='はじめて'?'<span class="tag first">新規</span>':''}</div>
-        <div class="mn">${r.menu_name}（約${r.menu_min}分・¥${(r.price||0).toLocaleString()}）</div>
-        <div class="meta">📞 ${r.tel}${r.mail?'　✉️ '+r.mail:''}</div>
-        ${r.note?`<div class="note">📝 ${r.note}</div>`:''}
+        <div class="mn">${esc(r.menu_name)}（約${Number(r.menu_min)||0}分・¥${(r.price||0).toLocaleString()}）</div>
+        <div class="meta">📞 ${esc(r.tel)}${r.mail?'　✉️ '+esc(r.mail):''}</div>
+        ${r.note?`<div class="note">📝 ${esc(r.note)}</div>`:''}
       </div>
       <div class="resv-side">
         <span class="tag ${r.status}">${r.status==='cancelled'?'キャンセル':'予約確定'}</span>
@@ -370,7 +372,7 @@ function renderCal(){
   let head='<thead><tr><th></th>'+days.map(d=>{const c=d.getDay()===0?'sun':d.getDay()===6?'sat':'';return `<th class="${c}">${d.getMonth()+1}/${d.getDate()}<br>(${WD[d.getDay()]})</th>`;}).join('')+'</tr></thead>';
   let body='<tbody>'+TIMES.map(t=>`<tr><td class="time">${t}</td>`+days.map(d=>{
     const ds=fmtDate(d),key=`${ds}_${t}`;
-    if(booked[key])return `<td><span class="cell booked" title="${booked[key]}様">●予約</span></td>`;
+    if(booked[key])return `<td><span class="cell booked" title="${esc(booked[key])}様">●予約</span></td>`;
     const isClosed=CLOSED.has(key);
     return `<td><span class="cell ${isClosed?'closed':'open'}" onclick="toggleSlot('${ds}','${t}')">${isClosed?'×':'◎'}</span></td>`;
   }).join('')+'</tr>').join('')+'</tbody>';
