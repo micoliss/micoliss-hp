@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="準備中">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#efe6d6"/>
+      <stop offset="1" stop-color="#ddcdb4"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <rect x="18" y="18" width="364" height="364" rx="14" fill="none" stroke="#c7b48f" stroke-width="1.5" stroke-dasharray="6 7"/>
+  <!-- カメラのアイコン -->
+  <g transform="translate(200,158)" fill="none" stroke="#b99a6b" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M-54,-22 h22 l9,-13 h46 l9,13 h22 a10,10 0 0 1 10,10 v54 a10,10 0 0 1 -10,10 h-108 a10,10 0 0 1 -10,-10 v-54 a10,10 0 0 1 10,-10 z"/>
+    <circle cx="0" cy="17" r="22"/>
+  </g>
+  <text x="200" y="262" text-anchor="middle" font-family="'Zen Old Mincho','Hiragino Mincho ProN',serif" font-size="46" letter-spacing="6" fill="#6f5f43">準備中</text>
+  <text x="200" y="300" text-anchor="middle" font-family="'Cormorant Garamond',Georgia,serif" font-size="19" letter-spacing="6" fill="#a8916a">Coming Soon</text>
+</svg>
