@@ -75,7 +75,7 @@ section.panel.show{display:block;animation:fade .4s ease}
 .cal-nav button:hover:not(:disabled){background:var(--bg-soft)}
 .cal-nav button:disabled{opacity:.35;cursor:not-allowed}
 .cal-month{font-family:var(--serif);font-size:1rem;letter-spacing:.04em}
-.cal-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+.cal-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:#fff;position:relative}
 table.cal{border-collapse:collapse;width:100%;min-width:560px;font-size:.82rem}
 table.cal th,table.cal td{border:1px solid var(--line);text-align:center;padding:8px 4px;white-space:nowrap}
 table.cal thead th{background:var(--bg-soft);font-weight:400;color:var(--ink-soft);position:sticky;top:0}
@@ -88,6 +88,7 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .slot:not(.ng):hover{background:#f0e7d6}
 .cal-legend{display:flex;gap:18px;justify-content:center;margin-top:12px;font-size:.78rem;color:var(--ink-soft)}
 .cal-legend b{color:var(--ok)}
+.cal-loading{text-align:center;color:var(--ink-soft);font-size:.85rem;padding:30px 0}
 
 /* フォーム */
 .form-grid{display:grid;gap:16px;max-width:560px}
@@ -121,7 +122,6 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .btn-ghost:hover{background:var(--bg-soft)}
 
 .note{font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:30px;line-height:1.7}
-.demo-badge{background:#fff4d6;border:1px solid #e8d59a;color:#8a6d2f;font-size:.76rem;border-radius:10px;padding:10px 14px;text-align:center;margin:18px auto 0;max-width:620px}
 
 @media(max-width:560px){
   .menu-item{flex-direction:column;align-items:flex-start}
@@ -143,8 +143,6 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
   <span class="en">Reservation</span>
   <h1>ネット予約</h1>
 </div>
-
-<div class="demo-badge wrap">🔧 これは試作版です。予約データはこのブラウザ内にだけ仮保存されます（②でデータベースに接続します）。</div>
 
 <!-- ステップバー -->
 <div class="wrap">
@@ -235,22 +233,21 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
   営業時間 9:00–19:00（不定休）・お電話は繋がりにくいためネット予約がおすすめです
 </p>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ===== 共有データ（admin.html と同じ localStorage を読み書き） ===== */
-const STORE = {
-  reservations: 'micoliss_reservations',
-  closed: 'micoliss_closed',     // 管理者が閉じた枠 "YYYY-MM-DD_HH:MM"
-};
-const load = (k,def)=>{ try{return JSON.parse(localStorage.getItem(k))??def}catch{return def} };
+/* ===== Supabase 接続 ===== */
+const SUPABASE_URL='https://efortdqqqeclshcquqbu.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmb3J0ZHFxcWVjbHNoY3F1cWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjMxODMsImV4cCI6MjA5ODMzOTE4M30.UfLhFR3mokVMiiyS07bCw4gSEZz3cTPVjKkgUnot4Jg';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* メニュー（サイトと同じ内容） */
+/* メニュー（トップページと同じ6コース・税込） */
 const MENUS = [
-  {id:'pc',   name:'パーソナルカラー診断', price:11000, min:90,  desc:'4シーズン／16タイプで似合う色を本格診断'},
-  {id:'bone', name:'骨格診断',           price:9000,  min:60,  desc:'似合うシルエット・素材・着こなしを分析'},
-  {id:'total',name:'トータル診断',        price:18000, min:150, desc:'パーソナルカラー＋骨格をセットで総合提案'},
-  {id:'shop', name:'同行ショッピング',     price:15000, min:180, desc:'診断結果をもとにお買い物に同行'},
-  {id:'make', name:'メイクレッスン',       price:8000,  min:75,  desc:'似合うコスメ選びとメイクをマンツーマンで'},
-  {id:'follow',name:'フォローアップ',       price:4000,  min:45,  desc:'診断後のコーデ相談・お悩み相談（オンライン可）'},
+  {id:'basic',   name:'ベーシックコース',            price:16500, min:90,  desc:'パーソナルカラー＋骨格診断＋メイクの基本コース'},
+  {id:'total',   name:'トータルプロデュースコース',  price:27500, min:150, desc:'顔タイプ診断まで含む人気No.1の全部入り'},
+  {id:'facetype',name:'顔タイプ診断（柄ドレープ付）', price:13200, min:60,  desc:'8タイプ診断＋柄ドレープ診断（女性限定）'},
+  {id:'glasses', name:'顔タイプメガネ診断',          price:8800,  min:60,  desc:'似合うメガネを診断（女性限定オプション）'},
+  {id:'mens',    name:'メンズパーソナルカラー診断',  price:16500, min:60,  desc:'男性向け：パーソナルカラー＋骨格診断'},
+  {id:'shopping',name:'ショッピング同行',            price:16500, min:90,  desc:'診断結果をもとに本当に似合う服選びに同行'},
 ];
 
 /* 営業時間 9:00–19:00、開始枠は30分刻み */
@@ -269,6 +266,23 @@ const WD=['日','月','火','水','木','金','土'];
 /* ===== 状態 ===== */
 let state={menu:null, date:null, time:null, weekStart:null};
 state.weekStart=new Date(); state.weekStart.setHours(0,0,0,0);
+
+/* Supabaseから取得した空き状況（個人情報なし） */
+let BUSY=[];        // [{date, time, menu_min}]
+let CLOSED=new Set();// "YYYY-MM-DD_HH:MM"
+let dataLoaded=false;
+
+async function loadAvailability(){
+  try{
+    const [busyRes, closedRes] = await Promise.all([
+      sb.from('busy_slots').select('date,time,menu_min'),
+      sb.from('closed_slots').select('slot'),
+    ]);
+    BUSY = (busyRes.data||[]).map(r=>({date:r.date, time:(r.time||'').slice(0,5), menu_min:r.menu_min}));
+    CLOSED = new Set((closedRes.data||[]).map(r=>r.slot));
+    dataLoaded=true;
+  }catch(e){ console.error(e); }
+}
 
 /* ===== STEP1 メニュー描画 ===== */
 function renderMenus(){
@@ -298,8 +312,6 @@ function neededSlots(){ return Math.ceil(state.menu.min/STEP_MIN); }
 
 /* ある日時から所要時間ぶん、すべて空いているか ===== */
 function isFree(dateStr, time){
-  const closed=load(STORE.closed,[]);
-  const resv=load(STORE.reservations,[]).filter(r=>r.status!=='cancelled');
   const idx=TIMES.indexOf(time); const need=neededSlots();
   if(idx<0 || idx+need>TIMES.length) return false;            // 閉店までに収まらない
   // 過去日時は不可
@@ -307,11 +319,11 @@ function isFree(dateStr, time){
   if(slotDate < new Date()) return false;
   for(let i=0;i<need;i++){
     const t=TIMES[idx+i];
-    if(closed.includes(`${dateStr}_${t}`)) return false;       // 管理者が閉じた
+    if(CLOSED.has(`${dateStr}_${t}`)) return false;            // 管理者が閉じた
     // 既存予約＋その前後バッファと重なるか（最低30分あける）
-    for(const r of resv){
+    for(const r of BUSY){
       if(r.date!==dateStr) continue;
-      const rIdx=TIMES.indexOf(r.time), rNeed=Math.ceil(r.menuMin/STEP_MIN);
+      const rIdx=TIMES.indexOf(r.time), rNeed=Math.ceil(r.menu_min/STEP_MIN);
       if((idx+i)>=rIdx-BUFFER_SLOTS && (idx+i)<rIdx+rNeed+BUFFER_SLOTS) return false;
     }
   }
@@ -321,6 +333,10 @@ function isFree(dateStr, time){
 /* ===== STEP2 カレンダー描画 ===== */
 function renderCal(){
   document.getElementById('selBar2').innerHTML=selBarHTML();
+  if(!dataLoaded){
+    document.getElementById('calTable').innerHTML='<tbody><tr><td class="cal-loading">空き状況を読み込み中…</td></tr></tbody>';
+    return;
+  }
   const days=[...Array(7)].map((_,i)=>{const d=new Date(state.weekStart);d.setDate(d.getDate()+i);return d;});
   const m1=days[0].getMonth()+1, m2=days[6].getMonth()+1;
   document.getElementById('calMonth').textContent = m1===m2? `${days[0].getFullYear()}年 ${m1}月` : `${m1}月 – ${m2}月`;
@@ -348,7 +364,7 @@ document.getElementById('prevWeek').onclick=()=>shiftWeek(-1);
 document.getElementById('nextWeek').onclick=()=>shiftWeek(1);
 
 /* ===== ステップ遷移 ===== */
-function goStep(n){
+async function goStep(n){
   if(n>=2 && !state.menu) return;
   if(n>=3 && (!state.date||!state.time)) return;
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('show'));
@@ -356,7 +372,7 @@ function goStep(n){
   document.querySelectorAll('.steps .step').forEach(s=>{
     const sn=+s.dataset.s; s.classList.toggle('active',sn===n); s.classList.toggle('done',sn<n);
   });
-  if(n===2) renderCal();
+  if(n===2){ renderCal(); await loadAvailability(); renderCal(); }
   if(n===3) document.getElementById('selBar3').innerHTML=selBarHTML();
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -380,24 +396,35 @@ function toConfirm(){
   goStep(4);
 }
 
-/* ===== 予約確定（localStorage へ保存） ===== */
-function submitReservation(){
-  // 念のため直前にもう一度空き確認（同時予約対策の簡易版）
-  if(!isFree(state.date,state.time)){ alert('申し訳ありません、今その枠が埋まりました。別の日時をお選びください。'); goStep(2); return; }
-  const list=load(STORE.reservations,[]);
+/* ===== 予約確定（Supabase へ保存） ===== */
+async function submitReservation(){
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='送信中…';
+  // 念のため直前に最新の空き状況を取り直して確認（同時予約対策）
+  await loadAvailability();
+  if(!isFree(state.date,state.time)){
+    alert('申し訳ありません、今その枠が埋まりました。別の日時をお選びください。');
+    btn.disabled=false; btn.textContent='この内容で予約する';
+    goStep(2); return;
+  }
+  const m=state.menu;
   const r={
     id:'r'+Date.now(),
-    createdAt:new Date().toISOString(),
     date:state.date, time:state.time,
-    menuId:state.menu.id, menuName:state.menu.name, menuMin:state.menu.min, price:state.menu.price,
+    menu_id:m.id, menu_name:m.name, menu_min:m.min, price:m.price,
     name:fName.value.trim(), kana:fKana.value.trim(), tel:fTel.value.trim(),
     mail:fMail.value.trim(), first:fFirst.value, note:fNote.value.trim(),
     status:'confirmed'
   };
-  list.push(r);
-  localStorage.setItem(STORE.reservations, JSON.stringify(list));
+  const {error} = await sb.from('reservations').insert(r);
+  if(error){
+    console.error(error);
+    alert('申し訳ありません、予約の保存に失敗しました。通信環境をご確認のうえ、もう一度お試しください。');
+    btn.disabled=false; btn.textContent='この内容で予約する';
+    return;
+  }
   document.getElementById('doneMsg').innerHTML=
-    `${r.date.replace(/-/g,'/')}（${WD[new Date(r.date).getDay()]}）${r.time}〜<br>「${r.menuName}」のご予約を承りました。<br><br>※本番ではこの後すぐにLINE・メールで確認が届きます（④で接続）。`;
+    `${r.date.replace(/-/g,'/')}（${WD[new Date(r.date).getDay()]}）${r.time}〜<br>「${r.menu_name}」のご予約を承りました。<br><br>※確認のご連絡を差し上げます。お電話が繋がらない場合もご安心ください。`;
   goStep(5);
 }
 
