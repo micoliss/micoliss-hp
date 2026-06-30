@@ -240,14 +240,21 @@ const SUPABASE_URL='https://efortdqqqeclshcquqbu.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmb3J0ZHFxcWVjbHNoY3F1cWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjMxODMsImV4cCI6MjA5ODMzOTE4M30.UfLhFR3mokVMiiyS07bCw4gSEZz3cTPVjKkgUnot4Jg';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* メニュー（トップページと同じ6コース・税込） */
+/* メニュー（トップページのメニューと連動・税込） */
 const MENUS = [
-  {id:'basic',   name:'ベーシックコース',            price:16500, min:90,  desc:'パーソナルカラー＋骨格診断＋メイクの基本コース'},
-  {id:'total',   name:'トータルプロデュースコース',  price:27500, min:150, desc:'顔タイプ診断まで含む人気No.1の全部入り'},
-  {id:'facetype',name:'顔タイプ診断（柄ドレープ付）', price:13200, min:60,  desc:'8タイプ診断＋柄ドレープ診断（女性限定）'},
-  {id:'glasses', name:'顔タイプメガネ診断',          price:8800,  min:60,  desc:'似合うメガネを診断（女性限定オプション）'},
-  {id:'mens',    name:'メンズパーソナルカラー診断',  price:16500, min:60,  desc:'男性向け：パーソナルカラー＋骨格診断'},
-  {id:'shopping',name:'ショッピング同行',            price:16500, min:90,  desc:'診断結果をもとに本当に似合う服選びに同行'},
+  {id:'basic',       name:'ベーシックコース',                    price:16500, min:90,  desc:'パーソナルカラー＋骨格診断＋メイクの基本コース'},
+  {id:'total',       name:'トータルプロデュースコース',          price:27500, min:150, desc:'顔タイプ診断まで含む人気No.1の全部入り'},
+  {id:'facetype',    name:'顔タイプ診断（柄ドレープ付）',         price:13200, min:60,  desc:'8タイプ診断＋柄ドレープ診断（女性限定）'},
+  {id:'glasses',     name:'顔タイプメガネ診断',                  price:8800,  min:60,  desc:'似合うメガネを診断（女性限定オプション）'},
+  {id:'mens',        name:'メンズパーソナルカラー診断',          price:16500, min:60,  desc:'男性向け：パーソナルカラー＋骨格診断'},
+  {id:'shopping',    name:'ショッピング同行',                    price:16500, min:90,  desc:'診断結果をもとに本当に似合う服選びに同行'},
+  {id:'bridal-total',name:'ブライダルトータルコース',            price:38500, min:180, desc:'花嫁さま専用の特別フル診断'},
+  {id:'bridal-face', name:'顔タイプブライダル診断（柄ドレープ付）',price:16500, min:90,  desc:'※当サロンで診断済みの方専用'},
+  {id:'bridal-shop', name:'ドレスショップ同行',                  price:16500, min:60,  desc:'試着同行＋後日アフターフォロー'},
+  {id:'seed',        name:'パーソナルシード',                    price:14300, min:60,  desc:'本質や個性の“種”を見つめる内面セッション'},
+  {id:'shuhi',       name:'数秘＆カラー',                        price:14300, min:90,  desc:'数秘と色で本質・強みをひも解く'},
+  {id:'birth',       name:'誕生花セラピー',                      price:14300, min:90,  desc:'数秘術×花×心理学のセラピー'},
+  {id:'tentai',      name:'天体色数',                            price:14300, min:90,  desc:'星と色・数からあなたを読み解く'},
 ];
 
 /* 営業時間 9:00–19:00、開始枠は30分刻み */
@@ -431,6 +438,11 @@ async function submitReservation(){
 
 /* 初期化 */
 renderMenus();
+/* メニューページの「このメニューで予約する」から来たら、自動で選択してSTEP2へ */
+(function(){
+  const id = new URLSearchParams(location.search).get('menu');
+  if(id && MENUS.find(m=>m.id===id)) pickMenu(id);
+})();
 </script>
 </body>
 </html>
