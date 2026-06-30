@@ -159,5 +159,14 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   <p class="copy">© 2026 Seed of Color -Micoliss-. All rights reserved.</p>
 </footer>
 
+<script>
+  // 遷移時に必ずページ先頭から表示（iOS等でのスクロール位置引き継ぎ対策）
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  document.documentElement.style.scrollBehavior = 'auto';
+  function __toTop(){ window.scrollTo(0, 0); }
+  __toTop();
+  window.addEventListener('load', __toTop);
+  window.addEventListener('pageshow', __toTop);
+</script>
 </body>
 </html>
