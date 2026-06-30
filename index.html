@@ -169,6 +169,25 @@ nav a:hover{color:var(--accent-dk)}
 .menu-card .card-img{margin:-34px -30px 22px;aspect-ratio:16/10;overflow:hidden;background:var(--bg-soft)}
 .menu-card .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .menu-card:hover .card-img img{transform:scale(1.05)}
+/* カテゴリタブ（外見・内面・健康） */
+.menu-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:0 0 38px}
+.menu-tab{
+  font-family:var(--serif);font-size:1rem;letter-spacing:.06em;color:var(--ink-soft);
+  background:var(--white);border:1px solid var(--line);border-radius:999px;
+  padding:11px 28px;cursor:pointer;transition:all .25s;line-height:1;
+}
+.menu-tab .en{display:block;font-family:var(--en);font-size:.62rem;letter-spacing:.2em;color:var(--accent);margin-bottom:4px}
+.menu-tab:hover{border-color:var(--accent);color:var(--ink)}
+.menu-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.menu-tab.active .en{color:rgba(255,255,255,.85)}
+.menu-panel{display:none}
+.menu-panel.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.menu-soon{text-align:center;padding:60px 20px;color:var(--ink-soft)}
+.menu-soon .ic{font-size:2rem;margin-bottom:14px;opacity:.5}
+.menu-soon h3{font-family:var(--serif);font-weight:500;font-size:1.25rem;color:var(--ink);margin-bottom:10px}
+.menu-soon p{font-size:.9rem;line-height:1.8}
+@media(max-width:560px){.menu-tab{padding:10px 20px;font-size:.92rem}}
 
 /* =================== ギャラリー =================== */
 .gallery{background:var(--bg-soft)}
@@ -316,21 +335,24 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       <span class="en">Menu</span>
       <h2>メニュー<small>「似合う」も「好き」も大切にする、診断コース一覧。</small></h2>
     </div>
+
+    <!-- カテゴリタブ -->
+    <div class="menu-tabs reveal">
+      <button class="menu-tab active" data-tab="look"><span class="en">Appearance</span>外見メニュー</button>
+      <button class="menu-tab" data-tab="inner"><span class="en">Inner</span>内面メニュー</button>
+      <button class="menu-tab" data-tab="health"><span class="en">Health</span>健康メニュー</button>
+    </div>
+
+    <!-- ① 外見メニュー -->
+    <div class="menu-panel active" id="tab-look">
     <div class="menu-grid">
 
       <div class="menu-card reveal">
-        <div class="card-img"><img src="img/hero-color.jpg" alt="カラードレープでのパーソナルカラー診断"></div>
+        <div class="card-img"><img src="img/basic-color.jpg?v=6" alt="パーソナルカラーのカラードレープ"></div>
         <span class="catch">似合うを知ろう</span>
         <h3>ベーシックコース</h3>
         <p>パーソナルカラーの基本から、似合うの土台をまるごと診断するスタート向けコース。</p>
-        <ul class="incl">
-          <li>パーソナルカラー診断<small>（基本32色＋トーン別120色）</small></li>
-          <li>骨格診断<small>（3タイプ）</small></li>
-          <li>メイクポーチ診断</li>
-          <li>メイクカラーアドバイス</li>
-          <li>トータルアドバイス</li>
-        </ul>
-        <p class="reco">普段のメイクや手持ち服にも活かしやすく、基本を知りたい方におすすめです。</p>
+        <p class="note-s"><a href="basic.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
         <div class="meta">
           <span class="price">¥16,500<small>（税込）</small></span>
           <span class="time">約90分</span>
@@ -338,19 +360,11 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       </div>
 
       <div class="menu-card reveal">
-        <div class="card-img"><img src="img/palette.jpg" alt="コスメとお花のトータルプロデュース"></div>
+        <div class="card-img"><img src="img/total-style.jpg?v=2" alt="コスメと香水のトータルプロデュース"></div>
         <span class="catch pop">人気No.1 ／ 似合うをとことん</span>
         <h3>トータルプロデュースコース</h3>
         <p>外見まるごと総合診断のフルコース。色も形も含めて、あなただけの「似合う」を提案します。</p>
-        <ul class="incl">
-          <li>パーソナルカラー診断<small>（基本32色＋トーン別120色）</small></li>
-          <li>骨格診断<small>（3タイプ）</small></li>
-          <li>顔タイプ診断<small>（8タイプ）</small></li>
-          <li>メイクポーチ診断</li>
-          <li>メイクカラーアドバイス</li>
-          <li>トータルアドバイス</li>
-        </ul>
-        <p class="reco">本気で「魅力をアップデートしたい」方におすすめです。</p>
+        <p class="note-s"><a href="total.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
         <div class="meta">
           <span class="price">¥27,500<small>（税込）</small></span>
           <span class="time">約150分</span>
@@ -358,16 +372,23 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       </div>
 
       <div class="menu-card reveal">
-        <div class="card-img"><img src="img/staff.jpg" alt="お顔の特徴を分析する顔タイプ診断"></div>
+        <div class="card-img"><img src="img/bridal.jpg?v=5" alt="ウェディングドレスが並ぶブライダルコース"></div>
+        <span class="catch">特別な日のために</span>
+        <h3>ブライダルコース</h3>
+        <p>人生で一番輝きたい日のために。目的に合わせて選べる3つのブライダルコースをご用意しています。</p>
+        <p class="note-s"><a href="bridal.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥16,500<small>〜（税込）</small></span>
+          <span class="time">60〜180分</span>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="card-img" style="background:#fff"><img src="img/facetype-chart.jpg" alt="顔タイプ診断 8タイプ分類" style="object-fit:contain"></div>
         <span class="catch">女性限定</span>
         <h3>顔タイプ診断<small style="font-size:.7rem;color:var(--ink-soft)">（柄ドレープ診断付）</small></h3>
         <p>顔の形やパーツのバランスを分析し、あなたの魅力を引き出すスタイルを丁寧にご提案します。</p>
-        <ul class="incl">
-          <li>顔タイプ診断<small>（8タイプ）</small></li>
-          <li>柄ドレープ診断</li>
-        </ul>
-        <p class="reco">柄ドレープ診断付きで、洋服選びの失敗がグッと減ります。</p>
-        <p class="note-s">※顔タイプ診断は女性のみとなります。</p>
+        <p class="note-s">※顔タイプ診断は女性のみとなります。<br><a href="facetype.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
         <div class="meta">
           <span class="price">¥13,200<small>（税込）</small></span>
           <span class="time">約60分</span>
@@ -375,29 +396,11 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       </div>
 
       <div class="menu-card reveal">
-        <div class="card-img"><img src="img/menu-glasses.jpg" alt="似合うメガネを選ぶ顔タイプメガネ診断"></div>
-        <span class="catch">オプション ／ 女性限定</span>
-        <h3>顔タイプメガネ診断</h3>
-        <p>顔タイプの特徴をもとに、あなたの魅力が引き立つメガネをご提案します。普段使いのメガネ選びやイメチェンにもぴったり。</p>
-        <p class="reco">「似合うメガネが分からない」方におすすめです。</p>
-        <p class="note-s">※顔タイプ診断を受けた方向けのオプションメニューです（女性のみ）。</p>
-        <div class="meta">
-          <span class="price">¥8,800<small>（税込）</small></span>
-          <span class="time">約60分</span>
-        </div>
-      </div>
-
-      <div class="menu-card reveal">
-        <div class="card-img"><img src="img/menu-mens.jpg" alt="男性向けパーソナルカラー診断"></div>
+        <div class="card-img"><img src="img/mens-style.jpg?v=4" alt="男性向けパーソナルカラー診断"></div>
         <span class="catch">男性向け</span>
         <h3>メンズパーソナルカラー診断</h3>
         <p>第一印象が大きく変わる、男性向けのカラー診断。似合う色を明確にして、服・髪色・ビジネスシーンでも活かせます。</p>
-        <ul class="incl">
-          <li>パーソナルカラー診断<small>（基本32色＋トーン別120色）</small></li>
-          <li>骨格診断<small>（3タイプ）</small></li>
-          <li>トータルアドバイス</li>
-        </ul>
-        <p class="reco">スタイルが整い清潔感もアップ。イメチェン・恋愛・お仕事に大人気です。</p>
+        <p class="note-s"><a href="mens.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
         <div class="meta">
           <span class="price">¥16,500<small>（税込）</small></span>
           <span class="time">約60分</span>
@@ -409,15 +412,117 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
         <span class="catch">似合うを身につけよう</span>
         <h3>ショッピング同行</h3>
         <p>おすすめのショップを巡りながら、実際に試着しつつ「本当に似合うアイテム」を一緒に選んでいきます。</p>
-        <p class="reco">診断後の迷いがなくなり、自信を持って日常を楽しめるように。診断結果を実際のファッションに落とし込みたい方に◎</p>
+        <p class="note-s"><a href="shopping.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
         <div class="meta">
           <span class="price">¥16,500<small>（税込）</small></span>
           <span class="time">約90分</span>
         </div>
       </div>
 
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/glasses-display.jpg" alt="似合うメガネを選ぶ顔タイプメガネ診断"></div>
+        <span class="catch">オプション ／ 女性限定</span>
+        <h3>顔タイプメガネ診断</h3>
+        <p>顔タイプの特徴をもとに、あなたの魅力が引き立つメガネをご提案します。普段使いのメガネ選びやイメチェンにもぴったり。</p>
+        <p class="note-s">※顔タイプ診断を受けた方向けのオプションメニューです（女性のみ）。<br><a href="glasses.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥8,800<small>（税込）</small></span>
+          <span class="time">約60分</span>
+        </div>
+      </div>
+
     </div>
     <p class="menu-note">※表示はすべて税込価格です。</p>
+    </div><!-- /外見メニュー -->
+
+    <!-- ② 内面メニュー -->
+    <div class="menu-panel" id="tab-inner">
+    <div class="menu-grid">
+
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/seed.jpg?v=2" alt="パーソナルシードのキャラクター"></div>
+        <span class="catch">内面から整える</span>
+        <h3>パーソナルシード</h3>
+        <p>あなたが生まれ持った本質や個性の“種”を見つめ、自分らしさを育てていく内面のセッションです。</p>
+        <p class="note-s"><a href="personal-seed.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥14,300<small>（税込）</small></span>
+          <span class="time">約60分</span>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/shuhi.jpg" alt="数秘＆カラーのナンバーカード"></div>
+        <span class="catch">内面から整える</span>
+        <h3>数秘＆カラー</h3>
+        <p>生年月日から導く数秘と色で、あなたの本質や強みをひも解きます。自分らしさを知り、毎日をもっと前向きに。</p>
+        <p class="note-s"><a href="shuhi.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥14,300<small>（税込）</small></span>
+          <span class="time">約90分</span>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/birthflower.jpg?v=2" alt="誕生花のキューブと花壇" style="object-position:center 80%"></div>
+        <span class="catch">内面から整える</span>
+        <h3>誕生花セラピー</h3>
+        <p>誕生花が持つ意味やメッセージを通して、あなたの心にそっと寄り添うセラピー。自分を大切にするきっかけに。</p>
+        <p class="note-s"><a href="birthflower.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥14,300<small>（税込）</small></span>
+          <span class="time">約90分</span>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="card-img" style="background:#fff"><img src="img/tentai.jpg" alt="天体色数のカラーチャート" style="object-fit:contain"></div>
+        <span class="catch">内面から整える</span>
+        <h3>天体色数</h3>
+        <p>生まれ持った星と色・数のメッセージから、あなたの個性やこれからの運びを読み解く内面のセッションです。</p>
+        <p class="note-s"><a href="tentai-shikisu.html" style="color:var(--accent-dk);font-weight:500">詳しく見る →</a></p>
+        <div class="meta">
+          <span class="price">¥14,300<small>（税込）</small></span>
+          <span class="time">約90分</span>
+        </div>
+      </div>
+
+    </div>
+    <p class="menu-note">※表示はすべて税込価格です。</p>
+    </div><!-- /内面メニュー -->
+
+    <!-- ③ 健康メニュー -->
+    <div class="menu-panel" id="tab-health">
+    <div class="menu-grid">
+
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/coming-soon.svg" alt="かっさセラピー（写真準備中）"></div>
+        <span class="catch">からだを整える</span>
+        <h3>かっさセラピー</h3>
+        <p>かっさプレートで巡りを促し、むくみや疲れをすっきりと。お顔まわりやデコルテを心地よくケアします。</p>
+        <p class="note-s">※内容・料金は調整中です。</p>
+        <div class="meta">
+          <span class="price">調整中</span>
+          <span class="time">お問い合わせ</span>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="card-img"><img src="img/coming-soon.svg" alt="PEMF×テラヘルツ搭載機器（写真準備中）"></div>
+        <span class="catch">からだを整える</span>
+        <h3>PEMF × テラヘルツ搭載機器</h3>
+        <p>PEMF（パルス電磁場）とテラヘルツを搭載した機器で、心身のリラックスとコンディショニングをサポートします。</p>
+        <p class="note-s">※内容・料金は調整中です。</p>
+        <div class="meta">
+          <span class="price">調整中</span>
+          <span class="time">お問い合わせ</span>
+        </div>
+      </div>
+
+    </div>
+    <p class="menu-note">※健康メニューは内容を準備中です。最新情報はお問い合わせください。</p>
+    </div><!-- /健康メニュー -->
+
   </div>
 </section>
 
@@ -558,6 +663,19 @@ addEventListener('scroll', () => {
 const nav = document.getElementById('nav');
 document.getElementById('menuBtn').addEventListener('click', () => nav.classList.toggle('open'));
 nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+/* メニューのカテゴリタブ切り替え（外見・内面・健康） */
+document.querySelectorAll('.menu-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.getElementById('tab-' + tab.dataset.tab);
+    panel.classList.add('active');
+    /* 非表示中はふわっと表示が効かないので、開いたパネルのカードは即表示にする */
+    panel.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  });
+});
 
 /* スクロールで要素をふわっと表示 */
 const io = new IntersectionObserver((entries) => {
