@@ -441,6 +441,10 @@ async function submitReservation(){
     btn.disabled=false; btn.textContent='この内容で予約する';
     return;
   }
+  // お店のLINEへ新規予約を通知（失敗しても予約自体には影響させない）
+  fetch('/api/notify-booking',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({kind:'new',date:r.date,time:r.time,name:r.name,first:r.first,menu_name:r.menu_name,tel:r.tel,note:r.note})
+  }).catch(()=>{});
   document.getElementById('doneMsg').innerHTML=
     `${r.date.replace(/-/g,'/')}（${WD[new Date(r.date).getDay()]}）${r.time}〜<br>「${r.menu_name}」のご予約を承りました。<br><br>※確認のご連絡を差し上げます。お電話が繋がらない場合もご安心ください。`;
   goStep(5);
