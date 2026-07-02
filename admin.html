@@ -156,6 +156,20 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
   </div>
 </div>
 
+<!-- パスワード再設定画面（メールのリンクから来た時だけ表示） -->
+<div class="login-screen" id="resetScreen" style="display:none">
+  <div class="login-card">
+    <h2>新しいパスワードの設定</h2>
+    <p>新しく使うパスワードを入力してください。</p>
+    <form id="resetForm" onsubmit="return doResetPassword(event)">
+      <label>新しいパスワード（6文字以上）</label>
+      <input id="resetPass" type="password" autocomplete="new-password" required minlength="6" placeholder="••••••••">
+      <button type="submit" id="resetBtn">パスワードを変更する</button>
+      <div class="login-err" id="resetErr"></div>
+    </form>
+  </div>
+</div>
+
 <!-- 管理アプリ本体 -->
 <div id="app">
 <div class="wrap">
@@ -252,6 +266,21 @@ async function doLogin(e){
   showApp(); return false;
 }
 async function doLogout(){ await sb.auth.signOut(); location.reload(); }
+
+/* ===== パスワード再設定（メールのリンクから来た時） ===== */
+async function doResetPassword(e){
+  e.preventDefault();
+  const btn=document.getElementById('resetBtn'), err=document.getElementById('resetErr');
+  btn.disabled=true; btn.textContent='変更中…'; err.textContent='';
+  const {error}=await sb.auth.updateUser({password:document.getElementById('resetPass').value});
+  btn.disabled=false; btn.textContent='パスワードを変更する';
+  if(error){ err.textContent='変更できませんでした。もう一度リンクを送り直してお試しください。'; return false; }
+  alert('パスワードを変更しました。このまま管理ページに入ります。');
+  history.replaceState(null,'',location.pathname);
+  document.getElementById('resetScreen').style.display='none';
+  showApp();
+  return false;
+}
 
 async function showApp(){
   document.getElementById('loginScreen').style.display='none';
@@ -425,9 +454,15 @@ async function clearAll(){
 }
 
 /* ===== 起動時：ログイン状態を確認 ===== */
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='PASSWORD_RECOVERY'){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('resetScreen').style.display='flex';
+  }
+});
 (async function init(){
   const {data:{session}}=await sb.auth.getSession();
-  if(session) showApp();
+  if(session && !location.hash.includes('type=recovery')) showApp();
 })();
 </script>
 </body>
