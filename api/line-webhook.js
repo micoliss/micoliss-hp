@@ -21,5 +21,32 @@ module.exports = async (req, res) => {
       });
     } catch (_) { /* 保存に失敗してもLINEには200を返す（再送ループ防止） */ }
   }
+
+  // 「ID確認」と送られてきたら、その人自身のLINEユーザーIDを返信する（設定用）
+  for (const ev of events) {
+    if (ev.type === 'message' && ev.message && ev.message.type === 'text'
+        && ev.message.text.trim() === 'ID確認' && ev.replyToken) {
+      try {
+        const tr = await fetch('https://api.line.me/oauth2/v3/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            grant_type: 'client_credentials',
+            client_id: process.env.LINE_CHANNEL_ID,
+            client_secret: process.env.LINE_CHANNEL_SECRET,
+          }),
+        });
+        const token = (await tr.json()).access_token;
+        await fetch('https://api.line.me/v2/bot/message/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            replyToken: ev.replyToken,
+            messages: [{ type: 'text', text: `あなたのユーザーIDは\n${ev.source.userId}\nです。` }],
+          }),
+        });
+      } catch (_) {}
+    }
+  }
   res.status(200).send('ok');
 };
