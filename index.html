@@ -293,6 +293,9 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 .flow-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .flow-panel{display:none}
 .flow-panel.active{display:block;animation:fadeUp .4s ease}
+.flow-steps.three{grid-template-columns:repeat(3,1fr);max-width:840px;margin-inline:auto}
+@media(max-width:860px){.flow-steps.three{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.flow-steps.three{grid-template-columns:1fr}}
 
 /* =================== お客様の声 =================== */
 .voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px}
@@ -634,24 +637,18 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
     <!-- 内面メニューの流れ -->
     <div class="flow-panel" id="flow-inner">
-      <div class="flow-steps">
+      <div class="flow-steps three">
         <div class="flow-step reveal">
           <span class="num"></span>
           <div class="ic">🗓️</div>
           <h3>ご予約</h3>
-          <p>ネット予約で希望のメニューと日時を選択。ご不明点はLINEでもお気軽に。</p>
-        </div>
-        <div class="flow-step reveal">
-          <span class="num"></span>
-          <div class="ic">💬</div>
-          <h3>カウンセリング</h3>
-          <p>気になっていることや今の想い、テーマを丁寧にお伺いします。</p>
+          <p>ネット予約で、お悩みやテーマに合ったメニューをお選びいただけます。ご不明点はLINEでもお気軽に。</p>
         </div>
         <div class="flow-step reveal">
           <span class="num"></span>
           <div class="ic">✨</div>
           <h3>セッション・読み解き</h3>
-          <p>数秘・誕生花・天体色数などから、あなたの本質や強みを読み解きます。</p>
+          <p>数秘・誕生花・天体色数・パーソナルシードなどから、あなたの本質や強みを読み解きます。</p>
         </div>
         <div class="flow-step reveal">
           <span class="num"></span>
