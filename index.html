@@ -84,6 +84,11 @@ header.scrolled .brand-logo{height:38px}
 nav ul{display:flex;gap:clamp(16px,2.6vw,34px);list-style:none;align-items:center}
 nav a{font-size:.82rem;letter-spacing:.1em;color:var(--ink-soft);transition:color .25s}
 nav a:hover{color:var(--accent-dk)}
+/* ナビ：ホバーで英語→日本語に切替（幅を保ったまま重ねて表示） */
+.nav-swap{position:relative}
+.nav-swap::after{content:attr(data-jp);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity .25s;white-space:nowrap;color:var(--accent-dk);font-size:.82rem;letter-spacing:.06em}
+.nav-swap:hover{color:transparent}
+.nav-swap:hover::after{opacity:1}
 .nav-cta{
   background:var(--accent);color:#fff;padding:9px 20px;border-radius:999px;
   font-size:.8rem;letter-spacing:.08em;transition:background .25s;
@@ -349,10 +354,11 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   <nav id="nav">
     <button class="menu-btn" id="menuBtn" aria-label="メニュー">☰</button>
     <ul>
-      <li><a href="#concept">Concept</a></li>
-      <li><a href="#menu">Menu</a></li>
-      <li><a href="#staff">Staff</a></li>
-      <li><a href="#access">Access</a></li>
+      <li><a href="#concept" class="nav-swap" data-jp="コンセプト">Concept</a></li>
+      <li><a href="#menu" class="nav-swap" data-jp="メニュー">Menu</a></li>
+      <li><a href="#staff" class="nav-swap" data-jp="スタッフ">Staff</a></li>
+      <li><a href="#gallery" class="nav-swap" data-jp="ギャラリー">Gallery</a></li>
+      <li><a href="#access" class="nav-swap" data-jp="アクセス">Access</a></li>
       <li><a href="#reserve" class="nav-cta">ご予約</a></li>
     </ul>
   </nav>
