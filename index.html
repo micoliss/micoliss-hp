@@ -286,6 +286,13 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 .flow-step:not(:last-child)::after{content:"→";position:absolute;top:50%;right:-15px;transform:translateY(-50%);color:var(--accent);font-size:1.05rem;z-index:2}
 @media(max-width:860px){.flow-steps{grid-template-columns:1fr 1fr}.flow-step:not(:last-child)::after{display:none}}
 @media(max-width:480px){.flow-steps{grid-template-columns:1fr}}
+/* 流れの外見／内面タブ */
+.flow-tabs{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:0 0 34px}
+.flow-tab{font-family:var(--serif);font-size:1rem;letter-spacing:.06em;color:var(--ink-soft);background:var(--white);border:1px solid var(--line);border-radius:999px;padding:11px 26px;cursor:pointer;transition:all .25s;line-height:1}
+.flow-tab:hover{border-color:var(--accent);color:var(--ink)}
+.flow-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-panel{display:none}
+.flow-panel.active{display:block;animation:fadeUp .4s ease}
 
 /* =================== お客様の声 =================== */
 .voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px}
@@ -589,30 +596,69 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       <span class="en">Flow</span>
       <h2>ご予約から当日までの流れ<small>はじめての方も安心。当日はリラックスしてお越しください。</small></h2>
     </div>
-    <div class="flow-steps">
-      <div class="flow-step reveal">
-        <span class="num"></span>
-        <div class="ic">🗓️</div>
-        <h3>ご予約</h3>
-        <p>ネット予約で希望のメニューと日時を選択。ご不明点はLINEでもお気軽に。</p>
+    <!-- 外見／内面 切替タブ -->
+    <div class="flow-tabs reveal">
+      <button class="flow-tab active" data-flow="look">外見メニューの流れ</button>
+      <button class="flow-tab" data-flow="inner">内面メニューの流れ</button>
+    </div>
+
+    <!-- 外見メニューの流れ -->
+    <div class="flow-panel active" id="flow-look">
+      <div class="flow-steps">
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🗓️</div>
+          <h3>ご予約</h3>
+          <p>ネット予約で希望のメニューと日時を選択。ご不明点はLINEでもお気軽に。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">💬</div>
+          <h3>カウンセリング</h3>
+          <p>お悩みやなりたいイメージ、ライフスタイルを丁寧にヒアリングします。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🎨</div>
+          <h3>診断・ご提案</h3>
+          <p>カラードレープなどで診断し、似合う色・形・スタイルを具体的にご提案します。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🛍️</div>
+          <h3>お買い物・活用へ</h3>
+          <p>ショッピング同行やメイクで、「似合う」を毎日の装いに活かせます。</p>
+        </div>
       </div>
-      <div class="flow-step reveal">
-        <span class="num"></span>
-        <div class="ic">💬</div>
-        <h3>カウンセリング</h3>
-        <p>お悩みやなりたいイメージ、ライフスタイルを丁寧にヒアリングします。</p>
-      </div>
-      <div class="flow-step reveal">
-        <span class="num"></span>
-        <div class="ic">✨</div>
-        <h3>診断・ご提案</h3>
-        <p>メニューに合わせて診断・セッションを行い、明日から活かせる具体的なご提案をお伝えします。</p>
-      </div>
-      <div class="flow-step reveal">
-        <span class="num"></span>
-        <div class="ic">📄</div>
-        <h3>アフターフォロー</h3>
-        <p>診断結果はお持ち帰りOK。迷ったときはいつでもご相談いただけます。</p>
+    </div>
+
+    <!-- 内面メニューの流れ -->
+    <div class="flow-panel" id="flow-inner">
+      <div class="flow-steps">
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🗓️</div>
+          <h3>ご予約</h3>
+          <p>ネット予約で希望のメニューと日時を選択。ご不明点はLINEでもお気軽に。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">💬</div>
+          <h3>カウンセリング</h3>
+          <p>気になっていることや今の想い、テーマを丁寧にお伺いします。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">✨</div>
+          <h3>セッション・読み解き</h3>
+          <p>数秘・誕生花・天体色数などから、あなたの本質や強みを読み解きます。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🎓</div>
+          <h3>講座・レッスンへ</h3>
+          <p>もっと深めたい方へ。講座・レッスンで、学びをさらに広げていけます。</p>
+        </div>
       </div>
     </div>
   </div>
@@ -896,6 +942,18 @@ document.querySelectorAll('.menu-tab').forEach(tab => {
     const panel = document.getElementById('tab-' + tab.dataset.tab);
     panel.classList.add('active');
     /* 非表示中はふわっと表示が効かないので、開いたパネルのカードは即表示にする */
+    panel.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  });
+});
+
+/* 診断の流れ：外見／内面タブ切り替え */
+document.querySelectorAll('.flow-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.flow-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.flow-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.getElementById('flow-' + tab.dataset.flow);
+    panel.classList.add('active');
     panel.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   });
 });
