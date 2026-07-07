@@ -201,6 +201,19 @@ nav a:hover{color:var(--accent-dk)}
 .gallery-grid figure span{position:relative;z-index:2;padding:16px;font-size:.82rem;letter-spacing:.08em}
 .gallery-grid figure::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(transparent 45%,rgba(0,0,0,.45))}
 .gallery-note{text-align:center;color:var(--ink-soft);font-size:.8rem;margin-top:22px}
+.gallery-grid figure{cursor:pointer}
+.gallery-grid figure .count{position:absolute;top:10px;right:10px;z-index:3;font-size:.72rem;letter-spacing:.04em;color:#fff;background:rgba(0,0,0,.42);padding:4px 11px;border-radius:999px;font-style:normal;backdrop-filter:blur(2px)}
+/* ライトボックス（拡大ビューア） */
+.lb{position:fixed;inset:0;z-index:200;background:rgba(28,24,20,.94);display:none;align-items:center;justify-content:center;padding:24px}
+.lb.open{display:flex}
+.lb img{max-width:92vw;max-height:80vh;border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+.lb-cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-size:1rem;letter-spacing:.1em;font-family:var(--serif)}
+.lb-count{position:absolute;top:20px;left:24px;color:#fff;font-size:.85rem;opacity:.75;letter-spacing:.12em}
+.lb-close{position:absolute;top:12px;right:18px;color:#fff;font-size:2.2rem;line-height:1;background:none;border:0;cursor:pointer;opacity:.85}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:2.6rem;line-height:1;background:none;border:0;cursor:pointer;opacity:.8;padding:12px 18px;user-select:none}
+.lb-nav:hover,.lb-close:hover{opacity:1}
+.lb-prev{left:6px}.lb-next{right:6px}
+@media(max-width:600px){.lb-nav{font-size:2rem;padding:8px 8px}.lb img{max-height:74vh}}
 
 /* =================== スタッフ =================== */
 .staff-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:center}
@@ -234,6 +247,11 @@ nav a:hover{color:var(--accent-dk)}
 .btn-ig:hover{filter:brightness(1.05);transform:translateY(-2px)}
 .btn-web{background:var(--accent);color:#fff}
 .btn-web:hover{background:var(--accent-dk);transform:translateY(-2px)}
+.btn-hp{background:#ff5a3c;color:#fff}
+.btn-hp:hover{background:#e8492c;transform:translateY(-2px)}
+.reserve-sns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:26px}
+.reserve-sns .btn{min-width:250px;justify-content:center}
+.reserve-sns .lead{width:100%;text-align:center;color:var(--ink-soft);font-size:.85rem;margin-bottom:2px}
 
 /* =================== アクセス / 営業時間 =================== */
 .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
@@ -255,6 +273,43 @@ footer .f-sns{display:flex;gap:20px;justify-content:center;margin-bottom:30px}
 footer .f-sns a{font-size:.85rem;color:#e9e3d8;border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .25s}
 footer .f-sns a:hover{border-color:var(--accent)}
 footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
+
+/* =================== 診断の流れ =================== */
+.flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:step}
+.flow-step{position:relative;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:34px 22px 28px;text-align:center;transition:transform .3s,box-shadow .3s}
+.flow-step:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.flow-step .num{counter-increment:step;font-family:var(--en);font-size:.95rem;letter-spacing:.16em;color:var(--accent);display:inline-block;margin-bottom:12px}
+.flow-step .num::before{content:"STEP " counter(step,decimal-leading-zero)}
+.flow-step .ic{font-size:1.9rem;margin-bottom:12px}
+.flow-step h3{font-family:var(--serif);font-weight:500;font-size:1.1rem;margin-bottom:10px;letter-spacing:.04em}
+.flow-step p{color:var(--ink-soft);font-size:.85rem;line-height:1.75}
+.flow-step:not(:last-child)::after{content:"→";position:absolute;top:50%;right:-15px;transform:translateY(-50%);color:var(--accent);font-size:1.05rem;z-index:2}
+@media(max-width:860px){.flow-steps{grid-template-columns:1fr 1fr}.flow-step:not(:last-child)::after{display:none}}
+@media(max-width:480px){.flow-steps{grid-template-columns:1fr}}
+
+/* =================== お客様の声 =================== */
+.voice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:24px}
+.voice-card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:32px 30px;position:relative;transition:transform .3s,box-shadow .3s}
+.voice-card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.voice-card::before{content:"\201C";position:absolute;top:12px;right:24px;font-family:var(--en);font-size:3.4rem;color:var(--line);line-height:1}
+.voice-card .stars{color:var(--accent);letter-spacing:.16em;font-size:.9rem;margin-bottom:14px}
+.voice-card .txt{color:var(--ink);font-size:.92rem;line-height:1.95;margin-bottom:20px}
+.voice-card .who{display:flex;align-items:center;gap:12px;border-top:1px dashed var(--line);padding-top:16px}
+.voice-card .ava{width:40px;height:40px;border-radius:50%;background:var(--bg-soft);display:flex;align-items:center;justify-content:center;font-family:var(--serif);color:var(--accent-dk);font-size:1rem;flex:none}
+.voice-card .who b{font-weight:500;font-size:.86rem;display:block;line-height:1.4}
+.voice-card .who span{font-size:.76rem;color:var(--ink-soft)}
+
+/* =================== よくある質問 =================== */
+.faq-list{max-width:760px;margin-inline:auto;display:grid;gap:14px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:14px;font-size:.95rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 24px 22px 56px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+@media(max-width:480px){.faq-item .a{padding-left:24px}}
 
 /* =================== スクロール演出 =================== */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
@@ -527,6 +582,42 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   </div>
 </section>
 
+<!-- ===================== 診断の流れ ===================== -->
+<section class="flow" id="flow" style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="en">Flow</span>
+      <h2>ご予約から当日までの流れ<small>はじめての方も安心。当日はリラックスしてお越しください。</small></h2>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step reveal">
+        <span class="num"></span>
+        <div class="ic">🗓️</div>
+        <h3>ご予約</h3>
+        <p>ネット予約で希望のメニューと日時を選択。ご不明点はLINEでもお気軽に。</p>
+      </div>
+      <div class="flow-step reveal">
+        <span class="num"></span>
+        <div class="ic">💬</div>
+        <h3>カウンセリング</h3>
+        <p>お悩みやなりたいイメージ、ライフスタイルを丁寧にヒアリングします。</p>
+      </div>
+      <div class="flow-step reveal">
+        <span class="num"></span>
+        <div class="ic">🎨</div>
+        <h3>診断・ご提案</h3>
+        <p>カラードレープなどで診断し、明日から使える具体的な提案をお伝えします。</p>
+      </div>
+      <div class="flow-step reveal">
+        <span class="num"></span>
+        <div class="ic">📄</div>
+        <h3>アフターフォロー</h3>
+        <p>診断結果はお持ち帰りOK。迷ったときはいつでもご相談いただけます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== スタッフ ===================== -->
 <section class="staff" id="staff">
   <div class="container">
@@ -562,6 +653,82 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   </div>
 </section>
 
+<!-- ===================== ギャラリー ===================== -->
+<section class="gallery" id="gallery">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="en">Gallery</span>
+      <h2>サロンの様子<small>ゆっくり過ごせる、完全予約制のプライベート空間です。</small></h2>
+    </div>
+    <div class="gallery-grid reveal">
+      <figure data-imgs="img/exterior.jpg|外観（赤い壁の建物・駐車場あり）;;img/p01_entrance.jpg|入口・エントランス">
+        <img src="img/exterior.jpg" alt="サロン外観（赤レンガの建物）"><span>外観・入口</span><em class="count">📷 2枚</em>
+      </figure>
+      <figure data-imgs="img/p02_reception.jpg|受付・エントランス;;img/salon-real.jpg|診断スペース（店内）">
+        <img src="img/p02_reception.jpg" alt="サロンの受付・内装"><span>受付・内装</span><em class="count">📷 2枚</em>
+      </figure>
+      <figure data-imgs="img/p11_drape_spring.jpg|SPRING（春）;;img/p14_drape_summer.jpg|SUMMER（夏）;;img/p15_drape_autumn.jpg|AUTUMN（秋）;;img/p12_drape_winter.jpg|WINTER（冬）;;img/p13_drape_sign.jpg|カラードレープ一式">
+        <img src="img/p11_drape_spring.jpg" alt="パーソナルカラーのカラードレープ 4シーズン"><span>カラードレープ（4シーズン）</span><em class="count">📷 5枚</em>
+      </figure>
+      <figure data-imgs="img/p06_staff_chart.jpg|4シーズンで診断;;img/p18_mirror2.jpg|ドレープでの似合わせ・鏡チェック;;img/p19_makeup2.jpg|メイクポーチ診断">
+        <img src="img/p06_staff_chart.jpg" alt="パーソナルカラー診断・メイクの様子"><span>診断・メイクの様子</span><em class="count">📷 3枚</em>
+      </figure>
+      <figure data-imgs="img/menu-tentai.jpg|天体色数;;img/menu-birth.jpg|誕生花セラピー;;img/menu-shuhi.jpg|数秘＆カラー;;img/menu-seed.jpg|パーソナルシード">
+        <img src="img/menu-inner.jpg" alt="内面メニュー（天体色数・誕生花・数秘＆カラー・パーソナルシード）"><span>内面メニュー</span><em class="count">📷 4枚</em>
+      </figure>
+      <figure data-imgs="img/session-real.jpg|かっさセラピー;;img/menu-health.jpg|健康機器（PEMF・テラヘルツ 他）">
+        <img src="img/session-real.jpg" alt="かっさセラピー・健康メニュー"><span>健康メニュー（かっさ 他）</span><em class="count">📷 2枚</em>
+      </figure>
+    </div>
+    <p class="gallery-note">新潟市西区・完全予約制のプライベートサロン。赤い壁の建物・駐車場ありが目印です。</p>
+  </div>
+</section>
+
+<!-- ===================== お客様の声 ===================== -->
+<section class="voice" id="voice">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="en">Voice</span>
+      <h2>お客様の声<small>診断を受けてくださった皆さまから届いた声をご紹介します。</small></h2>
+    </div>
+    <div class="voice-grid">
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">以前から自分の骨格とパーソナルカラーが気になり、今回診断をしてもらいました！骨格もパーソナルカラーも、自己診断と若干異なっていたので、新しい発見ができて面白かったです！様々な色を使って見てくれるので、正確な診断で安心しました。</p>
+        <div class="who"><span class="ava">も</span><div><b>もちゃん さん</b><span>20代 女性 ／ パーソナルカラー・骨格診断</span></div></div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">わかりやすく論理的に説明してくださり、とてもよかったです。なんとなくスタッフさんのセンスで結局いい悪いが決まるのではないかと思っていた部分がありましたが、理由を言語化してもらうととても納得ができました！</p>
+        <div class="who"><span class="ava">ヒ</span><div><b>ヒロ さん</b><span>30代 男性 ／ メンズパーソナルカラー診断</span></div></div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">来年結婚式も控えていて、ドレス選びで似合うものが知りたいと思い予約しました。顔タイプのウェディングコースは、似合うドレススタイルや髪型、小物関係も細かく教えてもらえて大満足です。次ドレスショップに伺うのが楽しみになりました。</p>
+        <div class="who"><span class="ava">シ</span><div><b>シフォンケーキ さん</b><span>20代 女性 ／ ブライダル（顔タイプウェディング）</span></div></div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">似合うものは勿論、こちらのライフスタイルや好みも考慮して選んでいただけたことが何より嬉しかったです。おかげさまで、10年ぶりにデニムを購入することができました。とても楽しく、濃密な時間で90分はあっという間でした。</p>
+        <div class="who"><span class="ava">し</span><div><b>しば さん</b><span>40代 女性 ／ ショッピング同行</span></div></div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">ベーシックなカラーの服ばかり着ていた私にとって、パーソナルカラー診断は新しい自分の発見になりました。担当スタッフさんが身近になって楽しくお話してくださって、とても楽しい時間を過ごすことができました。</p>
+        <div class="who"><span class="ava">ち</span><div><b>ちぃ さん</b><span>30代 女性 ／ トータルプロデュースコース</span></div></div>
+      </div>
+      <div class="voice-card reveal">
+        <div class="stars">★★★★★</div>
+        <p class="txt">初めてパーソナルカラーと骨格診断を受けました。苦手な色、得意な色と骨格を知ることで選択しやすくなり、買い物がより楽しくなりました。会社の人から服の色を褒めてもらえました！ありがとうございました！</p>
+        <div class="who"><span class="ava">し</span><div><b>しゃけ さん</b><span>20代 女性 ／ パーソナルカラー・骨格診断</span></div></div>
+      </div>
+    </div>
+    <p class="menu-note">
+      ※<a href="https://beauty.hotpepper.jp/kr/slnH000723861/review/" target="_blank" rel="noopener" style="color:var(--accent-dk)">HotPepper Beauty</a> に実際に投稿いただいたお客様の口コミです（個人の感想であり、効果を保証するものではありません）。
+    </p>
+  </div>
+</section>
+
 <!-- ===================== 予約 ===================== -->
 <section class="reserve" id="reserve">
   <div class="container">
@@ -579,6 +746,14 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
         <a href="reserve.html" class="btn btn-web">ネット予約をはじめる →</a>
       </div>
 
+    </div>
+
+    <!-- SNS・各種予約ボタン -->
+    <div class="reserve-sns reveal">
+      <p class="lead">LINE・HotPepper・Instagram からもどうぞ</p>
+      <a href="https://line.me/R/ti/p/@967tawyw?ts=12161705&oat_content=url" target="_blank" rel="noopener" class="btn btn-line">💬 Seed of Color -Micoliss- 公式LINEはこちら</a>
+      <a href="https://beauty.hotpepper.jp/kr/slnH000723861/" target="_blank" rel="noopener" class="btn btn-hp">📖 HotPepper Beautyで予約</a>
+      <a href="https://www.instagram.com/seed.of.color.micoliss/" target="_blank" rel="noopener" class="btn btn-ig">📷 Instagramを見る</a>
     </div>
   </div>
 </section>
@@ -598,7 +773,16 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
           <li><span class="lbl">ご予約</span><span>完全予約制（個室／お子さま同伴可・1人貸切OK）</span></li>
           <li><span class="lbl">メニュー</span><span>パーソナルカラー・骨格・顔タイプ診断／かっさセラピー／ブライダル</span></li>
         </ul>
-        <a href="https://www.google.com/maps/search/?api=1&query=新潟県新潟市西区小新西3丁目6-3" class="map-box" target="_blank" rel="noopener" style="margin-top:24px;text-decoration:none">📍 Googleマップで見る（新潟市西区小新西3-6-3）</a>
+        <div class="map-box" style="margin-top:24px;padding:0;overflow:hidden;background:none">
+          <iframe
+            src="https://maps.google.com/maps?q=Seed+of+Color-Micoliss-+%E6%96%B0%E6%BD%9F%E5%B8%82%E8%A5%BF%E5%8C%BA%E5%B0%8F%E6%96%B0%E8%A5%BF3%E4%B8%81%E7%9B%AE6-3&z=17&hl=ja&output=embed"
+            width="100%" height="100%" style="border:0;display:block"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            title="Seed of Color -Micoliss- の地図"></iframe>
+        </div>
+        <p style="text-align:center;margin-top:12px">
+          <a href="https://www.google.com/maps/search/?api=1&query=Seed+of+Color-Micoliss-+新潟市西区小新西3丁目6-3" target="_blank" rel="noopener" style="color:var(--accent-dk);font-size:.82rem;letter-spacing:.04em">📍 Googleマップで「Seed of Color -Micoliss-」を開く →</a>
+        </p>
       </div>
       <div class="reveal">
         <table class="hours-table">
@@ -622,6 +806,24 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   </div>
 </section>
 
+<!-- ===================== よくある質問 ===================== -->
+<section class="faq" id="faq" style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="en">FAQ</span>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="faq-list reveal">
+      <details class="faq-item"><summary><span class="q">Q</span>初めてでも大丈夫？<span class="ar">⌄</span></summary><div class="a">はい、ご来店の多くが初めての方です。専門用語を並べるよりも「話しやすさ・安心感」を大切にしていますので、知識がなくてもご安心ください。手ぶらでお越しいただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>店舗アクセスについて<span class="ar">⌄</span></summary><div class="a">新潟県新潟市西区小新西3丁目6-3。小針駅から車で約8分、バス停「工業高校入り口」の目の前です。赤い壁の建物・駐車場ありが目印。詳しくは下のアクセス欄の地図をご覧ください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>所要時間について<span class="ar">⌄</span></summary><div class="a">メニューによって異なり、約60〜150分です（顔タイプ診断・メンズ約60分／ベーシック約90分／トータルプロデュース約150分 など）。ご予約時にメニューをお選びいただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>家族や友達と一緒に受けられますか？<span class="ar">⌄</span></summary><div class="a">はい、1人貸切の個室なので、ご家族・ご友人とご一緒でも大丈夫です。お子さま同伴もOK。周りを気にせずゆっくりお過ごしいただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>支払い方法は何がある？<span class="ar">⌄</span></summary><div class="a">現金のほか各種キャッシュレス決済に対応しています。ポイントのご利用も可能です。詳しくはご予約時にお問い合わせください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>男性でも受けられますか？<span class="ar">⌄</span></summary><div class="a">もちろん受けられます。メンズパーソナルカラー診断をはじめ、男性のお客様も多くご来店いただいています。※顔タイプ診断は女性限定です。</div></details>
+    </div>
+  </div>
+</section>
+
 <!-- ===================== フッター ===================== -->
 <footer>
   <div class="container">
@@ -635,7 +837,45 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   </div>
 </footer>
 
+<!-- ===================== ライトボックス（拡大ビューア） ===================== -->
+<div class="lb" id="lightbox" aria-hidden="true">
+  <span class="lb-count" id="lbCount"></span>
+  <button class="lb-close" id="lbClose" aria-label="閉じる">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="前へ">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-nav lb-next" id="lbNext" aria-label="次へ">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
 <script>
+/* ギャラリー：タップで拡大＆グループ内を順に表示 */
+(function(){
+  const lb=document.getElementById('lightbox');
+  const lbImg=document.getElementById('lbImg'), lbCap=document.getElementById('lbCap'), lbCount=document.getElementById('lbCount');
+  let items=[], idx=0;
+  function show(i){idx=(i+items.length)%items.length;lbImg.src=items[idx].src;lbImg.alt=items[idx].cap;lbCap.textContent=items[idx].cap;lbCount.textContent=items.length>1?(idx+1)+' / '+items.length:'';}
+  function open(list,start){items=list;show(start||0);lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+  function close(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  document.querySelectorAll('.gallery-grid figure').forEach(fig=>{
+    fig.addEventListener('click',()=>{
+      const data=fig.getAttribute('data-imgs');
+      let list;
+      if(data){list=data.split(';;').map(s=>{const[src,cap]=s.split('|');return{src,cap:cap||''};});}
+      else{const im=fig.querySelector('img');list=[{src:im.src,cap:(fig.querySelector('span')||{}).textContent||''}];}
+      open(list,0);
+    });
+  });
+  document.getElementById('lbClose').addEventListener('click',close);
+  document.getElementById('lbPrev').addEventListener('click',e=>{e.stopPropagation();show(idx-1);});
+  document.getElementById('lbNext').addEventListener('click',e=>{e.stopPropagation();show(idx+1);});
+  lb.addEventListener('click',e=>{if(e.target===lb)close();});
+  document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')close();else if(e.key==='ArrowLeft')show(idx-1);else if(e.key==='ArrowRight')show(idx+1);});
+  /* スマホ：スワイプで前後 */
+  let x0=null;
+  lb.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)show(idx+(dx<0?1:-1));x0=null;});
+})();
+
 /* ヘッダー：スクロールで罫線表示 */
 const header = document.getElementById('header');
 addEventListener('scroll', () => {
