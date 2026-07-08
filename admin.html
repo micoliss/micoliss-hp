@@ -135,6 +135,10 @@ table.cal{border-collapse:collapse;width:100%;min-width:620px;font-size:.8rem}
 table.cal th,table.cal td{border:1px solid var(--line);text-align:center;padding:7px 4px;white-space:nowrap}
 table.cal thead th{background:var(--bg-soft);font-weight:400;color:var(--ink-soft)}
 table.cal thead th.sat{color:#6f86b8}table.cal thead th.sun{color:var(--ng)}
+.day-btn{margin-top:5px;border:1px solid var(--line);background:#fff;color:var(--ink-soft);border-radius:7px;padding:3px 8px;font-family:var(--sans);font-size:.68rem;cursor:pointer;white-space:nowrap}
+.day-btn:hover{background:#f6e6e6;color:#a85b5b;border-color:#e6c4c4}
+.day-btn.reopen{background:#eef3ee;color:#4a7a4a;border-color:#cfe0cf}
+.day-btn.reopen:hover{background:#e0ece0}
 table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:var(--en)}
 .cell{cursor:pointer;font-size:.95rem;line-height:1;display:block;border-radius:6px;padding:3px 0}
 .cell.open{color:var(--ok)}
@@ -638,7 +642,15 @@ function renderCal(){
   const today=new Date();today.setHours(0,0,0,0);
   document.getElementById('prevWeek').disabled=weekStart<=today;
   const booked=bookedMap();
-  let head='<thead><tr><th></th>'+days.map(d=>{const c=d.getDay()===0?'sun':d.getDay()===6?'sat':'';return `<th class="${c}">${d.getMonth()+1}/${d.getDate()}<br>(${WD[d.getDay()]})</th>`;}).join('')+'</tr></thead>';
+  let head='<thead><tr><th></th>'+days.map(d=>{
+    const c=d.getDay()===0?'sun':d.getDay()===6?'sat':'';
+    const ds=fmtDate(d);
+    // その日の「予約が入っていない枠」がすべて休止なら、ボタンは「◎に戻す」。そうでなければ「全部×」。
+    const openable=TIMES.filter(t=>!booked[`${ds}_${t}`]);
+    const allClosed=openable.length>0 && openable.every(t=>CLOSED.has(`${ds}_${t}`));
+    const btn=`<button class="day-btn ${allClosed?'reopen':''}" onclick="toggleDay('${ds}')">${allClosed?'◎に戻す':'全部×'}</button>`;
+    return `<th class="${c}">${d.getMonth()+1}/${d.getDate()}<br>(${WD[d.getDay()]})<br>${btn}</th>`;
+  }).join('')+'</tr></thead>';
   let body='<tbody>'+TIMES.map(t=>`<tr><td class="time">${t}</td>`+days.map(d=>{
     const ds=fmtDate(d),key=`${ds}_${t}`;
     if(booked[key])return `<td><span class="cell booked" title="${esc(booked[key])}様">●予約</span></td>`;
@@ -646,6 +658,22 @@ function renderCal(){
     return `<td><span class="cell ${isClosed?'closed':'open'}" onclick="toggleSlot('${ds}','${t}')">${isClosed?'×':'◎'}</span></td>`;
   }).join('')+'</tr>').join('')+'</tbody>';
   document.getElementById('calTable').innerHTML=head+body;
+}
+// その日1日を、まるごと休止（×）↔ 予約可（◎）に切り替える。予約が入っている枠はそのまま。
+async function toggleDay(ds){
+  const booked=bookedMap();
+  const slots=TIMES.filter(t=>!booked[`${ds}_${t}`]).map(t=>`${ds}_${t}`);
+  if(!slots.length) return;
+  const allClosed=slots.every(k=>CLOSED.has(k));
+  if(allClosed){                                  // 全部休止中 → 予約可に戻す
+    await sb.from('closed_slots').delete().in('slot',slots);
+    slots.forEach(k=>CLOSED.delete(k));
+  }else{                                          // 空きが残っている → まるごと休止に
+    const toAdd=slots.filter(k=>!CLOSED.has(k));
+    if(toAdd.length) await sb.from('closed_slots').insert(toAdd.map(slot=>({slot})));
+    toAdd.forEach(k=>CLOSED.add(k));
+  }
+  renderCal();
 }
 async function toggleSlot(ds,t){
   const key=`${ds}_${t}`;
