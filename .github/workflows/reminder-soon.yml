@@ -12,5 +12,5 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger soon reminders
-        run: curl -fsS "https://micoliss-hp.vercel.app/api/cron-remind?slot=soon"
+      - name: Trigger reminders
+        run: curl -fsS "https://micoliss-hp.vercel.app/api/cron-remind"

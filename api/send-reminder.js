@@ -1,7 +1,7 @@
 // 管理ページ(admin.html)から、お客様のLINEへリマインドを手動送信する。
-// 送信内容は type（前日/当日/お礼/フォロー）と予約情報から組み立てる（文面は lib/line.js）。
+// 文面は reminder_settings（管理ページで編集したテンプレート）を優先し、無ければ既定文面。
 
-const { buildText, pushLine } = require('../lib/line');
+const { buildText, pushLine, renderTemplate, fetchSettings, svcHeaders } = require('../lib/line');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') { res.status(405).json({ ok: false }); return; }
@@ -10,8 +10,16 @@ module.exports = async (req, res) => {
   }
   const b = req.body || {};
   const to = b.to;
-  const text = buildText(b.type, b);
   if (!to) { res.status(200).json({ ok: false, reason: 'no line user' }); return; }
+
+  // 文面：管理ページのテンプレートがあればそれを使い、なければ既定文面
+  let text;
+  try {
+    const s = (await fetchSettings(svcHeaders()))[b.type];
+    text = s && s.template ? renderTemplate(s.template, b) : buildText(b.type, b);
+  } catch (e) {
+    text = buildText(b.type, b);
+  }
   if (!text) { res.status(200).json({ ok: false, reason: 'bad type' }); return; }
 
   try {

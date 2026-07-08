@@ -88,6 +88,26 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .btn-sm.danger:hover{background:#f6e6e6;color:#a85b5b;border-color:#e6c4c4}
 .empty{text-align:center;color:var(--ink-soft);padding:50px 0;font-size:.9rem}
 
+/* リマインド設定 */
+.rs-title{font-family:var(--serif);font-weight:500;font-size:1.05rem;margin:6px 0 8px}
+.rs-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px}
+.rs-card.off{opacity:.62}
+.rs-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.rs-tog{display:flex;align-items:center;gap:8px;font-size:.98rem;cursor:pointer}
+.rs-tog input{width:18px;height:18px;accent-color:var(--accent)}
+.rs-timing{font-size:.84rem;color:var(--ink-soft);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rs-timing input{border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-family:var(--sans);font-size:.86rem;background:#fff;color:var(--ink)}
+.rs-num{width:64px;text-align:center}
+.rs-tpl{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:.86rem;color:var(--ink);background:#fff;line-height:1.6;resize:vertical}
+.rs-tpl:focus{outline:none;border-color:var(--accent)}
+.rs-savebar{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
+.rs-save{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 26px;font-family:var(--sans);font-size:.9rem;cursor:pointer}
+.rs-save:hover:not(:disabled){background:var(--accent-dk)}
+.rs-save:disabled{opacity:.5;cursor:not-allowed}
+.rs-msg{font-size:.84rem;color:var(--ok)}
+.rs-hr{border:0;border-top:1px solid var(--line);margin:26px 0 18px}
+.rs-title code,.cal-help code{background:var(--bg-soft);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.82em;color:var(--accent-dk)}
+
 /* リマインド */
 .rem-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px}
 .rem-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
@@ -258,7 +278,21 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 
   <!-- リマインド -->
   <div class="tabpanel" id="tab-remind">
-    <p class="cal-help">お客様が予約完了画面の<strong>合言葉</strong>を公式LINEに送ると「連携済み」になります。連携済みのお客様に、下のボタンで<strong>その場でLINEを送信</strong>できます（前日18時などの自動送信は次の段階で追加予定）。</p>
+
+    <!-- リマインド設定（オン/オフ・時刻・文面） -->
+    <h3 class="rs-title">⏰ リマインド設定</h3>
+    <p class="cal-help">各リマインドの<strong>オン/オフ・送信タイミング・文面</strong>を変更できます。文面には次の差し込みが使えます：<code>{name}</code>お名前　<code>{date}</code>日付　<code>{time}</code>時刻　<code>{menu}</code>メニュー</p>
+    <div id="remSettings"><div class="empty">読み込み中…</div></div>
+    <div class="rs-savebar">
+      <button class="rs-save" onclick="saveReminderSettings()">💾 設定を保存</button>
+      <span id="rsMsg" class="rs-msg"></span>
+    </div>
+
+    <hr class="rs-hr">
+
+    <!-- 手動送信 -->
+    <h3 class="rs-title">✉️ 手動で送る</h3>
+    <p class="cal-help">連携済みのお客様に、いつでもその場でLINEを送信できます。文面は上の設定の内容が使われます。</p>
     <div class="toolbar">
       <input id="remSearch" placeholder="名前・電話で検索" oninput="renderRemind()">
       <button class="btn-sm" style="width:auto;display:inline-block" onclick="reloadAll()">🔄 最新に更新</button>
@@ -395,7 +429,7 @@ function switchTab(t){
   document.getElementById('tab-'+t).classList.add('show');
   if(t==='cal') renderCal();
   if(t==='list') renderList();
-  if(t==='remind') renderRemind();
+  if(t==='remind'){ if(!rsLoaded) loadReminderSettings(); renderRemind(); }
 }
 
 /* ===== 予約一覧 ===== */
@@ -521,6 +555,72 @@ async function sendReminder(id,type){
   await sb.from('reservations').update({[rt.col]:true}).eq('id',id);
   r[rt.col]=true;
   renderRemind();
+}
+
+/* ===== リマインド設定（オン/オフ・時刻・文面） ===== */
+// 各リマインドの定義（timing: min=何分前 / time=送信時刻 / time+days=何日後の何時）
+const RS_DEF=[
+  {type:'soon',  label:'予約1時間前',   timing:'min'},
+  {type:'prev',  label:'前日リマインド', timing:'time'},
+  {type:'today', label:'当日リマインド', timing:'time'},
+  {type:'thanks',label:'お礼メッセージ', timing:'time'},
+  {type:'follow',label:'再来フォロー',   timing:'time+days'},
+];
+const RS_FALLBACK={
+  soon:{enabled:true,offset_min:60}, prev:{enabled:true,send_time:'18:00'},
+  today:{enabled:true,send_time:'08:00'}, thanks:{enabled:true,send_time:'10:00'},
+  follow:{enabled:true,send_time:'10:00',offset_days:14},
+};
+let RS_DATA={};
+let rsLoaded=false;
+async function loadReminderSettings(){
+  const {data}=await sb.from('reminder_settings').select('*');
+  RS_DATA={};
+  (data||[]).forEach(r=>RS_DATA[r.type]=r);
+  rsLoaded=true;
+  renderReminderSettings();
+}
+function renderReminderSettings(){
+  const box=document.getElementById('remSettings');
+  box.innerHTML=RS_DEF.map(def=>{
+    const s=Object.assign({}, RS_FALLBACK[def.type], RS_DATA[def.type]||{});
+    const on=s.enabled!==false;
+    let timing='';
+    if(def.timing==='min')
+      timing=`開始 <input type="number" class="rs-num" id="rs-min-${def.type}" min="5" max="240" step="5" value="${s.offset_min||60}"> 分前に送信`;
+    else if(def.timing==='time')
+      timing=`送信時刻 <input type="time" id="rs-time-${def.type}" value="${s.send_time||'09:00'}">`;
+    else if(def.timing==='time+days')
+      timing=`来店 <input type="number" class="rs-num" id="rs-days-${def.type}" min="1" max="90" value="${s.offset_days||14}"> 日後の <input type="time" id="rs-time-${def.type}" value="${s.send_time||'10:00'}"> に送信`;
+    return `<div class="rs-card ${on?'':'off'}" id="rs-card-${def.type}">
+      <div class="rs-row">
+        <label class="rs-tog"><input type="checkbox" id="rs-en-${def.type}" ${on?'checked':''}
+          onchange="document.getElementById('rs-card-${def.type}').classList.toggle('off',!this.checked)"><b>${def.label}</b></label>
+        <span class="rs-timing">${timing}</span>
+      </div>
+      <textarea class="rs-tpl" id="rs-tpl-${def.type}" placeholder="送信する文面">${esc(s.template||'')}</textarea>
+    </div>`;
+  }).join('');
+}
+async function saveReminderSettings(){
+  const btn=document.querySelector('.rs-save'), msg=document.getElementById('rsMsg');
+  btn.disabled=true; msg.style.color='var(--ink-soft)'; msg.textContent='保存中…';
+  const rows=RS_DEF.map((def,i)=>{
+    const g=id=>document.getElementById(id);
+    const row={type:def.type, label:def.label, sort:i+1,
+      enabled:g('rs-en-'+def.type).checked, template:g('rs-tpl-'+def.type).value,
+      send_time:null, offset_min:null, offset_days:null};
+    if(def.timing==='min') row.offset_min=parseInt(g('rs-min-'+def.type).value,10)||60;
+    else if(def.timing==='time') row.send_time=g('rs-time-'+def.type).value||null;
+    else if(def.timing==='time+days'){ row.send_time=g('rs-time-'+def.type).value||null; row.offset_days=parseInt(g('rs-days-'+def.type).value,10)||14; }
+    return row;
+  });
+  const {error}=await sb.from('reminder_settings').upsert(rows,{onConflict:'type'});
+  btn.disabled=false;
+  if(error){ msg.style.color='var(--ng)'; msg.textContent='保存できませんでした。もう一度お試しください。'; console.error(error); return; }
+  rows.forEach(r=>RS_DATA[r.type]=r);
+  msg.style.color='var(--ok)'; msg.textContent='✓ 保存しました';
+  setTimeout(()=>{msg.textContent='';},4000);
 }
 
 /* ===== 空き枠カレンダー ===== */
