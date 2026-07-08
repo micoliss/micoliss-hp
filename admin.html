@@ -88,6 +88,22 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .btn-sm.danger:hover{background:#f6e6e6;color:#a85b5b;border-color:#e6c4c4}
 .empty{text-align:center;color:var(--ink-soft);padding:50px 0;font-size:.9rem}
 
+/* リマインド */
+.rem-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px}
+.rem-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.rem-head .nm{font-size:1rem}
+.rem-head .nm .kana{font-size:.74rem;color:var(--ink-soft);margin-left:6px}
+.rem-head .when{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+.rem-link{font-size:.72rem;border-radius:999px;padding:3px 12px;white-space:nowrap}
+.rem-link.on{background:#e7f0e7;color:#3a7a3a}
+.rem-link.off{background:#f3ede4;color:var(--ink-soft)}
+.rem-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rem-btn{border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:.8rem;font-family:var(--sans);color:var(--ink);background:#fff;cursor:pointer}
+.rem-btn:hover:not(:disabled){background:var(--bg-soft)}
+.rem-btn.sent{background:#eef3ee;border-color:#cfe0cf;color:#4a7a4a;cursor:default}
+.rem-btn:disabled{opacity:.5;cursor:not-allowed}
+.rem-hint{font-size:.78rem;color:var(--ink-soft);margin-top:12px;background:var(--bg-soft);border-radius:8px;padding:8px 12px}
+
 /* カレンダー（枠の開閉） */
 .cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .cal-nav button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-family:var(--sans);font-size:.82rem;color:var(--ink);cursor:pointer}
@@ -200,6 +216,7 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
   <div class="tabs">
     <button class="active" data-t="list" onclick="switchTab('list')">📋 予約一覧</button>
     <button data-t="cal" onclick="switchTab('cal')">🗓️ 空き枠の管理</button>
+    <button data-t="remind" onclick="switchTab('remind')">🔔 リマインド</button>
     <button data-t="set" onclick="switchTab('set')">⚙️ 設定</button>
   </div>
 
@@ -237,6 +254,16 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
       <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(false)">この週の表示日を全部「休止」に</button>
       <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(true)">この週の表示日を全部「予約可」に</button>
     </div>
+  </div>
+
+  <!-- リマインド -->
+  <div class="tabpanel" id="tab-remind">
+    <p class="cal-help">お客様が予約完了画面の<strong>合言葉</strong>を公式LINEに送ると「連携済み」になります。連携済みのお客様に、下のボタンで<strong>その場でLINEを送信</strong>できます（前日18時などの自動送信は次の段階で追加予定）。</p>
+    <div class="toolbar">
+      <input id="remSearch" placeholder="名前・電話で検索" oninput="renderRemind()">
+      <button class="btn-sm" style="width:auto;display:inline-block" onclick="reloadAll()">🔄 最新に更新</button>
+    </div>
+    <div id="remindList"></div>
   </div>
 
   <!-- 設定 -->
@@ -358,6 +385,7 @@ async function reloadAll(){
   CLOSED=await fetchClosed();
   renderList();
   if(document.getElementById('tab-cal').classList.contains('show')) renderCal();
+  if(document.getElementById('tab-remind').classList.contains('show')) renderRemind();
 }
 
 /* ===== タブ ===== */
@@ -367,6 +395,7 @@ function switchTab(t){
   document.getElementById('tab-'+t).classList.add('show');
   if(t==='cal') renderCal();
   if(t==='list') renderList();
+  if(t==='remind') renderRemind();
 }
 
 /* ===== 予約一覧 ===== */
@@ -437,6 +466,63 @@ async function deleteResv(id){
   }
 }
 
+/* ===== リマインド ===== */
+// リマインドの種類（列名・ボタン表示・送信タイプ）
+const REM_TYPES=[
+  {type:'prev',   col:'rem_prev',   label:'前日リマインド'},
+  {type:'today',  col:'rem_today',  label:'当日リマインド'},
+  {type:'thanks', col:'rem_thanks', label:'お礼メッセージ'},
+  {type:'follow', col:'rem_follow', label:'2週間後フォロー'},
+];
+function renderRemind(){
+  const q=document.getElementById('remSearch').value.trim();
+  const today=fmtDate(new Date());
+  // これからの予約＋直近1週間の過去（お礼・フォロー送信用）を対象に
+  const from=new Date();from.setDate(from.getDate()-14);const fromS=fmtDate(from);
+  let list=ALL.filter(r=>r.status!=='cancelled'&&r.date>=fromS);
+  if(q) list=list.filter(r=>(r.name||'').includes(q)||(r.kana||'').includes(q)||(r.tel||'').includes(q));
+  list.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const el=document.getElementById('remindList');
+  if(!list.length){el.innerHTML='<div class="empty">対象の予約はありません。</div>';return;}
+  el.innerHTML=list.map(r=>{
+    const wd=WD[new Date(r.date).getDay()];
+    const linked=!!r.line_user_id;
+    const btns=REM_TYPES.map(rt=>{
+      const sent=!!r[rt.col];
+      const label=sent?'✓ '+rt.label+'（送信済み）':rt.label+'を送る';
+      const cls='rem-btn'+(sent?' sent':'');
+      const dis=(!linked||sent)?'disabled':'';
+      return `<button class="${cls}" ${dis} onclick="sendReminder('${r.id}','${rt.type}')">${label}</button>`;
+    }).join('');
+    return `<div class="rem-card">
+      <div class="rem-head">
+        <div>
+          <div class="nm">${esc(r.name)}<span class="kana">${esc(r.kana)}</span></div>
+          <div class="when">📅 ${r.date.slice(5).replace('-','/')}(${wd}) ${r.time}　💠 ${esc(r.menu_name)}</div>
+        </div>
+        <span class="rem-link ${linked?'on':'off'}">${linked?'LINE連携済み':'LINE未連携'}</span>
+      </div>
+      ${linked
+        ?`<div class="rem-btns">${btns}</div>`
+        :`<div class="rem-hint">このお客様はまだLINE連携していません。予約完了画面の合言葉を公式LINEに送っていただくと、ここから送信できるようになります。</div>`}
+    </div>`;
+  }).join('');
+}
+async function sendReminder(id,type){
+  const r=ALL.find(x=>x.id===id);
+  if(!r||!r.line_user_id) return;
+  const rt=REM_TYPES.find(x=>x.type===type);
+  if(!confirm(`${r.name}様に「${rt.label}」をLINEで送信します。よろしいですか？`)) return;
+  const res=await fetch('/api/send-reminder',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({to:r.line_user_id,type,name:r.name,date:r.date,time:r.time,menu_name:r.menu_name})
+  }).then(x=>x.json()).catch(()=>({ok:false}));
+  if(!res.ok){ alert('送信できませんでした。時間をおいて、もう一度お試しください。'); return; }
+  // 送信できたら「送信済み」を記録
+  await sb.from('reservations').update({[rt.col]:true}).eq('id',id);
+  r[rt.col]=true;
+  renderRemind();
+}
+
 /* ===== 空き枠カレンダー ===== */
 let weekStart=new Date();weekStart.setHours(0,0,0,0);
 function bookedMap(){
@@ -493,7 +579,8 @@ async function seedDemo(){
   const demo=[
     {id:'r'+now,    date:d(1),time:'10:00',menu_id:'basic',menu_name:'ベーシックコース',menu_min:90,price:16500,name:'佐藤 美咲',kana:'さとう みさき',tel:'090-1111-2222',mail:'misaki@example.com',first:'はじめて',note:'当日の持ち物はありますか？',status:'confirmed'},
     {id:'r'+(now+1),date:d(2),time:'13:30',menu_id:'total',menu_name:'トータルプロデュースコース',menu_min:150,price:27500,name:'鈴木 あや',kana:'すずき あや',tel:'080-3333-4444',mail:'',first:'2回目以降',note:'',status:'confirmed'},
-    {id:'r'+(now+2),date:d(4),time:'15:00',menu_id:'mens',menu_name:'メンズパーソナルカラー診断',menu_min:60,price:16500,name:'田中 太郎',kana:'たなか たろう',tel:'070-5555-6666',mail:'taro@example.com',first:'はじめて',note:'駐車場はありますか？',status:'confirmed'},
+    /* 3件目はオーナー自身のLINEに紐づけておき、リマインド送信ボタンをその場でテストできるようにする */
+    {id:'r'+(now+2),date:d(4),time:'15:00',menu_id:'mens',menu_name:'メンズパーソナルカラー診断',menu_min:60,price:16500,name:'田中 太郎',kana:'たなか たろう',tel:'070-5555-6666',mail:'taro@example.com',first:'はじめて',note:'駐車場はありますか？',status:'confirmed',line_user_id:'Ud76d05f0733062b8769582d5224b4065'},
   ];
   await sb.from('reservations').insert(demo);
   alert('サンプル予約を3件入れました。');

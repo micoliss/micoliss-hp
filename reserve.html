@@ -112,6 +112,15 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .done-box h2{justify-content:center}
 .done-box p{color:var(--ink-soft);font-size:.9rem;margin-top:10px}
 
+/* 完了画面のLINE案内 */
+.line-guide{margin:26px auto 0;max-width:420px;background:#f2f8f0;border:1px solid #cfe6c8;border-radius:14px;padding:20px 22px}
+.line-guide .lg-ttl{color:#3a7a3a;font-size:.9rem;font-weight:500;margin:0}
+.line-guide .lg-txt{color:var(--ink-soft);font-size:.82rem;margin-top:8px;line-height:1.7}
+.line-guide .lg-code{font-family:var(--en);font-size:2rem;letter-spacing:.4em;color:var(--ink);background:#fff;border:1px dashed #bcd9b4;border-radius:10px;padding:10px 0;margin:14px 0;text-indent:.4em}
+.line-guide .btn-line{background:#06c755;color:#fff;justify-content:center;width:100%}
+.line-guide .btn-line:hover{background:#05b34c;transform:translateY(-2px)}
+.line-guide .lg-note{font-size:.74rem;color:var(--ink-soft);margin-top:12px}
+
 /* ボタン */
 .actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:999px;font-size:.9rem;letter-spacing:.04em;border:0;cursor:pointer;font-family:var(--sans);transition:transform .2s,background .2s}
@@ -219,6 +228,15 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
       <div class="ic">🌿</div>
       <h2>ご予約ありがとうございます</h2>
       <p id="doneMsg"></p>
+
+      <div class="line-guide">
+        <p class="lg-ttl">📱 LINEで前日・当日のリマインドを受け取れます</p>
+        <p class="lg-txt">下のボタンで公式LINEを開き、友だち追加のうえ、この合言葉を<strong>そのまま送信</strong>してください。ご予約と紐づき、リマインドが届くようになります。</p>
+        <div class="lg-code" id="lineCode">------</div>
+        <a class="btn btn-line" href="https://line.me/R/ti/p/@710btxma" target="_blank" rel="noopener">公式LINEを開く</a>
+        <p class="lg-note">※ 任意です。登録されなくてもご予約は確定しています。</p>
+      </div>
+
       <div class="actions" style="justify-content:center">
         <a href="index.html" class="btn btn-ghost">サイトに戻る</a>
         <button class="btn btn-primary" onclick="location.reload()">続けて予約する</button>
@@ -426,13 +444,15 @@ async function submitReservation(){
     goStep(2); return;
   }
   const m=state.menu;
+  // お客様がLINEで送ると予約に紐づく「合言葉（6桁）」
+  const linkCode=String(Math.floor(100000+Math.random()*900000));
   const r={
     id:'r'+Date.now(),
     date:state.date, time:state.time,
     menu_id:m.id, menu_name:m.name, menu_min:m.min, price:m.price,
     name:fName.value.trim(), kana:fKana.value.trim(), tel:fTel.value.trim(),
     mail:fMail.value.trim(), first:fFirst.value, note:fNote.value.trim(),
-    status:'confirmed'
+    status:'confirmed', link_code:linkCode
   };
   const {error} = await sb.from('reservations').insert(r);
   if(error){
@@ -447,6 +467,8 @@ async function submitReservation(){
   }).catch(()=>{});
   document.getElementById('doneMsg').innerHTML=
     `${r.date.replace(/-/g,'/')}（${WD[new Date(r.date).getDay()]}）${r.time}〜<br>「${r.menu_name}」のご予約を承りました。<br><br>※確認のご連絡を差し上げます。お電話が繋がらない場合もご安心ください。`;
+  // LINEリマインドの案内：合言葉を表示し、公式LINEを開くボタンに反映
+  document.getElementById('lineCode').textContent=linkCode;
   goStep(5);
 }
 
