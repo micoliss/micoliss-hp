@@ -5,18 +5,22 @@
 
 const { SUPABASE_URL, buildText, pushLine, svcHeaders } = require('../lib/line');
 
-// JSTの日付文字列 'YYYY-MM-DD'（offsetDays日ずらし）。関数はUTCで動くので+9時間して計算。
+// JST基準の「今」（UTCで動くので+9時間）。日付や時刻の計算に使う。
+function nowJst() { return new Date(Date.now() + 9 * 3600 * 1000); }
 function jstDateStr(offsetDays) {
-  const d = new Date(Date.now() + 9 * 3600 * 1000 + offsetDays * 86400000);
+  const d = new Date(nowJst().getTime() + offsetDays * 86400000);
   return d.toISOString().slice(0, 10);
 }
 
 module.exports = async (req, res) => {
-  // CRON_SECRETを設定していれば、Vercel Cron以外からの呼び出しを弾く
-  if (process.env.CRON_SECRET) {
-    if ((req.headers.authorization || '') !== `Bearer ${process.env.CRON_SECRET}`) {
-      res.status(401).json({ ok: false }); return;
-    }
+  // CRON_SECRETを設定していれば呼び出しを制限する（未設定なら誰でも可＝後方互換）。
+  //   Vercelの定時cron → Authorization: Bearer <CRON_SECRET> を自動付与
+  //   外部スケジューラ(cron-job.org等) → URLに ?key=<CRON_SECRET> を付ける
+  const secret = process.env.CRON_SECRET;
+  if (secret) {
+    const okHeader = (req.headers.authorization || '') === `Bearer ${secret}`;
+    const okQuery = req.query && req.query.key === secret;
+    if (!okHeader && !okQuery) { res.status(401).json({ ok: false }); return; }
   }
   if (!process.env.SUPABASE_SERVICE_KEY) { res.status(200).json({ ok: false, reason: 'no service key' }); return; }
 
@@ -42,9 +46,37 @@ module.exports = async (req, res) => {
     }
   }
 
+  // slot=soon：今日の予約のうち「開始まで約1時間以内」で未送信の人へ「まもなく」通知。
+  // 外部スケジューラが数分おきに叩く想定。rem_hourフラグで一度だけ送る。
+  async function sendSoon() {
+    const n = nowJst();
+    const nowMin = n.getUTCHours() * 60 + n.getUTCMinutes(); // +9時間済みなのでこれがJSTの時計
+    const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${jstDateStr(0)}`
+      + `&status=neq.cancelled&line_user_id=not.is.null&rem_hour=is.false`
+      + `&select=id,name,date,time,menu_name,line_user_id`;
+    const rows = await (await fetch(q, { headers: h })).json();
+    if (!Array.isArray(rows)) return;
+    for (const r of rows) {
+      const [hh, mm] = String(r.time || '').slice(0, 5).split(':').map(Number);
+      const startMin = (hh || 0) * 60 + (mm || 0);
+      const diff = startMin - nowMin;               // 開始まであと何分か
+      if (diff > 0 && diff <= 60) {                 // 開始1時間前〜直前
+        const pr = await pushLine(r.line_user_id, buildText('soon', r));
+        if (pr.ok) {
+          await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
+            method: 'PATCH', headers: h, body: JSON.stringify({ rem_hour: true }),
+          });
+        }
+        results.push({ id: r.id, type: 'soon', ok: pr.ok });
+      }
+    }
+  }
+
   try {
     if (slot === 'eve') {
       await sendFor(jstDateStr(1), 'prev', 'rem_prev');        // 明日が予約日 → 前日リマインド
+    } else if (slot === 'soon') {
+      await sendSoon();                                        // 開始1時間前 → まもなく通知
     } else {
       await sendFor(jstDateStr(0),   'today',  'rem_today');   // 今日が予約日 → 当日リマインド
       await sendFor(jstDateStr(-1),  'thanks', 'rem_thanks');  // 昨日が予約日 → お礼
