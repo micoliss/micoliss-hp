@@ -144,6 +144,7 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .cell.open{color:var(--ok)}
 .cell.closed{color:var(--line);background:repeating-linear-gradient(45deg,#f3ede4,#f3ede4 4px,#ece3d4 4px,#ece3d4 8px)}
 .cell.booked{color:#fff;background:var(--accent);cursor:default;font-size:.66rem}
+.cell.offhours{color:#d3cbbc;cursor:default;background:#f7f3ec}
 .cell.open:hover,.cell.closed:hover{background:#f0e7d6}
 .cal-legend{display:flex;gap:18px;justify-content:center;margin-top:12px;font-size:.78rem;color:var(--ink-soft);flex-wrap:wrap}
 .cal-legend i{font-style:normal}
@@ -299,8 +300,10 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
     <div class="cal-legend">
       <span><i style="color:var(--ok)">◎</i> 予約可</span>
       <span><i style="color:#bbb">×</i> 休止（クリックで開閉）</span>
+      <span><i style="color:#d3cbbc">×</i> 営業時間外（自動）</span>
       <span><i style="color:var(--accent)">●</i> 予約あり</span>
     </div>
+    <p class="cal-help" style="margin-top:8px">営業時間（日〜木は17時まで／金・土は19時まで）を過ぎた枠は、自動で×（営業時間外）になります。</p>
     <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(false)">この週の表示日を全部「休止」に</button>
       <button class="btn-sm" style="width:auto;display:inline-block" onclick="closeDay(true)">この週の表示日を全部「予約可」に</button>
@@ -656,6 +659,10 @@ async function saveReminderSettings(){
 
 /* ===== 空き枠カレンダー ===== */
 let weekStart=new Date();weekStart.setHours(0,0,0,0);
+// 曜日ごとの閉店時刻（分）：金(5)・土(6)=19:00 / 日〜木=17:00
+function closeMinFor(wd){ return (wd===5||wd===6)?19*60:17*60; }
+// その日時が営業時間内か（開始時刻が閉店時刻より前）。時間外は自動で×。
+function inHours(ds,t){ const wd=new Date(`${ds}T00:00`).getDay(); const [hh,mm]=t.split(':').map(Number); return hh*60+mm < closeMinFor(wd); }
 function bookedMap(){
   const m={};ALL.filter(r=>r.status!=='cancelled').forEach(r=>{
     const idx=TIMES.indexOf(r.time),need=Math.ceil(r.menu_min/STEP_MIN);
@@ -672,8 +679,8 @@ function renderCal(){
   let head='<thead><tr><th></th>'+days.map(d=>{
     const c=d.getDay()===0?'sun':d.getDay()===6?'sat':'';
     const ds=fmtDate(d);
-    // その日の「予約が入っていない枠」がすべて休止なら、ボタンは「◎に戻す」。そうでなければ「全部×」。
-    const openable=TIMES.filter(t=>!booked[`${ds}_${t}`]);
+    // その日の「営業時間内で予約が入っていない枠」がすべて休止なら「◎に戻す」。そうでなければ「全部×」。
+    const openable=TIMES.filter(t=>inHours(ds,t) && !booked[`${ds}_${t}`]);
     const allClosed=openable.length>0 && openable.every(t=>CLOSED.has(`${ds}_${t}`));
     const btn=`<button class="day-btn ${allClosed?'reopen':''}" onclick="toggleDay('${ds}')">${allClosed?'◎に戻す':'全部×'}</button>`;
     return `<th class="${c}">${d.getMonth()+1}/${d.getDate()}<br>(${WD[d.getDay()]})<br>${btn}</th>`;
@@ -681,6 +688,7 @@ function renderCal(){
   let body='<tbody>'+TIMES.map(t=>`<tr><td class="time">${t}</td>`+days.map(d=>{
     const ds=fmtDate(d),key=`${ds}_${t}`;
     if(booked[key])return `<td><span class="cell booked" title="${esc(booked[key])}様">●予約</span></td>`;
+    if(!inHours(ds,t))return `<td><span class="cell offhours" title="営業時間外">×</span></td>`;  // 営業時間外は自動で×（操作不可）
     const isClosed=CLOSED.has(key);
     return `<td><span class="cell ${isClosed?'closed':'open'}" onclick="toggleSlot('${ds}','${t}')">${isClosed?'×':'◎'}</span></td>`;
   }).join('')+'</tr>').join('')+'</tbody>';
@@ -689,7 +697,7 @@ function renderCal(){
 // その日1日を、まるごと休止（×）↔ 予約可（◎）に切り替える。予約が入っている枠はそのまま。
 async function toggleDay(ds){
   const booked=bookedMap();
-  const slots=TIMES.filter(t=>!booked[`${ds}_${t}`]).map(t=>`${ds}_${t}`);
+  const slots=TIMES.filter(t=>inHours(ds,t) && !booked[`${ds}_${t}`]).map(t=>`${ds}_${t}`);
   if(!slots.length) return;
   const allClosed=slots.every(k=>CLOSED.has(k));
   if(allClosed){                                  // 全部休止中 → 予約可に戻す
@@ -711,7 +719,7 @@ async function toggleSlot(ds,t){
 async function closeDay(open){
   const days=[...Array(7)].map((_,i)=>{const d=new Date(weekStart);d.setDate(d.getDate()+i);return fmtDate(d);});
   const keys=[];
-  days.forEach(ds=>TIMES.forEach(t=>keys.push(`${ds}_${t}`)));
+  days.forEach(ds=>TIMES.forEach(t=>{ if(inHours(ds,t)) keys.push(`${ds}_${t}`); }));
   if(open){
     await sb.from('closed_slots').delete().in('slot',keys);
     keys.forEach(k=>CLOSED.delete(k));
