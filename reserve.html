@@ -112,7 +112,17 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .done-box h2{justify-content:center}
 .done-box p{color:var(--ink-soft);font-size:.9rem;margin-top:10px}
 
+/* STEP3のLINE連携ボックス */
+.line-connect{margin-top:20px;background:#f2f8f0;border:1px solid #cfe6c8;border-radius:14px;padding:18px 20px}
+.line-connect .lc-ttl{color:#3a7a3a;font-size:.9rem;font-weight:500;margin:0}
+.line-connect .lc-txt{color:var(--ink-soft);font-size:.82rem;margin-top:6px;line-height:1.7}
+.line-connect .btn-line{margin-top:14px;width:100%;justify-content:center}
+.line-connect .lc-done{color:#3a7a3a;font-size:.88rem;margin-top:14px;text-align:center}
+.btn-line{background:#06c755;color:#fff}
+.btn-line:hover{background:#05b34c;transform:translateY(-2px)}
+
 /* 完了画面のLINE案内 */
+.line-linked{margin:22px auto 0;max-width:420px;background:#f2f8f0;border:1px solid #cfe6c8;border-radius:14px;padding:16px 20px;color:#3a7a3a;font-size:.9rem}
 .line-guide{margin:26px auto 0;max-width:420px;background:#f2f8f0;border:1px solid #cfe6c8;border-radius:14px;padding:20px 22px}
 .line-guide .lg-ttl{color:#3a7a3a;font-size:.9rem;font-weight:500;margin:0}
 .line-guide .lg-txt{color:var(--ink-soft);font-size:.82rem;margin-top:8px;line-height:1.7}
@@ -205,6 +215,16 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
       <div class="field"><label>ご来店は初めてですか？</label><select id="fFirst"><option>はじめて</option><option>2回目以降</option></select></div>
       <div class="field"><label>ご要望・ご質問（任意）</label><textarea id="fNote" placeholder="当日の流れや持ち物など、ご不明点があればこちらへ"></textarea></div>
     </form>
+
+    <div class="line-connect" id="lineConnect">
+      <div class="lc-body">
+        <p class="lc-ttl">📱 LINEでリマインドを受け取る（任意）</p>
+        <p class="lc-txt">連携しておくと、前日・当日にご予約のリマインドがLINEに届きます。ボタンを押すとLINEでの確認画面が開きます。</p>
+      </div>
+      <button type="button" class="btn btn-line" id="lineConnectBtn" onclick="connectLine()">LINEで連携する</button>
+      <p class="lc-done" id="lineConnectDone" style="display:none">✓ <b id="lineName"></b> さんのLINEと連携しました</p>
+    </div>
+
     <div class="actions">
       <button class="btn btn-ghost" onclick="goStep(2)">← 日時に戻る</button>
       <button class="btn btn-primary" onclick="toConfirm()">予約内容の確認へ →</button>
@@ -229,7 +249,9 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
       <h2>ご予約ありがとうございます</h2>
       <p id="doneMsg"></p>
 
-      <div class="line-guide">
+      <p class="line-linked" id="lineLinked" style="display:none">🌿 LINEと連携済みです。前日・当日にリマインドをお送りします。</p>
+
+      <div class="line-guide" id="lineGuide">
         <p class="lg-ttl">📱 LINEで前日・当日のリマインドを受け取れます</p>
         <p class="lg-txt">下のボタンで公式LINEを開き、友だち追加のうえ、この合言葉を<strong>そのまま送信</strong>してください。ご予約と紐づき、リマインドが届くようになります。</p>
         <div class="lg-code" id="lineCode">------</div>
@@ -251,8 +273,12 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
   営業時間 9:00–19:00（不定休）・お電話は繋がりにくいためネット予約がおすすめです
 </p>
 
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ===== LINEログイン（LIFF）設定 ===== */
+const LIFF_ID='2010636016-Gopxm1Bo';
+
 /* ===== Supabase 接続 ===== */
 const SUPABASE_URL='https://efortdqqqeclshcquqbu.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVmb3J0ZHFxcWVjbHNoY3F1cWJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3NjMxODMsImV4cCI6MjA5ODMzOTE4M30.UfLhFR3mokVMiiyS07bCw4gSEZz3cTPVjKkgUnot4Jg';
@@ -295,7 +321,7 @@ const WD=['日','月','火','水','木','金','土'];
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 /* ===== 状態 ===== */
-let state={menu:null, date:null, time:null, weekStart:null};
+let state={menu:null, date:null, time:null, weekStart:null, lineUserId:null, lineName:null};
 state.weekStart=new Date(); state.weekStart.setHours(0,0,0,0);
 
 /* Supabaseから取得した空き状況（個人情報なし） */
@@ -452,7 +478,7 @@ async function submitReservation(){
     menu_id:m.id, menu_name:m.name, menu_min:m.min, price:m.price,
     name:fName.value.trim(), kana:fKana.value.trim(), tel:fTel.value.trim(),
     mail:fMail.value.trim(), first:fFirst.value, note:fNote.value.trim(),
-    status:'confirmed', link_code:linkCode
+    status:'confirmed', link_code:linkCode, line_user_id:state.lineUserId||null
   };
   const {error} = await sb.from('reservations').insert(r);
   if(error){
@@ -467,10 +493,64 @@ async function submitReservation(){
   }).catch(()=>{});
   document.getElementById('doneMsg').innerHTML=
     `${r.date.replace(/-/g,'/')}（${WD[new Date(r.date).getDay()]}）${r.time}〜<br>「${r.menu_name}」のご予約を承りました。<br><br>※確認のご連絡を差し上げます。お電話が繋がらない場合もご安心ください。`;
-  // LINEリマインドの案内：合言葉を表示し、公式LINEを開くボタンに反映
-  document.getElementById('lineCode').textContent=linkCode;
+  // LINE連携済みなら合言葉カードは隠して「連携済み」を表示。未連携なら合言葉カードで後から連携できる
+  if(state.lineUserId){
+    document.getElementById('lineGuide').style.display='none';
+    document.getElementById('lineLinked').style.display='block';
+  }else{
+    document.getElementById('lineCode').textContent=linkCode;
+  }
   goStep(5);
 }
+
+/* ===== LINEログイン連携 ===== */
+let liffReady=false;
+async function connectLine(){
+  if(!liffReady){ alert('LINEの準備中です。数秒おいてもう一度お試しください。'); return; }
+  try{
+    if(liff.isLoggedIn()){ await applyProfile(); return; }
+    // ログインで画面が切り替わるので、入力内容を一時保存して戻ってこられるようにする
+    saveResume();
+    liff.login({redirectUri:location.href});
+  }catch(e){ alert('LINE連携でエラーが発生しました。通信環境をご確認ください。'); }
+}
+async function applyProfile(){
+  const p=await liff.getProfile();
+  state.lineUserId=p.userId; state.lineName=p.displayName||'';
+  document.getElementById('lineConnectBtn').style.display='none';
+  document.getElementById('lineName').textContent=state.lineName;
+  document.getElementById('lineConnectDone').style.display='block';
+}
+function saveResume(){
+  sessionStorage.setItem('micoliss_resume', JSON.stringify({
+    menuId:state.menu?state.menu.id:null, date:state.date, time:state.time,
+    name:fName.value, kana:fKana.value, tel:fTel.value, mail:fMail.value, first:fFirst.value, note:fNote.value
+  }));
+}
+function restoreResume(){
+  const raw=sessionStorage.getItem('micoliss_resume');
+  if(!raw) return false;
+  sessionStorage.removeItem('micoliss_resume');
+  try{
+    const r=JSON.parse(raw);
+    if(r.menuId && MENUS.find(m=>m.id===r.menuId)) state.menu=MENUS.find(m=>m.id===r.menuId);
+    state.date=r.date; state.time=r.time;
+    fName.value=r.name||''; fKana.value=r.kana||''; fTel.value=r.tel||'';
+    fMail.value=r.mail||''; fFirst.value=r.first||'はじめて'; fNote.value=r.note||'';
+    return !!(state.menu && state.date && state.time);
+  }catch(e){ return false; }
+}
+(async function initLiff(){
+  try{
+    await liff.init({liffId:LIFF_ID});
+    liffReady=true;
+    if(liff.isLoggedIn()){
+      const resumed=restoreResume();   // 連携ボタンからログインして戻ってきた場合は入力内容を復元
+      await applyProfile();
+      if(resumed) goStep(3);
+    }
+  }catch(e){ /* LIFF失敗時も予約自体は通常どおり使える（連携ボタンだけ無効） */ }
+})();
 
 /* 初期化 */
 renderMenus();
