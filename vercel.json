@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/cron-remind?slot=eve", "schedule": "0 9 * * *" },
+    { "path": "/api/cron-remind?slot=morning", "schedule": "0 23 * * *" }
+  ]
+}
