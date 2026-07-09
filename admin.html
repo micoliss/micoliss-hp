@@ -104,6 +104,9 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .m-reply{border-top:1px solid var(--line);padding-top:16px}
 .m-reply h4{font-size:.92rem;margin:0 0 4px}
 .m-reply .hint{font-size:.78rem;color:var(--ink-soft);margin-bottom:8px}
+.m-sublabel{display:block;font-size:.76rem;color:var(--ink-soft);margin-bottom:5px}
+.m-subinput{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-family:var(--sans);font-size:.88rem;color:var(--ink);background:#fff;margin-bottom:12px}
+.m-subinput:focus{outline:none;border-color:var(--accent)}
 .m-reply textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:.9rem;color:var(--ink);line-height:1.6;resize:vertical}
 .m-reply textarea:focus{outline:none;border-color:var(--accent)}
 .m-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
@@ -595,15 +598,24 @@ function openResvDetail(id){
     <div class="m-reply">
       <h4>返信を送る</h4>
       <div class="hint">${linked&&hasMail?'LINEとメール、どちらでも送れます。':(linked?'このお客様にはLINEで送れます。':(hasMail?'このお客様にはメールで送れます。':'連絡先の登録がありません。'))}</div>
+      ${hasMail?`<label class="m-sublabel">メールの件名</label>
+      <input type="text" id="mReplySubject" class="m-subinput" value="ご予約について｜Seed of Color -Micoliss-" oninput="mSyncMailto('${id}')">`:''}
       <textarea id="mReplyText" placeholder="お客様へのメッセージを入力…">${esc((r.name||'お客')+'様\n\n')}</textarea>
       <div class="m-btns">
         <button class="send-line" ${linked?'':'disabled'} onclick="replySend('${id}','line')">LINEで送信</button>
         <button class="send-mail" ${hasMail?'':'disabled'} onclick="replySend('${id}','mail')">メールで送信</button>
-        ${hasMail?`<a class="btn-sm" style="width:auto;display:inline-flex;align-items:center;margin-top:0" href="mailto:${esc(r.mail)}?subject=${subj}">✉️ メールアプリで開く</a>`:''}
+        ${hasMail?`<a class="btn-sm" id="mMailtoLink" style="width:auto;display:inline-flex;align-items:center;margin-top:0" href="mailto:${esc(r.mail)}?subject=${subj}">✉️ メールアプリで開く</a>`:''}
       </div>
       <div class="m-msg" id="mReplyMsg"></div>
     </div>`;
   document.getElementById('resvModal').classList.add('show');
+}
+// 件名を変えたら「メールアプリで開く」リンクにも反映
+function mSyncMailto(id){
+  const r=ALL.find(x=>x.id===id); if(!r||!r.mail) return;
+  const link=document.getElementById('mMailtoLink'), subjEl=document.getElementById('mReplySubject');
+  if(!link||!subjEl) return;
+  link.href=`mailto:${r.mail}?subject=${encodeURIComponent(subjEl.value)}`;
 }
 async function replySend(id,channel){
   const r=ALL.find(x=>x.id===id); if(!r) return;
@@ -613,7 +625,9 @@ async function replySend(id,channel){
   const chLabel=channel==='line'?'LINE':'メール';
   if(!confirm(`${r.name}様に${chLabel}で送信します。よろしいですか？`)) return;
   msg.style.color='var(--ink-soft)'; msg.textContent='送信中…';
-  const payload={text, subject:'ご予約について｜Seed of Color -Micoliss-'};
+  const subjEl=document.getElementById('mReplySubject');
+  const subject=(subjEl&&subjEl.value.trim())||'ご予約について｜Seed of Color -Micoliss-';
+  const payload={text, subject};
   if(channel==='line') payload.to=r.line_user_id; else payload.mail=r.mail;
   const res=await fetch('/api/send-message',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)}).then(x=>x.json()).catch(()=>({ok:false}));
