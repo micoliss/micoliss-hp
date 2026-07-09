@@ -100,6 +100,10 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .rs-num{width:64px;text-align:center}
 .rs-tpl{width:100%;min-height:120px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:.86rem;color:var(--ink);background:#fff;line-height:1.6;resize:vertical}
 .rs-tpl:focus{outline:none;border-color:var(--accent)}
+.rs-preview{margin-top:10px}
+.rs-preview .lbl{font-size:.76rem;color:var(--ink-soft);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.rs-preview .bubble{background:#eef7ec;border:1px solid #cfe6cb;border-radius:14px;border-top-left-radius:4px;padding:12px 14px;font-size:.9rem;color:#33402f;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-width:92%}
+.rs-preview .bubble.empty{background:var(--bg-soft);border-color:var(--line);color:var(--ink-soft);font-style:italic}
 .rs-savebar{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
 .rs-save{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 26px;font-family:var(--sans);font-size:.9rem;cursor:pointer}
 .rs-save:hover:not(:disabled){background:var(--accent-dk)}
@@ -637,9 +641,34 @@ function renderReminderSettings(){
           onchange="document.getElementById('rs-card-${def.type}').classList.toggle('off',!this.checked)"><b>${def.label}</b></label>
         <span class="rs-timing">${timing}</span>
       </div>
-      <textarea class="rs-tpl" id="rs-tpl-${def.type}" placeholder="送信する文面">${esc(s.template||'')}</textarea>
+      <textarea class="rs-tpl" id="rs-tpl-${def.type}" placeholder="送信する文面" oninput="rsPreview('${def.type}')">${esc(s.template||'')}</textarea>
+      <div class="rs-preview">
+        <div class="lbl">👀 実際に送られる文章（サンプルのお客様で表示）</div>
+        <div class="bubble" id="rs-pv-${def.type}"></div>
+      </div>
     </div>`;
   }).join('');
+  RS_DEF.forEach(def=>rsPreview(def.type));
+}
+// プレビュー用のサンプル予約（差し込みを埋めて実際の見え方を再現）
+const RS_SAMPLE={name:'山田 花子', date:'2026-07-11', time:'14:00', menu_name:'パーソナルカラー診断'};
+// 差し込み {name}{date}{time}{menu} を埋める（送信側 lib/line.js の renderTemplate と同じ挙動）
+function rsFill(tpl, b){
+  const wd=WD[new Date(b.date).getDay()]||'';
+  const when=b.date?`${b.date.replace(/-/g,'/')}（${wd}）${b.time||''}`:'';
+  const menu=b.menu_name?`「${b.menu_name}」`:'ご予約';
+  return String(tpl==null?'':tpl)
+    .split('{name}').join(b.name||'お客')
+    .split('{date}').join(when)
+    .split('{time}').join(b.time||'')
+    .split('{menu}').join(menu);
+}
+function rsPreview(type){
+  const ta=document.getElementById('rs-tpl-'+type), pv=document.getElementById('rs-pv-'+type);
+  if(!ta||!pv) return;
+  const tpl=ta.value.trim();
+  if(!tpl){ pv.className='bubble empty'; pv.textContent='（文面が空です。保存すると既定の文章が送られます）'; return; }
+  pv.className='bubble'; pv.textContent=rsFill(ta.value, RS_SAMPLE);
 }
 async function saveReminderSettings(){
   const btn=document.querySelector('.rs-save'), msg=document.getElementById('rsMsg');
