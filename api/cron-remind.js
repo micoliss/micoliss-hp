@@ -5,11 +5,13 @@
 const { SUPABASE_URL, pushLine, svcHeaders, renderTemplate, buildText, fetchSettings } = require('../lib/line');
 const { sendMail, buildSubject } = require('../lib/mail');
 
-// 1件のリマインドを届ける。LINE連携済みならLINE、無ければメール（どちらも無ければ何もしない）。
+// 1件のリマインドを届ける。LINE連携済みならLINE、メール登録があればメール、両方あれば両方へ送る。
+// どれか1つでも成功したら ok=true（成功したチャネルだけ送信済みにし、失敗分でずっと再送しないため）。
 async function deliver(type, r, text) {
-  if (r.line_user_id) { const pr = await pushLine(r.line_user_id, text); return { ok: pr.ok, via: 'line' }; }
-  if (r.mail)         { const mr = await sendMail(r.mail, buildSubject(type), text); return { ok: mr.ok, via: 'mail' }; }
-  return { ok: false, via: 'none' };
+  const via = [];
+  if (r.line_user_id) { const pr = await pushLine(r.line_user_id, text); if (pr.ok) via.push('line'); }
+  if (r.mail)         { const mr = await sendMail(r.mail, buildSubject(type), text); if (mr.ok) via.push('mail'); }
+  return { ok: via.length > 0, via: via.join('+') || 'none' };
 }
 
 // 設定テーブルが未作成/空でも動くための既定値

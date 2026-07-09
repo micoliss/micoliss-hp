@@ -23,13 +23,10 @@ module.exports = async (req, res) => {
   if (!text) { res.status(200).json({ ok: false, reason: 'bad type' }); return; }
 
   try {
-    let r;
-    if (to) {
-      r = await pushLine(to, text);            // LINE優先
-    } else {
-      r = await sendMail(mail, buildSubject(b.type), text); // 無ければメール
-    }
-    res.status(200).json(r.ok ? { ok: true, via: to ? 'line' : 'mail' } : { ok: false, reason: 'send error', detail: r.detail });
+    const via = [];
+    if (to)   { const pr = await pushLine(to, text);                    if (pr.ok) via.push('line'); }
+    if (mail) { const mr = await sendMail(mail, buildSubject(b.type), text); if (mr.ok) via.push('mail'); }
+    res.status(200).json(via.length ? { ok: true, via: via.join('+') } : { ok: false, reason: 'send error' });
   } catch (e) {
     res.status(200).json({ ok: false, reason: 'exception' });
   }

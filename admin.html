@@ -557,8 +557,8 @@ function renderRemind(){
     const linked=!!r.line_user_id;
     const hasMail=!!r.mail;
     const contactable=linked||hasMail;               // LINE連携済み or メールあり
-    const chan=linked?'LINE':(hasMail?'メール':'');   // 実際に送る手段
-    const badge=linked?'LINE連携済み':(hasMail?'✉️ メールで送信':'連絡先なし');
+    const chan=(linked&&hasMail)?'LINEとメール':(linked?'LINE':(hasMail?'メール':''));  // 送る手段
+    const badge=(linked&&hasMail)?'LINE＋✉️メール':(linked?'LINE連携済み':(hasMail?'✉️ メールで送信':'連絡先なし'));
     const btns=REM_TYPES.map(rt=>{
       const sent=!!r[rt.col];
       const label=sent?'✓ '+rt.label+'（送信済み）':rt.label+`を${chan}で送る`;
@@ -584,7 +584,7 @@ async function sendReminder(id,type){
   const r=ALL.find(x=>x.id===id);
   if(!r||(!r.line_user_id&&!r.mail)) return;
   const rt=REM_TYPES.find(x=>x.type===type);
-  const chan=r.line_user_id?'LINE':'メール';
+  const chan=(r.line_user_id&&r.mail)?'LINEとメール':(r.line_user_id?'LINE':'メール');
   if(!confirm(`${r.name}様に「${rt.label}」を${chan}で送信します。よろしいですか？`)) return;
   const res=await fetch('/api/send-reminder',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({to:r.line_user_id||undefined,mail:r.mail||undefined,type,name:r.name,date:r.date,time:r.time,menu_name:r.menu_name})

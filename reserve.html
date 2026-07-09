@@ -211,7 +211,7 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
       <div class="field"><label>お名前<span class="req">必須</span></label><input id="fName" required placeholder="山田 花子"></div>
       <div class="field"><label>お名前（ふりがな）<span class="req">必須</span></label><input id="fKana" required placeholder="やまだ はなこ"></div>
       <div class="field"><label>電話番号<span class="req">必須</span></label><input id="fTel" required type="tel" placeholder="090-0000-0000"></div>
-      <div class="field"><label>メールアドレス</label><input id="fMail" type="email" placeholder="example@mail.com"></div>
+      <div class="field"><label>メールアドレス<span class="req">必須</span></label><input id="fMail" required type="email" placeholder="example@mail.com"></div>
       <div class="field"><label>ご来店は初めてですか？</label><select id="fFirst"><option>はじめて</option><option>2回目以降</option></select></div>
       <div class="field"><label>ご要望・ご質問（任意）</label><textarea id="fNote" placeholder="当日の流れや持ち物など、ご不明点があればこちらへ"></textarea></div>
     </form>
@@ -441,8 +441,9 @@ async function goStep(n){
 
 /* ===== STEP3→4 確認 ===== */
 function toConfirm(){
-  const name=fName.value.trim(), kana=fKana.value.trim(), tel=fTel.value.trim();
-  if(!name||!kana||!tel){ alert('お名前・ふりがな・電話番号は必須です。'); return; }
+  const name=fName.value.trim(), kana=fKana.value.trim(), tel=fTel.value.trim(), mail=fMail.value.trim();
+  if(!name||!kana||!tel||!mail){ alert('お名前・ふりがな・電話番号・メールアドレスは必須です。'); return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){ alert('メールアドレスの形式をご確認ください。'); return; }
   const m=state.menu;
   document.getElementById('confirmCard').innerHTML=`
     <dl>
