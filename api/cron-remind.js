@@ -3,6 +3,14 @@
 // 各予約の rem_* フラグで、1日に何度叩かれても二重送信しない。
 
 const { SUPABASE_URL, pushLine, svcHeaders, renderTemplate, buildText, fetchSettings } = require('../lib/line');
+const { sendMail, buildSubject } = require('../lib/mail');
+
+// 1件のリマインドを届ける。LINE連携済みならLINE、無ければメール（どちらも無ければ何もしない）。
+async function deliver(type, r, text) {
+  if (r.line_user_id) { const pr = await pushLine(r.line_user_id, text); return { ok: pr.ok, via: 'line' }; }
+  if (r.mail)         { const mr = await sendMail(r.mail, buildSubject(type), text); return { ok: mr.ok, via: 'mail' }; }
+  return { ok: false, via: 'none' };
+}
 
 // 設定テーブルが未作成/空でも動くための既定値
 const DEFAULTS = {
@@ -42,19 +50,20 @@ module.exports = async (req, res) => {
     const s = cfg(type);
     if (s.enabled === false) return;
     const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${dateStr}`
-      + `&status=neq.cancelled&line_user_id=not.is.null&${col}=is.false`
-      + `&select=id,name,date,time,menu_name,line_user_id`;
+      + `&status=neq.cancelled&${col}=is.false`
+      + `&or=(line_user_id.not.is.null,mail.not.is.null)`
+      + `&select=id,name,date,time,menu_name,line_user_id,mail`;
     const rows = await (await fetch(q, { headers: h })).json();
     if (!Array.isArray(rows)) return;
     for (const r of rows) {
       const text = s.template ? renderTemplate(s.template, r) : buildText(type, r);
-      const pr = await pushLine(r.line_user_id, text);
+      const pr = await deliver(type, r, text);
       if (pr.ok) {
         await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
           method: 'PATCH', headers: h, body: JSON.stringify({ [col]: true }),
         });
       }
-      results.push({ id: r.id, type, ok: pr.ok });
+      results.push({ id: r.id, type, ok: pr.ok, via: pr.via });
     }
   }
 
@@ -64,8 +73,9 @@ module.exports = async (req, res) => {
     if (s.enabled === false) return;
     const off = s.offset_min || 60;
     const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${jstDateStr(0)}`
-      + `&status=neq.cancelled&line_user_id=not.is.null&rem_hour=is.false`
-      + `&select=id,name,date,time,menu_name,line_user_id`;
+      + `&status=neq.cancelled&rem_hour=is.false`
+      + `&or=(line_user_id.not.is.null,mail.not.is.null)`
+      + `&select=id,name,date,time,menu_name,line_user_id,mail`;
     const rows = await (await fetch(q, { headers: h })).json();
     if (!Array.isArray(rows)) return;
     for (const r of rows) {
@@ -73,13 +83,13 @@ module.exports = async (req, res) => {
       const diff = (hh || 0) * 60 + (mm || 0) - nowMin;
       if (diff > 0 && diff <= off) {
         const text = s.template ? renderTemplate(s.template, r) : buildText('soon', r);
-        const pr = await pushLine(r.line_user_id, text);
+        const pr = await deliver('soon', r, text);
         if (pr.ok) {
           await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
             method: 'PATCH', headers: h, body: JSON.stringify({ rem_hour: true }),
           });
         }
-        results.push({ id: r.id, type: 'soon', ok: pr.ok });
+        results.push({ id: r.id, type: 'soon', ok: pr.ok, via: pr.via });
       }
     }
   }

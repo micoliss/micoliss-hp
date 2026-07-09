@@ -555,11 +555,15 @@ function renderRemind(){
   el.innerHTML=list.map(r=>{
     const wd=WD[new Date(r.date).getDay()];
     const linked=!!r.line_user_id;
+    const hasMail=!!r.mail;
+    const contactable=linked||hasMail;               // LINE連携済み or メールあり
+    const chan=linked?'LINE':(hasMail?'メール':'');   // 実際に送る手段
+    const badge=linked?'LINE連携済み':(hasMail?'✉️ メールで送信':'連絡先なし');
     const btns=REM_TYPES.map(rt=>{
       const sent=!!r[rt.col];
-      const label=sent?'✓ '+rt.label+'（送信済み）':rt.label+'を送る';
+      const label=sent?'✓ '+rt.label+'（送信済み）':rt.label+`を${chan}で送る`;
       const cls='rem-btn'+(sent?' sent':'');
-      const dis=(!linked||sent)?'disabled':'';
+      const dis=(!contactable||sent)?'disabled':'';
       return `<button class="${cls}" ${dis} onclick="sendReminder('${r.id}','${rt.type}')">${label}</button>`;
     }).join('');
     return `<div class="rem-card">
@@ -568,21 +572,22 @@ function renderRemind(){
           <div class="nm">${esc(r.name)}<span class="kana">${esc(r.kana)}</span></div>
           <div class="when">📅 ${r.date.slice(5).replace('-','/')}(${wd}) ${r.time}　💠 ${esc(r.menu_name)}</div>
         </div>
-        <span class="rem-link ${linked?'on':'off'}">${linked?'LINE連携済み':'LINE未連携'}</span>
+        <span class="rem-link ${contactable?'on':'off'}">${badge}</span>
       </div>
-      ${linked
+      ${contactable
         ?`<div class="rem-btns">${btns}</div>`
-        :`<div class="rem-hint">このお客様はまだLINE連携していません。予約完了画面の合言葉を公式LINEに送っていただくと、ここから送信できるようになります。</div>`}
+        :`<div class="rem-hint">このお客様はLINE連携も、メールアドレスの登録もありません。予約完了画面の合言葉を公式LINEに送っていただくと、ここから送信できるようになります。</div>`}
     </div>`;
   }).join('');
 }
 async function sendReminder(id,type){
   const r=ALL.find(x=>x.id===id);
-  if(!r||!r.line_user_id) return;
+  if(!r||(!r.line_user_id&&!r.mail)) return;
   const rt=REM_TYPES.find(x=>x.type===type);
-  if(!confirm(`${r.name}様に「${rt.label}」をLINEで送信します。よろしいですか？`)) return;
+  const chan=r.line_user_id?'LINE':'メール';
+  if(!confirm(`${r.name}様に「${rt.label}」を${chan}で送信します。よろしいですか？`)) return;
   const res=await fetch('/api/send-reminder',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({to:r.line_user_id,type,name:r.name,date:r.date,time:r.time,menu_name:r.menu_name})
+    body:JSON.stringify({to:r.line_user_id||undefined,mail:r.mail||undefined,type,name:r.name,date:r.date,time:r.time,menu_name:r.menu_name})
   }).then(x=>x.json()).catch(()=>({ok:false}));
   if(!res.ok){ alert('送信できませんでした。時間をおいて、もう一度お試しください。'); return; }
   // 送信できたら「送信済み」を記録
