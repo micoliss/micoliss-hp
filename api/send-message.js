@@ -1,24 +1,34 @@
-// 管理ページの「お客様詳細・返信」から、自由入力のメッセージをお客様へ送る。
+// 管理ページの「お客様詳細・返信」から、自由入力のメッセージ／画像をお客様へ送る。
 // to（LINE userId）が来ればLINE、mail が来ればメールで送る。
-// リマインド（type固定文面）とは別に、任意の文章を1通送るための窓口。
+// imageUrl（Supabaseの公開URL）が来れば、LINEは画像メッセージ、メールは添付で送る。
 
-const { pushLine } = require('../lib/line');
+const { pushLineMessages } = require('../lib/line');
 const { sendMail } = require('../lib/mail');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') { res.status(405).json({ ok: false }); return; }
   const b = req.body || {};
   const text = (b.text == null ? '' : String(b.text));
-  if (!text.trim()) { res.status(200).json({ ok: false, reason: 'no text' }); return; }
-  const to = b.to;      // LINE userId
-  const mail = b.mail;  // メールアドレス
+  const to = b.to;              // LINE userId
+  const mail = b.mail;          // メールアドレス
+  const imageUrl = b.imageUrl;  // 送る画像の公開URL（任意）
   const subject = b.subject || 'Seed of Color -Micoliss- より';
+  if (!text.trim() && !imageUrl) { res.status(200).json({ ok: false, reason: 'no content' }); return; }
   if (!to && !mail) { res.status(200).json({ ok: false, reason: 'no recipient' }); return; }
+
+  // LINE用メッセージ配列（テキスト＋画像を必要な分だけ）
+  const messages = [];
+  if (text.trim()) messages.push({ type: 'text', text });
+  if (imageUrl) messages.push({ type: 'image', originalContentUrl: imageUrl, previewImageUrl: imageUrl });
+
+  // メール用の添付
+  const attachments = imageUrl ? [{ filename: 'image.jpg', path: imageUrl }] : [];
+  const mailText = text.trim() ? text : '画像をお送りします。ご確認ください。';
 
   try {
     const via = [];
-    if (to)   { const pr = await pushLine(to, text);              if (pr.ok) via.push('line'); }
-    if (mail) { const mr = await sendMail(mail, subject, text);   if (mr.ok) via.push('mail'); }
+    if (to)   { const pr = await pushLineMessages(to, messages);                    if (pr.ok) via.push('line'); }
+    if (mail) { const mr = await sendMail(mail, subject, mailText, attachments);     if (mr.ok) via.push('mail'); }
     res.status(200).json(via.length ? { ok: true, via: via.join('+') } : { ok: false, reason: 'send error' });
   } catch (e) {
     res.status(200).json({ ok: false, reason: 'exception' });

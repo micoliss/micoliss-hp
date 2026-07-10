@@ -109,6 +109,12 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .m-subinput:focus{outline:none;border-color:var(--accent)}
 .m-reply textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:var(--sans);font-size:.9rem;color:var(--ink);line-height:1.6;resize:vertical}
 .m-reply textarea:focus{outline:none;border-color:var(--accent)}
+.m-imgbtn{background:#fff;border:1px dashed var(--accent);color:var(--accent-dk);border-radius:10px;padding:9px 16px;font-family:var(--sans);font-size:.86rem;cursor:pointer;margin-top:10px}
+.m-imgbtn:hover{background:var(--bg-soft)}
+.m-imgpv{margin-top:10px;position:relative;display:inline-block}
+.m-imgpv img{max-width:200px;max-height:200px;border-radius:10px;border:1px solid var(--line);display:block}
+.m-imgpv .m-imgdel{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;border:0;background:#a85b5b;color:#fff;font-size:1rem;cursor:pointer;line-height:1}
+.m-imgpv .m-imgsize{display:block;font-size:.72rem;color:var(--ink-soft);margin-top:4px}
 .m-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .m-btns button{border:0;border-radius:999px;padding:10px 20px;font-family:var(--sans);font-size:.86rem;cursor:pointer}
 .m-btns .send-line{background:#06c755;color:#fff}
@@ -575,9 +581,58 @@ async function deleteResv(id){
 }
 
 /* ===== お客様詳細・返信モーダル ===== */
-function closeResvDetail(){ document.getElementById('resvModal').classList.remove('show'); }
+let mPendingImage=null;                 // 送信待ちの圧縮済み画像(Blob)
+function closeResvDetail(){ mPendingImage=null; document.getElementById('resvModal').classList.remove('show'); }
+
+// 画像をスマホで見やすい範囲に圧縮（長辺1280px・約900KB以下を目安にJPEG化）。無料枠を節約。
+function compressImage(file, maxDim=1280, budget=900000){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width, h=img.height;
+      if(Math.max(w,h)>maxDim){ const s=maxDim/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      const tryQ=q=>c.toBlob(bl=>{
+        if(!bl){ reject(new Error('compress failed')); return; }
+        if(bl.size<=budget || q<=0.5) resolve(bl); else tryQ(Math.round((q-0.12)*100)/100);
+      },'image/jpeg',q);
+      tryQ(0.82);
+    };
+    img.onerror=()=>reject(new Error('image load failed'));
+    img.src=URL.createObjectURL(file);
+  });
+}
+// 画像を選んだとき：圧縮してプレビュー表示（アップロードは送信時）
+async function mPickImage(input){
+  const f=input.files&&input.files[0]; if(!f) return;
+  const msg=document.getElementById('mReplyMsg');
+  msg.style.color='var(--ink-soft)'; msg.textContent='画像を準備中…';
+  try{
+    mPendingImage=await compressImage(f);
+    const url=URL.createObjectURL(mPendingImage);
+    const pv=document.getElementById('mImgPreview');
+    pv.innerHTML=`<img src="${url}"><button type="button" class="m-imgdel" onclick="mClearImage()">×</button><span class="m-imgsize">送信サイズ：約 ${Math.round(mPendingImage.size/1024)} KB</span>`;
+    pv.style.display='inline-block';
+    msg.textContent='';
+  }catch(e){ mPendingImage=null; msg.style.color='var(--ng)'; msg.textContent='この画像は読み込めませんでした。別の画像でお試しください。'; }
+}
+function mClearImage(){
+  mPendingImage=null;
+  const pv=document.getElementById('mImgPreview'); if(pv){ pv.innerHTML=''; pv.style.display='none'; }
+  const inp=document.getElementById('mImgInput'); if(inp) inp.value='';
+}
+// 圧縮済み画像をSupabaseの公開バケットへアップロードし、公開URLを返す
+async function uploadReplyImage(id){
+  const path=`${id}/${Date.now()}.jpg`;
+  const {error}=await sb.storage.from('reply-images').upload(path, mPendingImage, {contentType:'image/jpeg', upsert:false});
+  if(error){ console.error(error); return null; }
+  const {data}=sb.storage.from('reply-images').getPublicUrl(path);
+  return data && data.publicUrl;
+}
 function openResvDetail(id){
   const r=ALL.find(x=>x.id===id); if(!r) return;
+  mPendingImage=null;
   const wd=WD[new Date(r.date).getDay()]||'';
   const linked=!!r.line_user_id, hasMail=!!r.mail;
   const telNum=(r.tel||'').replace(/[^0-9+]/g,'');
@@ -601,6 +656,9 @@ function openResvDetail(id){
       ${hasMail?`<label class="m-sublabel">メールの件名</label>
       <input type="text" id="mReplySubject" class="m-subinput" value="ご予約について｜Seed of Color -Micoliss-" oninput="mSyncMailto('${id}')">`:''}
       <textarea id="mReplyText" placeholder="お客様へのメッセージを入力…">${esc((r.name||'お客')+'様\n\n')}</textarea>
+      <input type="file" id="mImgInput" accept="image/*" style="display:none" onchange="mPickImage(this)">
+      <button type="button" class="m-imgbtn" onclick="document.getElementById('mImgInput').click()">🖼️ 画像を選ぶ（自動で軽く圧縮します）</button>
+      <div class="m-imgpv" id="mImgPreview" style="display:none"></div>
       <div class="m-btns">
         <button class="send-line" ${linked?'':'disabled'} onclick="replySend('${id}','line')">LINEで送信</button>
         <button class="send-mail" ${hasMail?'':'disabled'} onclick="replySend('${id}','mail')">メールで送信</button>
@@ -621,17 +679,24 @@ async function replySend(id,channel){
   const r=ALL.find(x=>x.id===id); if(!r) return;
   const text=document.getElementById('mReplyText').value.trim();
   const msg=document.getElementById('mReplyMsg');
-  if(!text){ msg.style.color='var(--ng)'; msg.textContent='メッセージを入力してください。'; return; }
+  if(!text && !mPendingImage){ msg.style.color='var(--ng)'; msg.textContent='メッセージか画像を入れてください。'; return; }
   const chLabel=channel==='line'?'LINE':'メール';
   if(!confirm(`${r.name}様に${chLabel}で送信します。よろしいですか？`)) return;
+  // 画像があればまずアップロードして公開URLを得る
+  let imageUrl=null;
+  if(mPendingImage){
+    msg.style.color='var(--ink-soft)'; msg.textContent='画像をアップロード中…';
+    imageUrl=await uploadReplyImage(id);
+    if(!imageUrl){ msg.style.color='var(--ng)'; msg.textContent='画像のアップロードに失敗しました。保管場所(バケット)の設定をご確認ください。'; return; }
+  }
   msg.style.color='var(--ink-soft)'; msg.textContent='送信中…';
   const subjEl=document.getElementById('mReplySubject');
   const subject=(subjEl&&subjEl.value.trim())||'ご予約について｜Seed of Color -Micoliss-';
-  const payload={text, subject};
+  const payload={text, subject, imageUrl};
   if(channel==='line') payload.to=r.line_user_id; else payload.mail=r.mail;
   const res=await fetch('/api/send-message',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)}).then(x=>x.json()).catch(()=>({ok:false}));
-  if(res.ok){ msg.style.color='var(--ok)'; msg.textContent='✓ '+chLabel+'で送信しました'; }
+  if(res.ok){ msg.style.color='var(--ok)'; msg.textContent='✓ '+chLabel+'で送信しました'; mClearImage(); }
   else { msg.style.color='var(--ng)'; msg.textContent='送信できませんでした。時間をおいて、もう一度お試しください。'; }
 }
 
