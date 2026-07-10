@@ -356,7 +356,7 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 
     <!-- リマインド設定（オン/オフ・時刻・文面） -->
     <h3 class="rs-title">⏰ リマインド設定</h3>
-    <p class="cal-help">各リマインドの<strong>オン/オフ・送信タイミング・文面</strong>を変更できます。文面には次の差し込みが使えます：<code>{name}</code>お名前　<code>{date}</code>日付　<code>{time}</code>時刻　<code>{menu}</code>メニュー</p>
+    <p class="cal-help">各リマインドの<strong>オン/オフ・送信タイミング・文面</strong>を変更できます。文面には次の差し込みが使えます：<code>{name}</code>お名前　<code>{date}</code>日付　<code>{time}</code>時刻　<code>{menu}</code>メニュー　<code>{review}</code>Googleクチコミのリンク</p>
     <div id="remSettings"><div class="empty">読み込み中…</div></div>
     <div class="rs-savebar">
       <button class="rs-save" onclick="saveReminderSettings()">💾 設定を保存</button>
@@ -824,7 +824,8 @@ function rsFill(tpl, b){
     .split('{name}').join(b.name||'お客')
     .split('{date}').join(when)
     .split('{time}').join(b.time||'')
-    .split('{menu}').join(menu);
+    .split('{menu}').join(menu)
+    .split('{review}').join('https://g.page/r/CeCm_qCnVpL1EAE/review');
 }
 function rsPreview(type){
   const ta=document.getElementById('rs-tpl-'+type), pv=document.getElementById('rs-pv-'+type);
