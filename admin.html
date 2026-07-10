@@ -183,7 +183,8 @@ table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:va
 .cell{cursor:pointer;font-size:.95rem;line-height:1;display:block;border-radius:6px;padding:3px 0}
 .cell.open{color:var(--ok)}
 .cell.closed{color:var(--line);background:repeating-linear-gradient(45deg,#f3ede4,#f3ede4 4px,#ece3d4 4px,#ece3d4 8px)}
-.cell.booked{color:#fff;background:var(--accent);cursor:default;font-size:.66rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding-left:4px;padding-right:4px}
+.cell.booked{color:#fff;background:var(--accent);cursor:pointer;font-size:.66rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding-left:4px;padding-right:4px}
+.cell.booked:hover{background:var(--accent-dk)}
 .cell.offhours{color:#d3cbbc;cursor:default;background:#f7f3ec}
 .cell.open:hover,.cell.closed:hover{background:#f0e7d6}
 .cal-legend{display:flex;gap:18px;justify-content:center;margin-top:12px;font-size:.78rem;color:var(--ink-soft);flex-wrap:wrap}
@@ -862,7 +863,7 @@ function inHours(ds,t){ const wd=new Date(`${ds}T00:00`).getDay(); const [hh,mm]
 function bookedMap(){
   const m={};ALL.filter(r=>r.status!=='cancelled').forEach(r=>{
     const idx=TIMES.indexOf(r.time),need=Math.ceil(r.menu_min/STEP_MIN);
-    for(let i=0;i<need;i++){const t=TIMES[idx+i];if(t)m[`${r.date}_${t}`]=r.name;}
+    for(let i=0;i<need;i++){const t=TIMES[idx+i];if(t)m[`${r.date}_${t}`]={name:r.name,id:r.id};}
   });return m;
 }
 function renderCal(){
@@ -883,7 +884,7 @@ function renderCal(){
   }).join('')+'</tr></thead>';
   let body='<tbody>'+TIMES.map(t=>`<tr><td class="time">${t}</td>`+days.map(d=>{
     const ds=fmtDate(d),key=`${ds}_${t}`;
-    if(booked[key])return `<td><span class="cell booked" title="${esc(booked[key])}様（予約）">${esc(booked[key])}</span></td>`;
+    if(booked[key])return `<td><span class="cell booked" title="${esc(booked[key].name)}様（クリックで詳細）" onclick="openResvDetail('${booked[key].id}')">${esc(booked[key].name)}</span></td>`;
     if(!inHours(ds,t))return `<td><span class="cell offhours" title="営業時間外">×</span></td>`;  // 営業時間外は自動で×（操作不可）
     const isClosed=CLOSED.has(key);
     return `<td><span class="cell ${isClosed?'closed':'open'}" onclick="toggleSlot('${ds}','${t}')">${isClosed?'×':'◎'}</span></td>`;
