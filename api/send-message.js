@@ -27,10 +27,11 @@ module.exports = async (req, res) => {
 
   try {
     const via = [];
-    if (to)   { const pr = await pushLineMessages(to, messages);                    if (pr.ok) via.push('line'); }
-    if (mail) { const mr = await sendMail(mail, subject, mailText, attachments);     if (mr.ok) via.push('mail'); }
-    res.status(200).json(via.length ? { ok: true, via: via.join('+') } : { ok: false, reason: 'send error' });
+    let detail = null;
+    if (to)   { const pr = await pushLineMessages(to, messages);                if (pr.ok) via.push('line'); else detail = 'LINE: ' + (pr.detail || '?'); }
+    if (mail) { const mr = await sendMail(mail, subject, mailText, attachments); if (mr.ok) via.push('mail'); else detail = 'MAIL: ' + (mr.detail || '?'); }
+    res.status(200).json(via.length ? { ok: true, via: via.join('+') } : { ok: false, reason: 'send error', detail, imageUrl });
   } catch (e) {
-    res.status(200).json({ ok: false, reason: 'exception' });
+    res.status(200).json({ ok: false, reason: 'exception', detail: String((e && e.message) || e) });
   }
 };

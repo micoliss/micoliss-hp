@@ -697,7 +697,7 @@ async function replySend(id,channel){
   const res=await fetch('/api/send-message',{method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)}).then(x=>x.json()).catch(()=>({ok:false}));
   if(res.ok){ msg.style.color='var(--ok)'; msg.textContent='✓ '+chLabel+'で送信しました'; mClearImage(); }
-  else { msg.style.color='var(--ng)'; msg.textContent='送信できませんでした。時間をおいて、もう一度お試しください。'; }
+  else { msg.style.color='var(--ng)'; msg.textContent='送信できませんでした。'+(res.detail?'（詳細: '+res.detail+'）':''); console.log('send-message fail:', res); }
 }
 
 /* ===== リマインド ===== */
