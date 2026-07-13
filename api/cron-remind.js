@@ -2,21 +2,22 @@
 // 送信可否・時刻・文面はすべて reminder_settings テーブル（管理ページで編集）を読む。
 // 各予約の rem_* フラグで、1日に何度叩かれても二重送信しない。
 
-const { SUPABASE_URL, pushLine, svcHeaders, renderTemplate, buildText, fetchSettings } = require('../lib/line');
+const { SUPABASE_URL, pushLineMessages, svcHeaders, renderTemplate, buildText, fetchSettings, buildPayload } = require('../lib/line');
 const { sendMail, buildSubject } = require('../lib/mail');
 
 // 1件のリマインドを届ける。LINE連携済みならLINE、メール登録があればメール、両方あれば両方へ送る。
+// 🔔設定に画像があれば、LINEは画像メッセージ、メールは添付として一緒に送る。
 // どれか1つでも成功したら ok=true（成功したチャネルだけ送信済みにし、失敗分でずっと再送しないため）。
-async function deliver(type, r, text) {
+async function deliver(type, r, text, imageUrls) {
   const via = [];
-  if (r.line_user_id) { const pr = await pushLine(r.line_user_id, text); if (pr.ok) via.push('line'); }
-  if (r.mail)         { const mr = await sendMail(r.mail, buildSubject(type), text); if (mr.ok) via.push('mail'); }
+  const { messages, attachments } = buildPayload(text, imageUrls);
+  if (r.line_user_id) { const pr = await pushLineMessages(r.line_user_id, messages);          if (pr.ok) via.push('line'); }
+  if (r.mail)         { const mr = await sendMail(r.mail, buildSubject(type), text, attachments); if (mr.ok) via.push('mail'); }
   return { ok: via.length > 0, via: via.join('+') || 'none' };
 }
 
 // 設定テーブルが未作成/空でも動くための既定値
 const DEFAULTS = {
-  soon:   { enabled: true, offset_min: 60 },
   prev:   { enabled: true, send_time: '18:00' },
   today:  { enabled: true, send_time: '08:00' },
   thanks: { enabled: true, send_time: '10:00' },
@@ -58,8 +59,13 @@ module.exports = async (req, res) => {
     const rows = await (await fetch(q, { headers: h })).json();
     if (!Array.isArray(rows)) return;
     for (const r of rows) {
+      // 「本日」は予約時刻を過ぎたら送らない（巡回が遅れても、終わった予約に通知が飛ばないように）
+      if (type === 'today') {
+        const [hh, mm] = String(r.time || '').slice(0, 5).split(':').map(Number);
+        if ((hh || 0) * 60 + (mm || 0) <= nowMin) continue;
+      }
       const text = s.template ? renderTemplate(s.template, r) : buildText(type, r);
-      const pr = await deliver(type, r, text);
+      const pr = await deliver(type, r, text, s.image_urls);
       if (pr.ok) {
         await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
           method: 'PATCH', headers: h, body: JSON.stringify({ [col]: true }),
@@ -69,38 +75,10 @@ module.exports = async (req, res) => {
     }
   }
 
-  // 開始まで「offset_min分以内」で未送信の当日予約に「まもなく」を送る（時刻ゲートなし・常に評価）
-  async function sendSoon() {
-    const s = cfg('soon');
-    if (s.enabled === false) return;
-    const off = s.offset_min || 60;
-    const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${jstDateStr(0)}`
-      + `&status=neq.cancelled&rem_hour=is.false`
-      + `&or=(line_user_id.not.is.null,mail.not.is.null)`
-      + `&select=id,name,date,time,menu_name,line_user_id,mail`;
-    const rows = await (await fetch(q, { headers: h })).json();
-    if (!Array.isArray(rows)) return;
-    for (const r of rows) {
-      const [hh, mm] = String(r.time || '').slice(0, 5).split(':').map(Number);
-      const diff = (hh || 0) * 60 + (mm || 0) - nowMin;
-      if (diff > 0 && diff <= off) {
-        const text = s.template ? renderTemplate(s.template, r) : buildText('soon', r);
-        const pr = await deliver('soon', r, text);
-        if (pr.ok) {
-          await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
-            method: 'PATCH', headers: h, body: JSON.stringify({ rem_hour: true }),
-          });
-        }
-        results.push({ id: r.id, type: 'soon', ok: pr.ok, via: pr.via });
-      }
-    }
-  }
-
   // 時刻ゲート型：今の時刻(JST)が設定の送信時刻を過ぎていれば送る
   const passed = (type) => { const s = cfg(type); return s.enabled !== false && nowMin >= toMin(s.send_time); };
 
   try {
-    await sendSoon();
     if (passed('prev'))   await sendBatch('prev',   jstDateStr(1),  'rem_prev');   // 明日が予約日
     if (passed('today'))  await sendBatch('today',  jstDateStr(0),  'rem_today');  // 今日が予約日
     if (passed('thanks')) await sendBatch('thanks', jstDateStr(-1), 'rem_thanks'); // 昨日が予約日

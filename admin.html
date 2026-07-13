@@ -140,6 +140,15 @@ header{background:var(--ink);color:#efe9df;border-bottom:1px solid var(--line)}
 .rs-preview .lbl{font-size:.76rem;color:var(--ink-soft);margin-bottom:6px;display:flex;align-items:center;gap:6px}
 .rs-preview .bubble{background:#eef7ec;border:1px solid #cfe6cb;border-radius:14px;border-top-left-radius:4px;padding:12px 14px;font-size:.9rem;color:#33402f;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-width:92%}
 .rs-preview .bubble.empty{background:var(--bg-soft);border-color:var(--line);color:var(--ink-soft);font-style:italic}
+.rs-imgbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.rs-imgbtn{background:#fff;border:1px dashed var(--accent);color:var(--accent-dk);border-radius:10px;padding:7px 14px;font-family:var(--sans);font-size:.82rem;cursor:pointer}
+.rs-imgbtn:hover{background:var(--bg-soft)}
+.rs-imgbtn input{display:none}
+.rs-imghint{font-size:.74rem;color:var(--ink-soft)}
+.rs-thumbs{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.rs-thumb{position:relative;display:inline-block}
+.rs-thumb img{width:96px;height:96px;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
+.rs-thumb button{position:absolute;top:-8px;right:-8px;width:24px;height:24px;border-radius:50%;border:0;background:#a85b5b;color:#fff;font-size:.9rem;cursor:pointer;line-height:1}
 .rs-savebar{display:flex;align-items:center;gap:14px;margin:6px 0 4px}
 .rs-save{background:var(--accent);color:#fff;border:0;border-radius:999px;padding:11px 26px;font-family:var(--sans);font-size:.9rem;cursor:pointer}
 .rs-save:hover:not(:disabled){background:var(--accent-dk)}
@@ -766,19 +775,22 @@ async function sendReminder(id,type){
 /* ===== リマインド設定（オン/オフ・時刻・文面） ===== */
 // 各リマインドの定義（timing: min=何分前 / time=送信時刻 / time+days=何日後の何時）
 const RS_DEF=[
-  {type:'soon',  label:'予約1時間前',   timing:'min'},
   {type:'prev',  label:'前日リマインド', timing:'time'},
   {type:'today', label:'当日リマインド', timing:'time'},
   {type:'thanks',label:'お礼メッセージ', timing:'time'},
   {type:'follow',label:'再来フォロー',   timing:'time+days'},
 ];
 const RS_FALLBACK={
-  soon:{enabled:true,offset_min:60}, prev:{enabled:true,send_time:'18:00'},
+  prev:{enabled:true,send_time:'18:00'},
   today:{enabled:true,send_time:'08:00'}, thanks:{enabled:true,send_time:'10:00'},
   follow:{enabled:true,send_time:'10:00',offset_days:14},
 };
 let RS_DATA={};
+let RS_IMGS={};          // type => 画像の公開URL配列（保存すると image_urls に改行区切りで入る）
+const RS_MAX_IMGS=4;     // LINEは1回の送信で5通まで。テキスト1通ぶんを空けて4枚。
 let rsLoaded=false;
+// 改行区切りの image_urls を配列にする（送信側 lib/line.js の parseImageUrls と同じ挙動）
+function parseImgUrls(v){ return String(v==null?'':v).split('\n').map(s=>s.trim()).filter(Boolean).slice(0,RS_MAX_IMGS); }
 async function loadReminderSettings(){
   const {data}=await sb.from('reminder_settings').select('*');
   RS_DATA={};
@@ -805,13 +817,20 @@ function renderReminderSettings(){
         <span class="rs-timing">${timing}</span>
       </div>
       <textarea class="rs-tpl" id="rs-tpl-${def.type}" placeholder="送信する文面" oninput="rsPreview('${def.type}')">${esc(s.template||'')}</textarea>
+      <div class="rs-imgbar">
+        <label class="rs-imgbtn">🖼️ 画像を追加
+          <input type="file" accept="image/*" onchange="rsPickImage('${def.type}',this)">
+        </label>
+        <span class="rs-imghint" id="rs-imgmsg-${def.type}">文面と一緒に送られます（最大4枚）</span>
+      </div>
+      <div class="rs-thumbs" id="rs-thumbs-${def.type}"></div>
       <div class="rs-preview">
         <div class="lbl">👀 実際に送られる文章（サンプルのお客様で表示）</div>
         <div class="bubble" id="rs-pv-${def.type}"></div>
       </div>
     </div>`;
   }).join('');
-  RS_DEF.forEach(def=>rsPreview(def.type));
+  RS_DEF.forEach(def=>{ RS_IMGS[def.type]=parseImgUrls((RS_DATA[def.type]||{}).image_urls); rsRenderThumbs(def.type); rsPreview(def.type); });
 }
 // プレビュー用のサンプル予約（差し込みを埋めて実際の見え方を再現）
 const RS_SAMPLE={name:'山田 花子', date:'2026-07-11', time:'14:00', menu_name:'パーソナルカラー診断'};
@@ -834,6 +853,44 @@ function rsPreview(type){
   if(!tpl){ pv.className='bubble empty'; pv.textContent='（文面が空です。保存すると既定の文章が送られます）'; return; }
   pv.className='bubble'; pv.textContent=rsFill(ta.value, RS_SAMPLE);
 }
+// 添付画像のサムネイル一覧を描き直す
+function rsRenderThumbs(type){
+  const box=document.getElementById('rs-thumbs-'+type); if(!box) return;
+  const urls=RS_IMGS[type]||[];
+  box.innerHTML=urls.map((u,i)=>
+    `<div class="rs-thumb"><img src="${esc(u)}" alt="添付画像${i+1}"><button type="button" title="削除" onclick="rsRemoveImage('${type}',${i})">×</button></div>`
+  ).join('');
+}
+// 画像を選んだら、圧縮してSupabaseの公開バケットへ即アップロードし、URLを控える。
+// （「保存」を押すまでDBには入らない）
+async function rsPickImage(type, input){
+  const f=input.files&&input.files[0]; input.value=''; if(!f) return;
+  const msg=document.getElementById('rs-imgmsg-'+type);
+  const urls=RS_IMGS[type]||(RS_IMGS[type]=[]);
+  if(urls.length>=RS_MAX_IMGS){ msg.textContent=`画像は${RS_MAX_IMGS}枚までです`; return; }
+  msg.textContent='画像を準備中…';
+  try{
+    const blob=await compressImage(f);
+    const path=`reminder/${type}/${Date.now()}.jpg`;
+    const {error}=await sb.storage.from('reply-images').upload(path, blob, {contentType:'image/jpeg', upsert:false});
+    if(error) throw error;
+    const {data}=sb.storage.from('reply-images').getPublicUrl(path);
+    if(!data||!data.publicUrl) throw new Error('no public url');
+    urls.push(data.publicUrl);
+    rsRenderThumbs(type);
+    msg.textContent=`追加しました（約 ${Math.round(blob.size/1024)} KB）。「保存」を押すと反映されます`;
+  }catch(e){
+    console.error(e);
+    msg.textContent='画像を追加できませんでした。別の画像でお試しください。';
+  }
+}
+// 一覧から外す（ストレージ上のファイルは残るが、送信には使われなくなる）
+function rsRemoveImage(type, i){
+  (RS_IMGS[type]||[]).splice(i,1);
+  rsRenderThumbs(type);
+  const msg=document.getElementById('rs-imgmsg-'+type);
+  if(msg) msg.textContent='「保存」を押すと反映されます';
+}
 async function saveReminderSettings(){
   const btn=document.querySelector('.rs-save'), msg=document.getElementById('rsMsg');
   btn.disabled=true; msg.style.color='var(--ink-soft)'; msg.textContent='保存中…';
@@ -841,6 +898,7 @@ async function saveReminderSettings(){
     const g=id=>document.getElementById(id);
     const row={type:def.type, label:def.label, sort:i+1,
       enabled:g('rs-en-'+def.type).checked, template:g('rs-tpl-'+def.type).value,
+      image_urls:(RS_IMGS[def.type]||[]).join('\n'),
       send_time:null, offset_min:null, offset_days:null};
     if(def.timing==='min') row.offset_min=parseInt(g('rs-min-'+def.type).value,10)||60;
     else if(def.timing==='time') row.send_time=g('rs-time-'+def.type).value||null;

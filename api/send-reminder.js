@@ -2,7 +2,7 @@
 // LINE連携済みならLINE、そうでなければメール（mail宛）で送る。
 // 文面は reminder_settings（管理ページで編集したテンプレート）を優先し、無ければ既定文面。
 
-const { buildText, pushLine, renderTemplate, fetchSettings, svcHeaders } = require('../lib/line');
+const { buildText, pushLineMessages, renderTemplate, fetchSettings, svcHeaders, buildPayload } = require('../lib/line');
 const { sendMail, buildSubject } = require('../lib/mail');
 
 module.exports = async (req, res) => {
@@ -12,11 +12,12 @@ module.exports = async (req, res) => {
   const mail = b.mail;   // メールアドレス
   if (!to && !mail) { res.status(200).json({ ok: false, reason: 'no recipient' }); return; }
 
-  // 文面：管理ページのテンプレートがあればそれを使い、なければ既定文面
-  let text;
+  // 文面・画像：管理ページの設定があればそれを使い、無ければ既定文面（画像なし）
+  let text, imageUrls;
   try {
     const s = (await fetchSettings(svcHeaders()))[b.type];
     text = s && s.template ? renderTemplate(s.template, b) : buildText(b.type, b);
+    imageUrls = s && s.image_urls;
   } catch (e) {
     text = buildText(b.type, b);
   }
@@ -24,8 +25,9 @@ module.exports = async (req, res) => {
 
   try {
     const via = [];
-    if (to)   { const pr = await pushLine(to, text);                    if (pr.ok) via.push('line'); }
-    if (mail) { const mr = await sendMail(mail, buildSubject(b.type), text); if (mr.ok) via.push('mail'); }
+    const { messages, attachments } = buildPayload(text, imageUrls);
+    if (to)   { const pr = await pushLineMessages(to, messages);                     if (pr.ok) via.push('line'); }
+    if (mail) { const mr = await sendMail(mail, buildSubject(b.type), text, attachments); if (mr.ok) via.push('mail'); }
     res.status(200).json(via.length ? { ok: true, via: via.join('+') } : { ok: false, reason: 'send error' });
   } catch (e) {
     res.status(200).json({ ok: false, reason: 'exception' });
