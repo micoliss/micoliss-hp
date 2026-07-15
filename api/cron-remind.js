@@ -18,6 +18,7 @@ async function deliver(type, r, text, imageUrls) {
 
 // 設定テーブルが未作成/空でも動くための既定値
 const DEFAULTS = {
+  soon:   { enabled: true, offset_min: 60 },
   prev:   { enabled: true, send_time: '18:00' },
   today:  { enabled: true, send_time: '08:00' },
   thanks: { enabled: true, send_time: '10:00' },
@@ -75,10 +76,38 @@ module.exports = async (req, res) => {
     }
   }
 
+  // 「◯分前」型リマインド：今日の予約で、開始まで設定分以内・まだ始まっていない・未送信のものに送る。
+  // 巡回は5分おきなので、開始◯分前を最初にまたいだ巡回で1回だけ送られる（rem_soonで二重送信防止）。
+  async function sendSoon() {
+    const s = cfg('soon');
+    if (s.enabled === false) return;
+    const offset = Number(s.offset_min) || 60;
+    const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${jstDateStr(0)}`
+      + `&status=neq.cancelled&rem_soon=is.false`
+      + `&or=(line_user_id.not.is.null,mail.not.is.null)`
+      + `&select=id,name,date,time,menu_name,line_user_id,mail`;
+    const rows = await (await fetch(q, { headers: h })).json();
+    if (!Array.isArray(rows)) return;
+    for (const r of rows) {
+      const [hh, mm] = String(r.time || '').slice(0, 5).split(':').map(Number);
+      const remain = (hh || 0) * 60 + (mm || 0) - nowMin;
+      if (remain <= 0 || remain > offset) continue;   // もう始まった／まだ先すぎる
+      const text = s.template ? renderTemplate(s.template, r) : buildText('soon', r);
+      const pr = await deliver('soon', r, text, s.image_urls);
+      if (pr.ok) {
+        await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
+          method: 'PATCH', headers: h, body: JSON.stringify({ rem_soon: true }),
+        });
+      }
+      results.push({ id: r.id, type: 'soon', ok: pr.ok, via: pr.via });
+    }
+  }
+
   // 時刻ゲート型：今の時刻(JST)が設定の送信時刻を過ぎていれば送る
   const passed = (type) => { const s = cfg(type); return s.enabled !== false && nowMin >= toMin(s.send_time); };
 
   try {
+    await sendSoon();                                                              // 予約の約◯分前
     if (passed('prev'))   await sendBatch('prev',   jstDateStr(1),  'rem_prev');   // 明日が予約日
     if (passed('today'))  await sendBatch('today',  jstDateStr(0),  'rem_today');  // 今日が予約日
     if (passed('thanks')) await sendBatch('thanks', jstDateStr(-1), 'rem_thanks'); // 昨日が予約日

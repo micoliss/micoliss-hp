@@ -715,6 +715,7 @@ async function replySend(id,channel){
 const REM_TYPES=[
   {type:'prev',   col:'rem_prev',   label:'前日リマインド'},
   {type:'today',  col:'rem_today',  label:'当日リマインド'},
+  {type:'soon',   col:'rem_soon',   label:'直前リマインド'},
   {type:'thanks', col:'rem_thanks', label:'お礼メッセージ'},
   {type:'follow', col:'rem_follow', label:'2週間後フォロー'},
 ];
@@ -777,12 +778,14 @@ async function sendReminder(id,type){
 const RS_DEF=[
   {type:'prev',  label:'前日リマインド', timing:'time'},
   {type:'today', label:'当日リマインド', timing:'time'},
+  {type:'soon',  label:'直前リマインド', timing:'min'},
   {type:'thanks',label:'お礼メッセージ', timing:'time'},
   {type:'follow',label:'再来フォロー',   timing:'time+days'},
 ];
 const RS_FALLBACK={
   prev:{enabled:true,send_time:'18:00'},
-  today:{enabled:true,send_time:'08:00'}, thanks:{enabled:true,send_time:'10:00'},
+  today:{enabled:true,send_time:'08:00'},
+  soon:{enabled:true,offset_min:60}, thanks:{enabled:true,send_time:'10:00'},
   follow:{enabled:true,send_time:'10:00',offset_days:14},
 };
 let RS_DATA={};
