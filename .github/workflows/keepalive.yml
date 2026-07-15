@@ -1,0 +1,17 @@
+# Supabase無料枠の自動停止(約7日間アクセスが無いと停止)を予防するキープアライブ。
+# 毎日1回、Supabaseの外(GitHub Actions)から /api/keepalive を叩き、Supabaseに軽いアクセスを送る。
+# キープアライブは1週間に1回当たれば十分なので、GitHub Actionsの遅延・たまのスキップは問題にならない。
+# （リマインドの正確な定期実行は別途 Supabase pg_cron が担当。こちらは停止予防専用。）
+name: keepalive
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # 毎日1回（UTC 0:00 = JST 9:00ごろ）
+  workflow_dispatch:        # 手動実行も可能（Actions画面のRun workflow）
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Keep Supabase awake
+        run: curl -fsS "https://micoliss-hp.vercel.app/api/keepalive"
