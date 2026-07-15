@@ -716,7 +716,6 @@ async function replySend(id,channel){
 // リマインドの種類（列名・ボタン表示・送信タイプ）
 const REM_TYPES=[
   {type:'prev',   col:'rem_prev',   label:'前日リマインド'},
-  {type:'today',  col:'rem_today',  label:'当日リマインド'},
   {type:'soon',   col:'rem_soon',   label:'直前リマインド'},
   {type:'thanks', col:'rem_thanks', label:'お礼メッセージ'},
   {type:'follow', col:'rem_follow', label:'2週間後フォロー'},
@@ -779,7 +778,6 @@ async function sendReminder(id,type){
 // 各リマインドの定義（timing: min=何分前 / time=送信時刻 / time+days=何日後の何時）
 const RS_DEF=[
   {type:'prev',  label:'前日リマインド', timing:'time'},
-  {type:'today', label:'当日リマインド', timing:'time'},
   {type:'soon',  label:'直前リマインド', timing:'min'},
   {type:'thanks',label:'お礼メッセージ', timing:'time'},
   {type:'follow',label:'再来フォロー',   timing:'time+days'},

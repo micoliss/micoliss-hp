@@ -20,7 +20,7 @@ async function deliver(type, r, text, imageUrls) {
 const DEFAULTS = {
   soon:   { enabled: true, offset_min: 60 },
   prev:   { enabled: true, send_time: '18:00' },
-  today:  { enabled: true, send_time: '08:00' },
+  today:  { enabled: false, send_time: '08:00' },  // 当日8時リマインドは廃止（直前リマインドで十分なため）
   thanks: { enabled: true, send_time: '10:00' },
   follow: { enabled: true, send_time: '10:00', offset_days: 14 },
 };
@@ -109,7 +109,6 @@ module.exports = async (req, res) => {
   try {
     await sendSoon();                                                              // 予約の約◯分前
     if (passed('prev'))   await sendBatch('prev',   jstDateStr(1),  'rem_prev');   // 明日が予約日
-    if (passed('today'))  await sendBatch('today',  jstDateStr(0),  'rem_today');  // 今日が予約日
     if (passed('thanks')) await sendBatch('thanks', jstDateStr(-1), 'rem_thanks'); // 昨日が予約日
     if (passed('follow')) {
       const days = cfg('follow').offset_days || 14;
