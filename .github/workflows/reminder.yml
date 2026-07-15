@@ -1,13 +1,15 @@
-# リマインドの定期実行。GitHubが30分おきにMicolissの送信チェック用URLを叩く（無料・新規登録不要）。
+# リマインドの定期実行。
+# 【2026-07-15】定期実行は Supabase の pg_cron（5分おき・定刻でスキップしない）に移行した。
+#   → 設定は supabase_pg_cron_reminder.sql / ジョブ名 micoliss-reminder。
+#   GitHub Actions は無料枠のため遅延・スキップが多く（30分おきのはずが2時間以上停止する事故あり）、
+#   定期スケジュール(schedule)を無効化した。手動実行(workflow_dispatch)だけ残す＝いざという時の予備。
 # 送信判定・文面・LINE/メール送信は /api/cron-remind 側で行う。
-# 前日リマインド(18:00)と当日リマインド(08:00)は送信時刻ゲート＋rem_*フラグ方式なので、
-# 巡回が多少遅れても「その時刻を過ぎた次の巡回」で1回だけ送られる（二重送信しない）。
 name: reminder
 
 on:
-  schedule:
-    - cron: "*/30 * * * *"   # 30分おき（UTC基準。混雑時は数分〜十数分遅延することがある）
-  workflow_dispatch:           # 手動実行も可能（Actions画面のRun workflow）
+  # schedule:
+  #   - cron: "*/30 * * * *"   # ← Supabase pg_cron に移行のため停止（2026-07-15）
+  workflow_dispatch:           # 手動実行のみ（Actions画面のRun workflow）
 
 jobs:
   ping:
