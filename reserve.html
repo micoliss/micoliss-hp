@@ -91,9 +91,10 @@ table.cal thead th{background:var(--bg-soft);font-weight:400;color:var(--ink-sof
 table.cal thead th.sat{color:#6f86b8}
 table.cal thead th.sun{color:var(--ng)}
 table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:var(--en);letter-spacing:.05em}
-/* 横スクロールしても左右の時間列が画面に残るように固定（スマホ対策） */
+/* 横スクロールしても左の時間列が画面に残るように固定（スマホ対策）。
+   右列はChromeのstickyバグ（right指定が表セルで効かない）のため固定せず通常表示 */
 table.cal td.time:first-child,table.cal th:first-child{position:sticky;left:0;z-index:2;background:var(--bg-soft);box-shadow:1px 0 0 var(--line)}
-table.cal td.time:last-child,table.cal th:last-child{position:sticky;right:0;z-index:2;background:var(--bg-soft);box-shadow:-1px 0 0 var(--line)}
+table.cal th:last-child{background:var(--bg-soft)}
 .slot{cursor:pointer;font-size:1rem;line-height:1;color:var(--ok)}
 .slot.ng{color:var(--line);cursor:not-allowed}
 .slot.sel{background:var(--accent);color:#fff;border-radius:6px}

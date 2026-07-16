@@ -194,9 +194,10 @@ table.cal thead th.sat{color:#6f86b8}table.cal thead th.sun{color:var(--ng)}
 .day-btn.reopen{background:#eef3ee;color:#4a7a4a;border-color:#cfe0cf}
 .day-btn.reopen:hover{background:#e0ece0}
 table.cal td.time{background:var(--bg-soft);color:var(--ink-soft);font-family:var(--en)}
-/* 横スクロールしても左右の時間列が画面に残るように固定（スマホ対策） */
+/* 横スクロールしても左の時間列が画面に残るように固定（スマホ対策）。
+   右列はChromeのstickyバグ（right指定が表セルで効かない）のため固定せず通常表示 */
 table.cal td.time:first-child,table.cal th:first-child{position:sticky;left:0;z-index:2;background:var(--bg-soft);box-shadow:1px 0 0 var(--line)}
-table.cal td.time:last-child,table.cal th:last-child{position:sticky;right:0;z-index:2;background:var(--bg-soft);box-shadow:-1px 0 0 var(--line)}
+table.cal th:last-child{background:var(--bg-soft)}
 .cell{cursor:pointer;font-size:.95rem;line-height:1;display:block;border-radius:6px;padding:3px 0}
 .cell.open{color:var(--ok)}
 .cell.closed{color:var(--line);background:repeating-linear-gradient(45deg,#f3ede4,#f3ede4 4px,#ece3d4 4px,#ece3d4 8px)}
