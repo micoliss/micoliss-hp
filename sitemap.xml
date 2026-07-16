@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://micoliss-hp.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/profile.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/reserve.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/basic.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/total.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/mens.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/bridal.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/facetype.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/glasses.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/shopping.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/personal-seed.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/birthflower.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/shuhi.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://micoliss-hp.vercel.app/tentai-shikisu.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/</loc><lastmod>2026-07-16</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/profile.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/reserve.html</loc><lastmod>2026-07-16</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/basic.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/total.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/mens.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/bridal.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/facetype.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/glasses.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/shopping.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/personal-seed.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/birthflower.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/shuhi.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://micoliss-hp.vercel.app/tentai-shikisu.html</loc><lastmod>2026-07-16</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
