@@ -4,13 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ベーシックコース｜パーソナルカラー診断 新潟｜Seed of Color -Micoliss-</title>
-<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の外見メニュー「ベーシックコース」。パーソナルカラーの基本から、似合うの土台をまるごと診断するスタート向けコースです。">
+<meta name="description" content="【新潟市西区・新潟市】パーソナルカラー診断（基本32色＋トーン別120色）＋骨格診断（ストレート・ウェーブ・ナチュラル）＋メイクが90分16,500円。普段のメイクポーチを見ながらのメイクポーチ診断付きで、今ある服とコスメを活かせます。はじめての方向け。アドバイスシート付き・1人貸切・駐車場あり。Seed of Color -Micoliss-">
 <link rel="canonical" href="https://micoliss-hp.vercel.app/basic.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="geo.region" content="JP-15">
 <meta name="geo.placename" content="新潟市西区">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"パーソナルカラー診断（ベーシックコース）","serviceType":"パーソナルカラー診断・イメージコンサルティング（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/basic.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"パーソナルカラー診断（ベーシックコース）","item":"https://micoliss-hp.vercel.app/basic.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"メイクポーチは持って行ったほうがいいですか？","acceptedAnswer":{"@type":"Answer","text":"はい、ぜひ普段お使いのメイクポーチをそのままお持ちください。実際に使っているものを見ながら、活かせるもの・お顔に合いにくいものを一緒に確認していきます。"}},
+{"@type":"Question","name":"トータルプロデュースコースとの違いは？","acceptedAnswer":{"@type":"Answer","text":"ベーシックコースは「パーソナルカラー診断・骨格診断・メイク」の3本立てです。トータルプロデュースコースは、これに顔タイプ診断（似合うテイスト）が加わった全部入りのコースになります（約150分）。まず土台を知りたい方はベーシック、一度でまとめて知りたい方はトータルがおすすめです。"}},
+{"@type":"Question","name":"何を着て行けばいいですか？","acceptedAnswer":{"@type":"Answer","text":"普段どおりの服装で大丈夫です。首まわりがすっきりした服だと診断がスムーズです。メイクも普段どおりでお越しください。"}},
+{"@type":"Question","name":"診断結果は後から見返せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。診断結果をまとめたアドバイスシートをお渡ししますので、お帰りのあとも、お買い物のたびに見返していただけます。"}},
+{"@type":"Question","name":"パーソナルカラーは変わりますか？","acceptedAnswer":{"@type":"Answer","text":"生まれ持った色素に基づくので、基本的に一生変わりません。一度知れば、この先ずっとお買い物に活きます。"}}
+]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +99,17 @@ article b{color:var(--accent-dk);font-weight:500}
 .btn-ghost{border:1px solid var(--accent);color:var(--accent-dk)}
 .btn-ghost:hover{background:var(--accent);color:#fff}
 
+/* よくある質問 */
+.faq-list{display:grid;gap:12px;margin:6px 0 22px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:12px;font-size:.93rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 20px 20px 46px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+
 /* フッター */
 footer{background:var(--ink);color:#e9e3d8;padding:50px 0 28px;text-align:center;margin-top:60px}
 footer .f-logo{display:inline-block;width:200px;max-width:60%;background:#fff;border-radius:14px;padding:14px 22px;margin-bottom:20px}
@@ -123,16 +141,87 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
     <p class="lead">パーソナルカラーの基本から、似合うの土台をまるごと診断するスタート向けコースです。</p>
 
+    <p>「何から受ければいいのかわからない」という方は、まずこちらへ。<b>似合う色・似合う形・似合うメイクの色</b>——服選びの土台になる3つが、90分でひととおり揃います。新しく買い揃える必要はありません。<b>今あるお洋服とコスメを活かせる</b>ように、お持ちのものを見ながらお話しします。</p>
+
     <h3>含まれる内容</h3>
     <ul class="checklist">
       <li>パーソナルカラー診断（基本32色＋トーン別120色）</li>
-      <li>骨格診断（3タイプ）</li>
+      <li>骨格診断（ストレート・ウェーブ・ナチュラルの3タイプ）</li>
       <li>メイクポーチ診断</li>
       <li>メイクカラーアドバイス</li>
       <li>トータルアドバイス</li>
     </ul>
 
-    <p>普段のメイクや手持ち服にも活かしやすく、基本を知りたい方におすすめです。</p>
+    <div class="divider"></div>
+
+    <h3>メイクポーチ診断とは</h3>
+    <p>Micolissのベーシックコースでは、<b>普段お使いのメイクポーチを、そのままお持ちいただきます。</b></p>
+    <p>診断で似合う色がわかっても、「じゃあ手持ちのコスメはどうすれば？」が残ってしまっては、明日から何も変わりません。実際に使っているものを一緒に見ながら、<b>これは活かせる／これは顔色が沈んで見える</b>と、その場で確認していきます。</p>
+    <p>新しく買い揃える前に、<b>まず今あるものを活かす。</b>そのためのメイクポーチ診断です。</p>
+
+    <div class="divider"></div>
+
+    <h3>Micolissのベーシックコースの特徴</h3>
+
+    <p><b>① 基本32色＋トーン別120色のドレープで診断</b><br>
+    実際に布を顔に当てて、目で見て比べます。簡易的な診断とは違い、120色まで見ていくことで「青が似合う」ではなく「この明るさ・鮮やかさの青」まで絞り込めます。新潟で約10年、延べ5,000名以上を診断してきた経験をもとに分析します。</p>
+
+    <p><b>② 骨格診断アドバイザーによる骨格診断（ストレート・ウェーブ・ナチュラル）</b><br>
+    お洋服の上から実際に触らせていただき、骨や筋肉のつき方から似合う形・素材を分析します。色だけわかっても、形が合わなければ「なんか違う」が残ります。</p>
+
+    <p><b>③ 「似合う」に、あなたの「好き」を重ねます</b><br>
+    診断結果は、あなたを縛るルールではありません。Micolissが大切にしているのは、<b>まず「似合う」を知り、そのうえで「好き」も大切にすること。</b>どちらかを諦めていただくためのご提案はしません。</p>
+
+    <div class="divider"></div>
+
+    <h3>こんな方が受けています</h3>
+    <ul class="checklist">
+      <li>パーソナルカラー診断を受けるのが<b>はじめて</b>の方</li>
+      <li>「似合う」の土台を、まずひととおり知っておきたい方</li>
+      <li>色も形もわからず、<b>朝の服選びに時間がかかる</b>方</li>
+      <li><b>手持ちの服やコスメを活かしたい</b>方（新しく買い揃える必要はありません）</li>
+      <li>買っても着ない服が増えてしまう方</li>
+      <li>メイクの色がしっくりこない、いつも同じメイクになってしまう方</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>診断の流れ（約90分）</h3>
+    <ol class="steps">
+      <li>カウンセリング——普段の服装やお悩み、なりたい印象をお伺いします</li>
+      <li>パーソナルカラー診断——ドレープを当てながら、一緒に鏡で確認していきます</li>
+      <li>骨格診断——お洋服の上から実際に触らせていただき、似合う形・素材を分析します</li>
+      <li>メイクポーチ診断・メイクカラーアドバイス——お持ちのコスメを見ながら、似合う色をお伝えします</li>
+      <li>トータルアドバイス——明日から何を選べばいいか、具体的にお伝えします</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <h3>診断のあと、こんな変化があります</h3>
+    <p>診断を活かしていただいた方からは、こんな声をよくいただきます。</p>
+    <ul class="checklist">
+      <li>買い物で迷う時間が減り、<b>失敗買いがなくなった</b></li>
+      <li>手持ちのコスメの中で、<b>使うべきもの・手放すものがはっきりした</b></li>
+      <li>顔色が明るく見えて、「<b>元気そうだね</b>」と言われるようになった</li>
+      <li>何を着ればいいか分かるので、<b>朝の支度が早くなった</b></li>
+      <li>「<b>似合ってるね</b>」と言われることが増えた</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>よくある質問</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary><span class="q">Q</span>メイクポーチは持って行ったほうがいいですか？<span class="ar">⌄</span></summary><div class="a">はい、ぜひ普段お使いのメイクポーチをそのままお持ちください。実際に使っているものを見ながら、活かせるもの・お顔に合いにくいものを一緒に確認していきます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>トータルプロデュースコースとの違いは？<span class="ar">⌄</span></summary><div class="a">ベーシックコースは「パーソナルカラー診断・骨格診断・メイク」の3本立てです。<a href="total.html" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px">トータルプロデュースコース</a>は、これに<b>顔タイプ診断（似合うテイスト）</b>が加わった全部入りのコースになります（約150分）。まず土台を知りたい方はベーシック、一度でまとめて知りたい方はトータルがおすすめです。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>何を着て行けばいいですか？<span class="ar">⌄</span></summary><div class="a">普段どおりの服装で大丈夫です。首まわりがすっきりした服だと診断がスムーズです。メイクも普段どおりでお越しください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>診断結果は後から見返せますか？<span class="ar">⌄</span></summary><div class="a">はい。診断結果をまとめたアドバイスシートをお渡ししますので、お帰りのあとも、お買い物のたびに見返していただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>パーソナルカラーは変わりますか？<span class="ar">⌄</span></summary><div class="a">生まれ持った色素に基づくので、基本的に一生変わりません。一度知れば、この先ずっとお買い物に活きます。</div></details>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>アクセス</h3>
+    <p>新潟市西区小新西のプライベートサロンです。小針駅から車で約8分、バス停「工業高校入り口」の目の前、赤い壁の建物・駐車場ありが目印。新潟市内はもちろん、県内各地からお越しいただいています。</p>
 
     <div class="divider"></div>
 
