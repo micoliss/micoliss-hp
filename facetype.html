@@ -4,13 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>顔タイプ診断｜パーソナルカラー診断 新潟｜Seed of Color -Micoliss-</title>
-<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の外見メニュー「顔タイプ診断」。顔の形やパーツのバランスを分析し、あなたの魅力を引き出すスタイルを丁寧にご提案します。柄ドレープ診断付き。">
+<meta name="description" content="【新潟市西区・新潟市】顔タイプ診断®（8タイプ）＋柄ドレープ診断が60分13,200円。顔タイプアドバイザー1級による診断で、日本顔タイプ診断協会公式の柄ドレープ（全15枚・32柄）で似合う柄まで分かります。キュート／フレッシュ／フェミニン／エレガント等。アドバイスシート付き・女性限定・1人貸切・駐車場あり。Seed of Color -Micoliss-">
 <link rel="canonical" href="https://micoliss-hp.vercel.app/facetype.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="geo.region" content="JP-15">
 <meta name="geo.placename" content="新潟市西区">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"顔タイプ診断","serviceType":"パーソナルカラー診断・イメージコンサルティング（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/facetype.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"顔タイプ診断","item":"https://micoliss-hp.vercel.app/facetype.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"なぜ女性限定なのですか？","acceptedAnswer":{"@type":"Answer","text":"顔タイプ診断には男性向けの専門資格が別にあり、当サロンは女性の顔タイプ診断に特化しているためです。男性のお客様にはメンズパーソナルカラー診断（パーソナルカラー＋骨格診断）をご用意しております。"}},
+{"@type":"Question","name":"パーソナルカラー診断との違いは？","acceptedAnswer":{"@type":"Answer","text":"パーソナルカラー診断は「似合う色」、顔タイプ診断は「似合うテイスト・形」を見るものです。両方わかると、色と形の両面から服が選べるようになります。"}},
+{"@type":"Question","name":"メイクは含まれますか？","acceptedAnswer":{"@type":"Answer","text":"顔タイプ診断（柄ドレープ付）にメイクは含まれません。メイクは、パーソナルカラー診断でわかったお似合いの色をもとにご提案しています。顔タイプ診断とメイクの両方をご希望の方には、メイクカラーアドバイス・メイクポーチ診断まで含まれるトータルプロデュースコースがおすすめです。"}},
+{"@type":"Question","name":"診断結果は後から見返せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。診断結果をまとめたアドバイスシートをお渡ししますので、お帰りのあとも、お買い物のたびに見返していただけます。"}},
+{"@type":"Question","name":"顔タイプは年齢で変わりますか？","acceptedAnswer":{"@type":"Answer","text":"顔タイプは骨格や顔立ちをもとに分析するため、大きく変わることはありません。特に「直線的か曲線的か」という土台の部分は、生涯変わりません。ただし、「子供顔か大人顔か」という印象は、年齢とともに少しずつ変化することがあります。30代以降で「以前と似合うものが変わってきた」と感じる方は、あらためて診断を受けていただくと、今のご自身に似合うスタイルが見つかります。"}}
+]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +99,19 @@ article b{color:var(--accent-dk);font-weight:500}
 .btn-ghost{border:1px solid var(--accent);color:var(--accent-dk)}
 .btn-ghost:hover{background:var(--accent);color:#fff}
 
+/* よくある質問 */
+.faq-list{display:grid;gap:12px;margin:6px 0 22px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:12px;font-size:.93rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 20px 20px 46px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+/* 8タイプ表示 */
+.types{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:6px 0 22px;font-size:.95rem;line-height:2.2;text-align:center;letter-spacing:.04em}
+
 /* フッター */
 footer{background:var(--ink);color:#e9e3d8;padding:50px 0 28px;text-align:center;margin-top:60px}
 footer .f-logo{display:inline-block;width:200px;max-width:60%;background:#fff;border-radius:14px;padding:14px 22px;margin-bottom:20px}
@@ -121,7 +141,9 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
   <article>
 
-    <p class="lead">顔の形やパーツのバランスを分析し、あなたの魅力を引き出すスタイルを丁寧にご提案します。柄ドレープ診断付き。</p>
+    <p class="lead">「似合う色はわかったのに、なぜかしっくりこない」——その原因は、<b>色ではなく“テイスト”</b>かもしれません。</p>
+
+    <p>同じ色のワンピースでも、フリルが似合う人と、シンプルな形が似合う人がいます。それを分けているのが<b>顔の印象</b>です。<b>顔タイプ診断<sup>&reg;</sup></b>では、顔の形やパーツのバランスを分析し、あなたの魅力を引き出すスタイルを丁寧にご提案します。</p>
 
     <h3>含まれる内容</h3>
     <ul class="checklist">
@@ -129,7 +151,78 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       <li>柄ドレープ診断</li>
     </ul>
 
-    <p>柄ドレープ診断付きで、洋服選びの失敗がグッと減ります。</p>
+    <div class="divider"></div>
+
+    <h3>顔タイプ<sup>&reg;</sup>8タイプ</h3>
+    <div class="types">キュート／アクティブキュート／フレッシュ／クールカジュアル<br>フェミニン／ソフトエレガント／エレガント／クール</div>
+    <p>「子供顔か大人顔か」×「直線的か曲線的か」の2つの軸から、8つのタイプに分類します。</p>
+
+    <div class="divider"></div>
+
+    <h3>柄ドレープ診断とは</h3>
+    <p>洋服選びで意外と失敗しやすいのが<b>「柄」</b>です。気に入って買った花柄のブラウスが、着てみるとなんだか「服に着られている」感じがする——それは、柄がお顔の印象と合っていないのかもしれません。</p>
+    <p>似合う柄を決めているのは、体型でも肌の色でもなく、<b>顔のパーツの形と大きさ</b>です。曲線的なお顔立ちの方には丸みのある柄（花柄・ドットなど）、直線的なお顔立ちの方にはシャープな柄（ストライプ・幾何学模様など）が調和します。</p>
+    <p>Micolissでは、<b>日本顔タイプ診断協会公式の柄ドレープ（全15枚・32柄）</b>を使用しています。現役アパレルデザイナーが手がけた完全オリジナルの柄を、カラー診断と同じように実際にお顔の下に当てて比べていきます。柄の大きさ、曲線か直線か、色の組み合わせやコントラストまで見ていくので、「花柄が似合う」ではなく<b>「この大きさの、この花柄」</b>まで絞り込めます。</p>
+    <p>似合う柄と似合わない柄を並べて見比べると、その差にご自身でも驚かれるはずです。<b>柄物選びの失敗が、ぐっと減ります。</b></p>
+
+    <div class="divider"></div>
+
+    <h3>Micolissの顔タイプ診断<sup>&reg;</sup>の特徴</h3>
+
+    <p><b>① 顔タイプアドバイザー1級による診断</b><br>
+    日本顔タイプ診断協会の<b>顔タイプアドバイザー1級</b>を取得しています。新潟で約10年、延べ5,000名以上を診断してきた経験をもとに、丁寧に分析します。</p>
+
+    <p><b>② 32柄の公式柄ドレープ付き</b><br>
+    公式の柄ドレープは<b>1級取得者のみが購入できるツール</b>です。顔タイプがわかるだけでなく、<b>似合う柄まで</b>その場で確認できるサロンは限られます。</p>
+
+    <p><b>③ 1人貸切のプライベートサロン</b><br>
+    完全予約制で、他のお客様と一緒になることはありません。駐車場もあるので、お車でそのままお越しいただけます。</p>
+
+    <div class="divider"></div>
+
+    <h3>こんな方が受けています</h3>
+    <ul class="checklist">
+      <li>パーソナルカラー診断は受けたけれど、まだ服選びに迷う方</li>
+      <li>「若く見せたい」「大人っぽく見せたい」など、なりたい印象がある方</li>
+      <li>年齢とともに、昔似合っていた服がしっくりこなくなった方</li>
+      <li>柄物にいつも失敗する、結局は無地ばかり選んでしまう方</li>
+      <li>自分に似合う「テイスト」がわからない方</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>診断の流れ（約60分）</h3>
+    <ol class="steps">
+      <li>カウンセリング——お悩みやなりたいイメージをお伺いします</li>
+      <li>顔タイプ診断——顔の形やパーツのバランスを見て、8タイプのどれかを分析します</li>
+      <li>柄ドレープ診断——柄の布を当てて、似合う柄を確認していきます</li>
+      <li>アドバイス——似合うテイスト・アイテム・柄を具体的にお伝えします</li>
+    </ol>
+
+    <div class="divider"></div>
+
+    <h3>診断のあと、こんな変化があります</h3>
+    <p>診断を活かしていただいた方からは、こんな声をよくいただきます。</p>
+    <ul class="checklist">
+      <li>今まで避けていた<b>色物も柄物も、挑戦できる</b>ようになった</li>
+      <li>色だけでなく柄も取り入れたら、<b>「似合うもの着てるね」と褒められる</b>ことが増えた</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>よくある質問</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary><span class="q">Q</span>なぜ女性限定なのですか？<span class="ar">⌄</span></summary><div class="a">顔タイプ診断には男性向けの専門資格が別にあり、当サロンは女性の顔タイプ診断に特化しているためです。男性のお客様には<a href="mens.html" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px">メンズパーソナルカラー診断</a>（パーソナルカラー＋骨格診断）をご用意しておりますので、ぜひそちらをご覧ください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>パーソナルカラー診断との違いは？<span class="ar">⌄</span></summary><div class="a">パーソナルカラー診断は「似合う色」、顔タイプ診断は「似合うテイスト・形」を見るものです。両方わかると、色と形の両面から服が選べるようになります。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>メイクは含まれますか？<span class="ar">⌄</span></summary><div class="a">顔タイプ診断（柄ドレープ付）にメイクは含まれません。メイクは、パーソナルカラー診断でわかったお似合いの色をもとにご提案しています。顔タイプ診断とメイクの両方をご希望の方には、パーソナルカラー診断・骨格診断・顔タイプ診断に加えてメイクカラーアドバイス・メイクポーチ診断まで含まれる<a href="total.html" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px">トータルプロデュースコース</a>がおすすめです。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>診断結果は後から見返せますか？<span class="ar">⌄</span></summary><div class="a">はい。診断結果をまとめたアドバイスシートをお渡ししますので、お帰りのあとも、お買い物のたびに見返していただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>顔タイプは年齢で変わりますか？<span class="ar">⌄</span></summary><div class="a">顔タイプは骨格や顔立ちをもとに分析するため、大きく変わることはありません。特に「直線的か曲線的か」という土台の部分は、生涯変わりません。ただし、「子供顔か大人顔か」という印象は、年齢とともに少しずつ変化することがあります。30代以降で「以前と似合うものが変わってきた」と感じる方は、あらためて診断を受けていただくと、今のご自身に似合うスタイルが見つかります。</div></details>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>アクセス</h3>
+    <p>新潟市西区小新西のプライベートサロンです。小針駅から車で約8分、バス停「工業高校入り口」の目の前、赤い壁の建物・駐車場ありが目印。新潟市内はもちろん、県内各地からお越しいただいています。</p>
 
     <div class="divider"></div>
 
