@@ -4,13 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ブライダルコース｜パーソナルカラー診断 新潟｜Seed of Color -Micoliss-</title>
-<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の外見メニュー「ブライダルコース」。人生で一番輝きたい日のために。あなたに似合う色・スタイルを総合的にご提案し、花嫁姿をより美しく演出します。">
+<meta name="description" content="【新潟市西区・新潟市】顔タイプウェディングアドバイザーによる花嫁さまのためのブライダル診断。ブライダルトータルコース（180分38,500円・オリジナルコラージュ付）／顔タイプブライダル診断（90分16,500円）／ドレスショップ同行（60分16,500円・LINEアフターフォロー付）。ドレス選びの前にどうぞ。Seed of Color -Micoliss-">
 <link rel="canonical" href="https://micoliss-hp.vercel.app/bridal.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="geo.region" content="JP-15">
 <meta name="geo.placename" content="新潟市西区">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"ブライダルパーソナルカラー診断","serviceType":"パーソナルカラー診断・イメージコンサルティング（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/bridal.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"ブライダルパーソナルカラー診断","item":"https://micoliss-hp.vercel.app/bridal.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"いつ受けるのがおすすめですか？","acceptedAnswer":{"@type":"Answer","text":"ドレス選びの前です。似合うドレスがわかってから試着に行くと、迷う時間がぐっと減ります。写真は一生残りますので、「あのとき、もっと似合うものがあったかも」と後から思わないためにも、ドレスを選ぶ前にお越しください。"}},
+{"@type":"Question","name":"ドレスはもう決まっているのですが、受ける意味はありますか？","acceptedAnswer":{"@type":"Answer","text":"はい、あります。ドレスが決まっていても、アクセサリー・ブーケ・ヘアメイクの色選びに活かしていただけます。小物で全体の印象は大きく変わりますので、ぜひご相談ください。"}},
+{"@type":"Question","name":"母や参列者も受けられますか？","acceptedAnswer":{"@type":"Answer","text":"ブライダルコースは花嫁さま専用のメニューです。お母様やご参列の方には、トータルプロデュースコースまたはベーシックコースをおすすめしています。式当日の装いはもちろん、そのあとのお買い物にもずっと活かしていただけます。"}},
+{"@type":"Question","name":"診断結果は後から見返せますか？","acceptedAnswer":{"@type":"Answer","text":"はい。診断結果をまとめたアドバイスシートをお渡しします。ブライダルトータルコースでは、さらに後日、あなたに似合うアイテムを一枚にまとめたオリジナルコラージュをデータでお送りします。ドレス選びやヘアメイクの打ち合わせで、そのままご覧いただけます。"}}
+]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,6 +98,32 @@ article b{color:var(--accent-dk);font-weight:500}
 .btn-ghost{border:1px solid var(--accent);color:var(--accent-dk)}
 .btn-ghost:hover{background:var(--accent);color:#fff}
 
+/* 資格バッジ */
+.badge-box{display:flex;gap:22px;align-items:center;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px;margin:6px 0 22px}
+.badge-box img{width:140px;flex:none;border-radius:50%}
+.badge-txt .bt{font-family:var(--serif);color:var(--accent-dk);font-size:1.02rem;margin-bottom:10px}
+.badge-txt p{margin:0;font-size:.94rem}
+@media(max-width:620px){
+  .badge-box{flex-direction:column;gap:16px;text-align:center;padding:22px 20px}
+  .badge-box img{width:150px}
+  .badge-txt{text-align:left}
+}
+/* よくある質問 */
+.faq-list{display:grid;gap:12px;margin:6px 0 22px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:12px;font-size:.93rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 20px 20px 46px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+/* コース選びガイド */
+.pick{background:var(--bg-soft);border-radius:var(--radius);padding:20px 24px;margin:6px 0 22px}
+.pick .pi{margin-bottom:14px;font-size:.95rem}
+.pick .pi:last-child{margin-bottom:0}
+.pick .pq{color:var(--accent-dk);font-weight:500;display:block}
+
 /* フッター */
 footer{background:var(--ink);color:#e9e3d8;padding:50px 0 28px;text-align:center;margin-top:60px}
 footer .f-logo{display:inline-block;width:200px;max-width:60%;background:#fff;border-radius:14px;padding:14px 22px;margin-bottom:20px}
@@ -121,8 +153,42 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
   <article>
 
-    <p class="lead">最高の日を、<b>自分史上最高に美しい姿</b>で。<br>
-    前撮りや式当日に向けて、目的に合わせて選べる3つのコースをご用意しています。</p>
+    <p class="lead">ドレスショップに並ぶ何十着ものドレス。どれも素敵に見えて、でも「本当に似合っているのはどれ？」——迷ってしまう花嫁さまは、とても多いです。</p>
+
+    <p><b>顔タイプウェディングアドバイザー</b>として、あなたのお顔立ちから、いちばん輝いて見えるドレスのテイストをお伝えします。</p>
+
+    <p>でも、<b>似合うだけが正解ではありません。</b>ずっと憧れていたドレスがあるなら、その「好き」も大切にしたい。Micolissがご一緒するのは、<b>「似合う」と「好き」が、ちゃんと重なる一着</b>を見つける時間です。</p>
+
+    <p>最高の日を、<b>自分史上最高に美しい姿</b>で。前撮りや式当日に向けて、目的に合わせて選べる3つのコースをご用意しています。</p>
+
+    <div class="divider"></div>
+
+    <div class="badge-box">
+      <img src="img/badge-wedding-advisor.jpg" alt="顔タイプウェディングアドバイザー（日本顔タイプ診断協会）">
+      <div class="badge-txt">
+        <p class="bt">顔タイプウェディングアドバイザーによる、花嫁さまのための診断です。</p>
+        <p>一生に一度の日だからこそ、「なんとなく可愛いから」で選んで後悔してほしくない——そう思っています。日本顔タイプ診断協会の<b>顔タイプウェディングアドバイザー</b>を取得し、新潟で約10年・延べ5,000名以上を診断してきた経験をもとに、あなたに本当に似合う一着を一緒に見つけます。</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>いつ受けるのがおすすめ？</h3>
+    <p><b>ドレス選びの前です。</b></p>
+    <p>ドレスショップには何十着ものドレスが並んでいます。どれも素敵に見えて、「本当に似合っているのはどれ？」と迷ってしまう花嫁さまは、とても多いです。</p>
+    <p>似合うドレスがわかってから試着に行くと、<b>迷う時間がぐっと減ります。</b>写真は一生残ります。「あのとき、もっと似合うものがあったかも」と後から思ってほしくないので、<b>ドレスを選ぶ前に</b>、あなたに似合う色・形・テイストをはっきりさせておきましょう。</p>
+
+    <div class="divider"></div>
+
+    <h3>3つのコース、どれを選べばいい？</h3>
+    <div class="pick">
+      <p class="pi"><span class="pq">◆ はじめての方・診断を受けたことがない方</span>
+      → <b>①ブライダルトータルコース</b>（¥38,500・180分）。色・骨格・顔タイプを全部まとめて。オリジナルコラージュ付きです。</p>
+      <p class="pi"><span class="pq">◆ すでにMicolissでパーソナルカラー診断・骨格診断を受けている方</span>
+      → <b>②顔タイプブライダル診断</b>（¥16,500・90分）。すでにあるデータに、ブライダル向けの顔タイプ・柄ドレープを足します。</p>
+      <p class="pi"><span class="pq">◆ ドレスの試着に、一緒に来てほしい方</span>
+      → <b>③ドレスショップ同行</b>（¥16,500・60分）。<b>①か②の診断を受けていただいた方のためのメニュー</b>です。診断結果をもとにお選びしていきます。</p>
+    </div>
 
     <div class="divider"></div>
 
@@ -145,6 +211,12 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       <li>トータルアドバイス</li>
     </ul>
     <p>前撮りや式当日を「自分史上最高に美しい姿」で迎えるための特別コース。一生に一度の準備に、丁寧に寄り添います。</p>
+
+    <div class="pick" style="margin-top:20px">
+      <p class="pi"><span class="pq">◆ オリジナルコラージュとは</span>
+      診断の結果をもとに、<b>あなたに似合うアイテムを一枚の画像にまとめて、後日データでお渡しします。</b></p>
+      <p class="pi">「エレガントタイプなので、こういうドレスが似合いますよ」——そう聞いても、いざドレスショップに立つと思い出せないものです。画像が手元にあれば、<b>スマホを見せながら「こういうものを探しています」と伝えられます。</b>ドレス選びでも、ヘアメイクの打ち合わせでも、そのまま使っていただけます。</p>
+    </div>
 
     <div class="divider"></div>
 
@@ -175,6 +247,40 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
       <a href="reserve.html?menu=bridal-shop" class="btn btn-primary">このコースで予約する</a>
     </div>
     <p>ドレスショップでの試着に同行します。試着時の印象チェック、写真を撮るときの角度や立ち方をアドバイス。その場での候補整理に加えて、後日、試着写真を見ながらのアフターフォローも含まれます。「その場で決めきれなかった」「家に帰ってから迷ってしまった」——そんな時も大丈夫です。</p>
+
+    <div class="pick">
+      <p class="pi"><span class="pq">◆ ご利用の条件</span>
+      <b>Micolissで診断を受けていただいた方のためのメニューです。</b>診断結果をもとにお選びしていくので、まずは①または②の診断からお願いしています。</p>
+      <p class="pi"><span class="pq">◆ お店はどこへ？</span>
+      <b>お客様がお決めになったドレスショップへご一緒します。</b>お店によっては外部からの同行をお受けいただけない場合もありますので、ご予約前に一度、お店へご確認いただけますとスムーズです。</p>
+      <p class="pi"><span class="pq">◆ 後日のアフターフォローとは</span>
+      試着の後日、<b>お撮りになった試着写真をLINEでお送りください。</b>写真を見ながら、あらためてアドバイスいたします。その場では決めきれなくても大丈夫。お家でゆっくり考えてから、ご相談いただけます。</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>診断のあと、こんな変化があります</h3>
+    <p>ご利用いただいた花嫁さまからは、こんな声をよくいただきます。</p>
+    <ul class="checklist">
+      <li><b>迷わず決められた。</b>ドレスショップで悩む時間が、驚くほど短くなった</li>
+      <li>前撮りの写真を見て、<b>「これが私で良かった」と思えた</b></li>
+      <li>ドレスだけでなく、<b>小物やヘアメイクまで迷わなくなった</b></li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>よくある質問</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary><span class="q">Q</span>いつ受けるのがおすすめですか？<span class="ar">⌄</span></summary><div class="a">ドレス選びの前です。似合うドレスがわかってから試着に行くと、迷う時間がぐっと減ります。写真は一生残りますので、「あのとき、もっと似合うものがあったかも」と後から思わないためにも、ドレスを選ぶ前にお越しください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>ドレスはもう決まっているのですが、受ける意味はありますか？<span class="ar">⌄</span></summary><div class="a">はい、あります。ドレスが決まっていても、アクセサリー・ブーケ・ヘアメイクの色選びに活かしていただけます。小物で全体の印象は大きく変わりますので、ぜひご相談ください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>母や参列者も受けられますか？<span class="ar">⌄</span></summary><div class="a">ブライダルコースは花嫁さま専用のメニューです。お母様やご参列の方には、<a href="total.html" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px">トータルプロデュースコース</a>または<a href="basic.html" style="color:var(--accent-dk);text-decoration:underline;text-underline-offset:3px">ベーシックコース</a>をおすすめしています。式当日の装いはもちろん、そのあとのお買い物にもずっと活かしていただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>診断結果は後から見返せますか？<span class="ar">⌄</span></summary><div class="a">はい。診断結果をまとめたアドバイスシートをお渡しします。ブライダルトータルコースでは、さらに後日、あなたに似合うアイテムを一枚にまとめたオリジナルコラージュをデータでお送りします。ドレス選びやヘアメイクの打ち合わせで、そのままご覧いただけます。</div></details>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>アクセス</h3>
+    <p>新潟市西区小新西のプライベートサロンです。小針駅から車で約8分、バス停「工業高校入り口」の目の前、赤い壁の建物・駐車場ありが目印。新潟市内はもちろん、県内各地からお越しいただいています。</p>
 
     <div class="closing">
       <img src="img/logo.jpg" alt="Seed of Color -Micoliss-" class="closing-logo" style="width:210px;max-width:66%;height:auto;display:block;margin:0 auto 14px;mix-blend-mode:multiply">
