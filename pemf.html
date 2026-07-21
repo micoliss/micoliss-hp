@@ -12,10 +12,10 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"PEMF・テラヘルツケア（健康メニュー）","serviceType":"コンディションケア・リラクゼーション（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/pemf.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"PEMF・テラヘルツケア（健康メニュー）","item":"https://micoliss-hp.vercel.app/pemf.html"}]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
-{"@type":"Question","name":"どれを選べばいいですか？","acceptedAnswer":{"@type":"Answer","text":"気になる部位でお選びください。目のあたりはGALAXY、足もと・体全体はP90、お腹・腰はシェイクンマッサージャー、気になるところにピンポイントで当てたいときはバイタリティーワンドがおすすめです。迷ったときはご来店時にご相談ください。"}},
+{"@type":"Question","name":"どれを選べばいいですか？","acceptedAnswer":{"@type":"Answer","text":"迷ったときは、かっさ＋P90の『深リラックスケアコース』がいちばんおすすめです。体全体をゆるめたい方はP90、目のあたりはGALAXY、ピンポイントで当てたいときはバイタリティーワンド、お腹・腰はシェイクンマッサージャーと、お好みで選べます。"}},
 {"@type":"Question","name":"痛くないですか？何をするのですか？","acceptedAnswer":{"@type":"Answer","text":"PEMF（パルス電磁場）とテラヘルツ波の機器を、部位に合わせて当てる・のせるだけです。チクチク・ズキズキといった痛みはなく、リラックスしてお受けいただけます。"}},
 {"@type":"Question","name":"何を持って行けばいいですか？","acceptedAnswer":{"@type":"Answer","text":"特別な持ち物はありません。当日はリラックスできる服装でお越しいただくと、より心地よくお受けいただけます。"}},
-{"@type":"Question","name":"ほかのメニューと一緒に受けられますか？","acceptedAnswer":{"@type":"Answer","text":"はい。かっさとの組み合わせ『深リラックスケアコース』（約45分）もご用意しています。診断メニューのあとのリセットにもおすすめです。"}},
+{"@type":"Question","name":"ほかのメニューと一緒に受けられますか？","acceptedAnswer":{"@type":"Answer","text":"はい。パーソナルカラーや骨格・顔タイプ診断など、気になるメニューと一緒にお受けいただけます。診断のあとのリセットにぴったりで、かっさとの組み合わせ『深リラックスケアコース』（約45分）もご用意しています。"}},
 {"@type":"Question","name":"受けられない場合はありますか？","acceptedAnswer":{"@type":"Answer","text":"心臓にペースメーカーを入れている方、体内に金属などを入れている方、8歳以下のお子様はお受けいただけません。妊娠中・通院中・持病のある方はご相談ください。詳しくはご予約時やご来店時にお声がけください。"}}
 ]}</script>
 
@@ -114,6 +114,14 @@ article b{color:var(--accent-dk);font-weight:500}
 .choose .cp small{font-size:.7rem;color:var(--ink-soft)}
 .choose .cd{font-size:.86rem;color:var(--ink-soft);margin-top:8px;line-height:1.8}
 .choose .cgo{display:inline-block;margin-top:10px;font-size:.82rem;color:#4f8a6d;font-weight:500}
+.grp-label{font-family:var(--serif);font-size:1rem;color:var(--accent-dk);margin:22px 0 4px;display:flex;align-items:center;gap:10px}
+.grp-label::after{content:"";flex:1;height:1px;background:var(--line)}
+.grp-label .sub{font-family:inherit;font-size:.76rem;color:var(--ink-soft);font-weight:400}
+.choose a.opt{border-left-color:#c9ad7a}
+.choose a.opt .cq{background:#c9ad7a}
+.choose a.opt .cgo{color:#b08d4e}
+.choose a.main{border-left-width:6px;background:#fbf7ef}
+.choose .badge{display:inline-block;font-size:.72rem;color:#fff;background:var(--accent-dk);border-radius:999px;padding:3px 12px;margin-bottom:10px;letter-spacing:.04em}
 
 /* 締め */
 .closing{text-align:center;background:var(--bg-soft);border-radius:var(--radius);padding:40px 28px;margin-top:40px}
@@ -159,7 +167,7 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 <div class="page-head">
   <span class="en">Condition Care</span>
   <h1>PEMF・テラヘルツケア</h1>
-  <span class="sub">健康メニュー ／ どこが気になる？で選ぶ</span>
+  <span class="sub">健康メニュー ／ かっさ＋P90でしっかり整える</span>
 </div>
 
 <div class="wrap">
@@ -173,34 +181,43 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
     <p><b>PEMF（パルス電磁場）</b>と<b>テラヘルツ波</b>を利用した、次世代のコンディションケアです。当てる・のせるだけで、チクチク・ズキズキといった痛みはありません。日々のセルフケアやリラックスタイムにおすすめの、新しいリセット習慣です。</p>
     <p style="font-size:.86rem;color:var(--ink-soft)">※医療行為ではなく、リラクゼーション・コンディションケアを目的としたものです。</p>
 
-    <h3>どこが気になる？で選ぶ</h3>
+    <h3>メニューを選ぶ</h3>
     <div class="choose">
-      <a href="reserve.html?menu=galaxy">
+      <a href="reserve.html?menu=deeprelax" class="main">
+        <span class="badge">いちばん人気</span>
+        <div class="ct"><span class="cn">深リラックスケアコース（かっさ＋P90）</span><span class="cp">¥5,500<small>（税込）</small>／約45分</span></div>
+        <div class="cd">水牛かっさで頭・耳・首をやさしく流したあと、P90に足をのせてじんわり。上半身から足もとまで、しっかりゆるめて整えたい方にいちばんおすすめのコースです。</div>
+        <span class="cgo">このメニューで予約する →</span>
+      </a>
+      <a href="reserve.html?menu=pemf" class="main">
+        <span class="cq">体全体</span>
+        <div class="ct"><span class="cn">次世代コンディションケア（P90）</span><span class="cp">¥3,300<small>（税込）</small>／約30分</span></div>
+        <div class="cd">機器に足をのせるだけ。足裏から届けて、足もとから体全体がじんわり温かく、座ったままリラックスできます。</div>
+        <span class="cgo">このメニューで予約する →</span>
+      </a>
+    </div>
+
+    <div class="grp-label">オプション・単品でも <span class="sub">気になる部位にプラスできます</span></div>
+    <div class="choose">
+      <a href="reserve.html?menu=galaxy" class="opt">
         <span class="cq">目のあたり</span>
         <div class="ct"><span class="cn">GALAXY G-One（目周りケア）</span><span class="cp">¥1,650<small>（税込）</small>／約15分</span></div>
-        <div class="cd">ゴーグル型のアイマッサージャー。目もとを温めながら、押し揉み・振動でやさしくほぐします。じんわり温かく「とにかく気持ちいい」と好評。目を使うお仕事の方に。</div>
+        <div class="cd">ゴーグル型のアイマッサージャー。目もとを温めながら、押し揉み・振動でやさしくほぐします。じんわり温かく「とにかく気持ちいい」と好評。目を使うお仕事の方に。<br><span style="font-size:.8rem">※ほかのメニューと同時なら1回¥1,100でご利用いただけます。</span></div>
         <span class="cgo">このメニューで予約する →</span>
       </a>
-      <a href="reserve.html?menu=pemf">
-        <span class="cq">足もと・体全体</span>
-        <div class="ct"><span class="cn">次世代コンディションケア（P90）</span><span class="cp">¥3,300<small>（税込）</small>／約30分</span></div>
-        <div class="cd">機器に足をのせるだけ。足裏から届けて、足首あたりがじんわり温かく、座ったままリラックスできます。</div>
-        <span class="cgo">このメニューで予約する →</span>
-      </a>
-      <a href="reserve.html?menu=thzwand">
+      <a href="reserve.html?menu=thzwand" class="opt">
         <span class="cq">気になるところにピンポイント</span>
         <div class="ct"><span class="cn">バイタリティーワンド</span><span class="cp">¥4,950<small>（税込）</small>／約45分</span></div>
         <div class="cd">テラヘルツ＋PEMF＋温熱を、首・肩・腰・足など気になるところにピンポイント。当てるだけで痛みはなく、じんわり温まってすっきり。髪にも使えます。</div>
         <span class="cgo">このメニューで予約する →</span>
       </a>
-      <a href="reserve.html?menu=shaken">
+      <a href="reserve.html?menu=shaken" class="opt">
         <span class="cq">お腹・腰</span>
         <div class="ct"><span class="cn">シェイクンマッサージャー</span><span class="cp">¥2,200<small>（税込）</small>／約20分</span></div>
         <div class="cd">お腹・腰まわりに巻いて、温熱とエアバッグでやさしくマッサージ。ぽかぽかと巡りをサポートしながら、ゆったりリラックスできます。</div>
         <span class="cgo">このメニューで予約する →</span>
       </a>
     </div>
-    <p style="font-size:.86rem;color:var(--ink-soft)">しっかり整えたい方には、<a href="kassa.html" style="color:var(--accent-dk)">かっさ</a>＋P90の「深リラックスケアコース」（¥5,500・約45分）もございます。</p>
 
     <h3>こんな心地よさを</h3>
     <ul class="checklist">
@@ -221,10 +238,10 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
     <h3>よくあるご質問</h3>
     <div class="faq-list">
-      <details class="faq-item"><summary><span class="q">Q</span>どれを選べばいいですか？<span class="ar">⌄</span></summary><div class="a">気になる部位でお選びください。目のあたりはGALAXY、足もと・体全体はP90、気になるところにピンポイントで当てたいときはバイタリティーワンドがおすすめです。迷ったときは、ご来店時にご相談ください。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>どれを選べばいいですか？<span class="ar">⌄</span></summary><div class="a">迷ったときは、かっさ＋P90の「深リラックスケアコース」がいちばんおすすめです。体全体をゆるめたい方はP90、目のあたりはGALAXY、気になるところにピンポイントで当てたいときはバイタリティーワンドと、お好みで選べます。ご来店時のご相談も大歓迎です。</div></details>
       <details class="faq-item"><summary><span class="q">Q</span>痛くないですか？何をするのですか？<span class="ar">⌄</span></summary><div class="a">PEMF（パルス電磁場）とテラヘルツ波の機器を、部位に合わせて当てる・のせるだけです。チクチク・ズキズキといった痛みはなく、リラックスしてお受けいただけます。</div></details>
       <details class="faq-item"><summary><span class="q">Q</span>何を持って行けばいいですか？<span class="ar">⌄</span></summary><div class="a">特別な持ち物はありません。当日はリラックスできる服装でお越しいただくと、より心地よくお受けいただけます。</div></details>
-      <details class="faq-item"><summary><span class="q">Q</span>ほかのメニューと一緒に受けられますか？<span class="ar">⌄</span></summary><div class="a">はい。かっさとの組み合わせ「深リラックスケアコース」（約45分）もご用意しています。診断メニューのあとのリセットにもおすすめです。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>ほかのメニューと一緒に受けられますか？<span class="ar">⌄</span></summary><div class="a">はい。パーソナルカラーや骨格・顔タイプ診断など、気になるメニューと一緒にお受けいただけます。診断のあとのリセットにぴったりで、かっさとの組み合わせ「深リラックスケアコース」（約45分）もご用意しています。</div></details>
       <details class="faq-item"><summary><span class="q">Q</span>受けられない場合はありますか？<span class="ar">⌄</span></summary><div class="a">心臓にペースメーカーを入れている方、体内に金属などを入れている方、8歳以下のお子様はお受けいただけません。妊娠中・通院中・持病のある方はご相談ください。詳しくはご予約時やご来店時にお声がけください。</div></details>
     </div>
 
