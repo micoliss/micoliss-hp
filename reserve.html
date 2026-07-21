@@ -227,6 +227,17 @@ table.cal th:last-child{background:var(--bg-soft)}
       <div class="field"><label>メールアドレス<span class="req">必須</span></label><input id="fMail" required type="email" placeholder="example@mail.com"></div>
       <div class="field"><label>ご来店は初めてですか？</label><select id="fFirst"><option>はじめて</option><option>2回目以降</option></select></div>
       <div class="field"><label>ご要望・ご質問（任意）</label><textarea id="fNote" placeholder="当日の流れや持ち物など、ご不明点があればこちらへ"></textarea></div>
+
+      <div id="innerBox" style="display:none;grid-column:1/-1;background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-top:4px">
+        <p style="font-family:var(--serif);color:var(--accent-dk);font-size:1rem;margin:0 0 6px">内面メニューのお客様へ（任意）</p>
+        <p style="font-size:.8rem;color:var(--ink-soft);line-height:1.8;margin:0 0 16px">診断に使う項目です。セッションによって使うものが異なりますので、<b>分かる範囲で</b>ご記入ください（すべて任意）。当日その場でお伺いしても大丈夫です。</p>
+        <div class="form-grid" style="gap:14px;max-width:none">
+          <div class="field"><label>生年月日</label><input id="fBirth" placeholder="例：1990年3月7日"></div>
+          <div class="field"><label>氏名（旧姓・フルネーム）</label><input id="fOldName" placeholder="お名前を数字にするメニューで使います（旧姓があれば旧姓も）"></div>
+          <div class="field"><label>生まれた時間</label><input id="fBirthTime" placeholder="例：14時30分ごろ／わかる範囲で"></div>
+          <div class="field"><label>生まれた場所（出生した病院など）</label><input id="fBirthPlace" placeholder="例：新潟県新潟市／◯◯病院"></div>
+        </div>
+      </div>
     </form>
 
     <div class="line-connect" id="lineConnect">
@@ -448,9 +459,25 @@ async function goStep(n){
     const sn=+s.dataset.s; s.classList.toggle('active',sn===n); s.classList.toggle('done',sn<n);
   });
   if(n===2){ renderCal(); await loadAvailability(); renderCal(); }
-  if(n===3) document.getElementById('selBar3').innerHTML=selBarHTML();
+  if(n===3){ document.getElementById('selBar3').innerHTML=selBarHTML(); updateInnerBox(); }
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+/* ===== 内面メニュー用の任意入力 ===== */
+const INNER_IDS=['seed','shuhi','birth','tentai'];
+function isInner(){ return !!(state.menu && INNER_IDS.includes(state.menu.id)); }
+function updateInnerBox(){ const b=document.getElementById('innerBox'); if(b) b.style.display=isInner()?'block':'none'; }
+function innerExtra(){
+  if(!isInner()) return '';
+  const rows=[
+    ['生年月日', fBirth.value.trim()],
+    ['氏名（旧姓）', fOldName.value.trim()],
+    ['生まれた時間', fBirthTime.value.trim()],
+    ['生まれた場所', fBirthPlace.value.trim()],
+  ].filter(x=>x[1]);
+  return rows.length ? '【内面メニュー情報】\n'+rows.map(x=>x[0]+'：'+x[1]).join('\n') : '';
+}
+function buildNote(){ return [fNote.value.trim(), innerExtra()].filter(Boolean).join('\n\n'); }
 
 /* ===== STEP3→4 確認 ===== */
 function toConfirm(){
@@ -466,7 +493,7 @@ function toConfirm(){
       <dt>電話</dt><dd>${esc(tel)}</dd>
       <dt>メール</dt><dd>${esc(fMail.value.trim())||'—'}</dd>
       <dt>ご来店</dt><dd>${esc(fFirst.value)}</dd>
-      <dt>ご要望</dt><dd>${esc(fNote.value.trim())||'—'}</dd>
+      <dt>ご要望</dt><dd>${esc(buildNote()).replace(/\n/g,'<br>')||'—'}</dd>
     </dl>
     <div class="total"><span>お支払い目安</span><span class="v">¥${m.price.toLocaleString()}<small style="font-size:.7rem;color:var(--ink-soft)">（税込・当日）</small></span></div>`;
   goStep(4);
@@ -491,7 +518,7 @@ async function submitReservation(){
     date:state.date, time:state.time,
     menu_id:m.id, menu_name:m.name, menu_min:m.min, price:m.price,
     name:fName.value.trim(), kana:fKana.value.trim(), tel:fTel.value.trim(),
-    mail:fMail.value.trim(), first:fFirst.value, note:fNote.value.trim(),
+    mail:fMail.value.trim(), first:fFirst.value, note:buildNote(),
     status:'confirmed', link_code:linkCode, line_user_id:state.lineUserId||null
   };
   const {error} = await sb.from('reservations').insert(r);
@@ -538,7 +565,8 @@ async function applyProfile(){
 function saveResume(){
   sessionStorage.setItem('micoliss_resume', JSON.stringify({
     menuId:state.menu?state.menu.id:null, date:state.date, time:state.time,
-    name:fName.value, kana:fKana.value, tel:fTel.value, mail:fMail.value, first:fFirst.value, note:fNote.value
+    name:fName.value, kana:fKana.value, tel:fTel.value, mail:fMail.value, first:fFirst.value, note:fNote.value,
+    birth:fBirth.value, oldName:fOldName.value, birthTime:fBirthTime.value, birthPlace:fBirthPlace.value
   }));
 }
 function restoreResume(){
@@ -551,6 +579,8 @@ function restoreResume(){
     state.date=r.date; state.time=r.time;
     fName.value=r.name||''; fKana.value=r.kana||''; fTel.value=r.tel||'';
     fMail.value=r.mail||''; fFirst.value=r.first||'はじめて'; fNote.value=r.note||'';
+    fBirth.value=r.birth||''; fOldName.value=r.oldName||''; fBirthTime.value=r.birthTime||''; fBirthPlace.value=r.birthPlace||'';
+    updateInnerBox();
     return !!(state.menu && state.date && state.time);
   }catch(e){ return false; }
 }
