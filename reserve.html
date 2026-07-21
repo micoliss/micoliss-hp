@@ -229,13 +229,13 @@ table.cal th:last-child{background:var(--bg-soft)}
       <div class="field"><label>ご要望・ご質問（任意）</label><textarea id="fNote" placeholder="当日の流れや持ち物など、ご不明点があればこちらへ"></textarea></div>
 
       <div id="innerBox" style="display:none;grid-column:1/-1;background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-top:4px">
-        <p style="font-family:var(--serif);color:var(--accent-dk);font-size:1rem;margin:0 0 6px">内面メニューのお客様へ（任意）</p>
-        <p style="font-size:.8rem;color:var(--ink-soft);line-height:1.8;margin:0 0 16px">診断に使う項目です。セッションによって使うものが異なりますので、<b>分かる範囲で</b>ご記入ください（すべて任意）。当日その場でお伺いしても大丈夫です。</p>
+        <p style="font-family:var(--serif);color:var(--accent-dk);font-size:1rem;margin:0 0 6px">内面メニューのお客様へ</p>
+        <p style="font-size:.8rem;color:var(--ink-soft);line-height:1.8;margin:0 0 16px">診断に使う大切な項目です。ご入力いただけると当日がスムーズになります。メニューによっては<b>事前にお調べしておくもの</b>もありますので、できるだけご記入ください（分かる範囲で大丈夫です）。</p>
         <div class="form-grid" style="gap:14px;max-width:none">
           <div class="field"><label>生年月日</label><input id="fBirth" placeholder="例：1990年3月7日"></div>
-          <div class="field"><label>氏名（旧姓・フルネーム）</label><input id="fOldName" placeholder="お名前を数字にするメニューで使います（旧姓があれば旧姓も）"></div>
+          <div class="field"><label>氏名（ローマ字・フルネーム）</label><input id="fOldName" placeholder="例：YAMADA HANAKO（旧姓があれば旧姓も）"></div>
           <div class="field"><label>生まれた時間</label><input id="fBirthTime" placeholder="例：14時30分ごろ／わかる範囲で"></div>
-          <div class="field"><label>生まれた場所（出生した病院など）</label><input id="fBirthPlace" placeholder="例：新潟県新潟市／◯◯病院"></div>
+          <div class="field"><label>生まれた場所（都道府県）</label><input id="fBirthPlace" placeholder="例：新潟県"></div>
         </div>
       </div>
     </form>
@@ -471,7 +471,7 @@ function innerExtra(){
   if(!isInner()) return '';
   const rows=[
     ['生年月日', fBirth.value.trim()],
-    ['氏名（旧姓）', fOldName.value.trim()],
+    ['氏名（ローマ字）', fOldName.value.trim()],
     ['生まれた時間', fBirthTime.value.trim()],
     ['生まれた場所', fBirthPlace.value.trim()],
   ].filter(x=>x[1]);
