@@ -4,13 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>パーソナルシード｜パーソナルカラー診断 新潟｜Seed of Color -Micoliss-</title>
-<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の内面メニュー「パーソナルシード」。あなたが生まれ持った本質や個性の“種”を見つめ、自分らしさを育てていくセッションです。">
+<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の内面メニュー「パーソナルシード」。生年月日から生まれ持った本質・強み＝“個の種”を読み解く、占いではない統計学ベースの診断。パーソナルシード マスターコーチが、あなたらしさを言葉にし、これからの方向性を照らします。約60分11,000円。">
 <link rel="canonical" href="https://micoliss-hp.vercel.app/personal-seed.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="geo.region" content="JP-15">
 <meta name="geo.placename" content="新潟市西区">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"パーソナルシード（内面診断）","serviceType":"パーソナルカラー診断・イメージコンサルティング（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/personal-seed.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"パーソナルシード（内面診断）","item":"https://micoliss-hp.vercel.app/personal-seed.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"パーソナルシードは占いですか？","acceptedAnswer":{"@type":"Answer","text":"いいえ。生年月日をもとにした診断メソッドで、古くから伝わる帝王学のデータに統計学・心理学・行動科学の視点を重ねたものです。当たる・当たらないではなく、あなたが生まれ持った傾向や強みを言葉にして整理していくセッションです。"}},
+{"@type":"Question","name":"何を持って行けばいいですか？","acceptedAnswer":{"@type":"Answer","text":"ご自身の生年月日だけで診断できます。ご予約時に生年月日をお知らせください。あとは手ぶらでお越しいただけます。"}},
+{"@type":"Question","name":"外見の診断（パーソナルカラーや顔タイプ）とどう違いますか？","acceptedAnswer":{"@type":"Answer","text":"外見メニューは「似合う」を、パーソナルシードは「あなたらしさ（本質）」を扱います。両方を知ると「似合う」と「好き」がつながり、装いにも生き方にも軸ができます。どちらか一方だけでも受けていただけます。"}},
+{"@type":"Question","name":"家族や職場の人間関係にも役立ちますか？","acceptedAnswer":{"@type":"Answer","text":"はい。ご自身だけでなく、身近な人の“種”を知ることで、違いを責めずに関わりやすくなります。人生計画や日々のコミュニケーションのヒントとしても活かせます。"}},
+{"@type":"Question","name":"診断はどなたが担当しますか？","acceptedAnswer":{"@type":"Answer","text":"パーソナルシードの最上位資格である「マスターコーチ」が担当します。約10年・延べ5,000名以上を見てきた経験と合わせて、あなたらしさを丁寧に言葉にしていきます。"}}
+]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,6 +85,20 @@ article b{color:var(--accent-dk);font-weight:500}
 .price-box dd{font-size:1.05rem;color:var(--ink);text-align:right;font-family:var(--serif)}
 .price-box .note{display:block;margin-top:16px;font-size:.78rem;color:#b08a6a;line-height:1.7;font-family:var(--sans)}
 
+/* FAQ */
+.faq-list{display:grid;gap:12px;margin:6px 0 22px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:12px;font-size:.93rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 20px 20px 46px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+
+/* 資格バッジ */
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:.78rem;letter-spacing:.06em;padding:5px 14px;border-radius:999px;font-family:var(--sans);margin-bottom:14px}
+
 /* 締め */
 .closing{text-align:center;background:var(--bg-soft);border-radius:var(--radius);padding:40px 28px;margin-top:40px}
 .closing .seed{font-size:1.6rem;margin-bottom:8px}
@@ -121,28 +142,73 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
   <article>
 
-    <p class="lead">パーソナルシードは、あなたが生まれ持った<b>本質や個性の“種”</b>を見つめ、自分らしさを育てていく内面のセッションです。</p>
+    <p class="lead">パーソナルシードは、あなたの<b>生年月日</b>から、生まれ持った本質や持ち味＝<b>“個の種”</b>を読み解く内面のセッションです。モヤモヤしていた「自分らしさ」が言葉になり、これからの方向性が見えてきます。</p>
 
     <h3>パーソナルシードとは</h3>
-    <p>あなたの内側にある“色の種”に光をあて、強みや本来の魅力を言葉にしていきます。外見の診断と組み合わせることで、「似合う」と「好き」がより深くつながります。</p>
+    <span class="badge">パーソナルシード マスターコーチが担当</span>
+    <p>パーソナルシードは、生年月日をもとに「個の種」＝あなたが生まれ持った本質や持ち味を導き出す診断メソッドです。いわゆる占いではなく、古くから伝わる<b>帝王学のデータ</b>に、<b>統計学・心理学・行動科学</b>の視点を重ねた、信頼度の高い分析がベースになっています。</p>
+    <p>Micolissでは、パーソナルシードの<b>最上位資格「マスターコーチ」</b>が診断を担当します。約10年・延べ5,000名以上を見てきた経験と合わせて、あなたらしさをひとつずつ丁寧に言葉にしていきます。</p>
+    <p>Micolissが大切にしているのは、「似合う」を知って、そのうえで<b>「好き」も大切にする</b>こと。パーソナルシードは、その“好き”の根っこにある「あなたらしさ」を照らすメニューです。</p>
 
-    <h3>こんな方におすすめ</h3>
+    <h3>パーソナルシードでわかること</h3>
     <ul class="checklist">
-      <li>自分の本質や強みを知りたい方</li>
-      <li>「好き」と「似合う」のバランスに迷っている方</li>
-      <li>これからの自分の方向性を整理したい方</li>
-      <li>外見だけでなく内面からも整えたい方</li>
+      <li>生まれ持った本質・強み・持ち味が、はっきり言葉になる</li>
+      <li>どんな場面で力を発揮しやすいか（あなたの得意な生き方）</li>
+      <li>これからの方向性や、自分の見せ方の軸</li>
+      <li>「好き」と「似合う」をどう重ねると自分らしいか</li>
+      <li>家族や職場など、身近な人との関わり方のヒント</li>
     </ul>
+
+    <h3>こんな方が受けています</h3>
+    <ul class="checklist">
+      <li>自分の本質や強みを、はっきり言葉にしたい方</li>
+      <li>「好き」と「似合う」のバランスに迷っている方</li>
+      <li>これからの生き方・見せ方の方向性を整理したい方</li>
+      <li>外見だけでなく、内面からも自分を整えたい方</li>
+      <li>家族や職場の人との関わり方をラクにしたい方</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>ご利用について</h3>
+    <p>パーソナルシードは、<b>単体でも</b>受けていただけます。診断に必要なのは<b>ご自身の生年月日</b>だけ。ご予約時に生年月日をお知らせいただければ、あとは手ぶらでお越しいただけます。外見メニュー（パーソナルカラー・顔タイプ・骨格診断）と合わせて受けると、「似合う」と「好き」がつながり、装いにも生き方にも軸ができます。</p>
+
+    <h3>診断の流れ</h3>
+    <ol class="steps">
+      <li>ご予約時にお知らせいただいた生年月日をもとに、あなたの“個の種”を読み解きます。</li>
+      <li>生まれ持った本質・強み・持ち味を、ひとつずつ言葉にしてお伝えします。</li>
+      <li>「どんな場面で力が出るか」「どう見せると自分らしいか」を一緒に整理します。</li>
+      <li>これからの方向性や、外見の「似合う」との重ね方までお話しします。</li>
+    </ol>
+
+    <h3>診断を受けたあとに</h3>
+    <p>ぼんやりしていた「自分らしさ」がはっきりすると、迷ったときの<b>軸</b>ができます。強みが言葉になることで、装いの選び方にも日々の選択にも自信が生まれ、遠慮していた「好き」も安心して選べるようになります。ご自身だけでなく、身近な人の“種”を知ることで、違いを責めずに関わりやすくなる——そんな声もいただいています。</p>
+
+    <div class="divider"></div>
+
+    <h3>よくあるご質問</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary><span class="q">Q</span>パーソナルシードは占いですか？<span class="ar">⌄</span></summary><div class="a">いいえ。生年月日をもとにした診断メソッドで、古くから伝わる帝王学のデータに統計学・心理学・行動科学の視点を重ねたものです。当たる・当たらないではなく、あなたが生まれ持った傾向や強みを言葉にして整理していくセッションです。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>何を持って行けばいいですか？<span class="ar">⌄</span></summary><div class="a">ご自身の生年月日だけで診断できます。ご予約時に生年月日をお知らせください。あとは手ぶらでお越しいただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>外見の診断（パーソナルカラーや顔タイプ）とどう違いますか？<span class="ar">⌄</span></summary><div class="a">外見メニューは「似合う」を、パーソナルシードは「あなたらしさ（本質）」を扱います。両方を知ると「似合う」と「好き」がつながり、装いにも生き方にも軸ができます。どちらか一方だけでも受けていただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>家族や職場の人間関係にも役立ちますか？<span class="ar">⌄</span></summary><div class="a">はい。ご自身だけでなく、身近な人の“種”を知ることで、違いを責めずに関わりやすくなります。人生計画や日々のコミュニケーションのヒントとしても活かせます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>診断はどなたが担当しますか？<span class="ar">⌄</span></summary><div class="a">パーソナルシードの最上位資格である「マスターコーチ」が担当します。約10年・延べ5,000名以上を見てきた経験と合わせて、あなたらしさを丁寧に言葉にしていきます。</div></details>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>アクセス</h3>
+    <p>新潟市西区小新西のプライベートサロンです。小針駅から車で約8分、バス停「工業高校入り口」の目の前、赤い壁の建物・駐車場ありが目印。新潟市内はもちろん、県内各地からお越しいただいています。</p>
 
     <div class="divider"></div>
 
     <h3>料金・時間</h3>
     <div class="price-box">
       <dl>
-        <dt>料金</dt><dd>¥14,300（税込）</dd>
+        <dt>料金</dt><dd>¥11,000（税込）</dd>
         <dt>所要時間</dt><dd>約60分</dd>
       </dl>
-      <span class="note">※ 表示は税込価格です。</span>
+      <span class="note">※ 表示は税込価格です。ご予約時に生年月日をお知らせください。</span>
     </div>
 
     <div style="text-align:center;margin:6px 0 10px">
