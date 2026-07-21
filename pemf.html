@@ -135,6 +135,16 @@ footer .f-logo{display:inline-block;width:200px;max-width:60%;background:#fff;bo
 footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
 
 @media(max-width:680px){ body{line-height:1.95} }
+/* スマホ：料金一覧の長いメニュー名がはみ出さないよう縦積みにする */
+@media(max-width:600px){
+  .price-box{padding:22px 20px}
+  .price-box dl{grid-template-columns:1fr;gap:2px 0}
+  .price-box dt{white-space:normal;font-size:1rem}
+  .price-box dd{text-align:left;color:var(--accent-dk);font-size:1.05rem;margin-bottom:12px}
+  .price-box dd:last-of-type{margin-bottom:0}
+  .choose .ct{flex-direction:column;gap:2px}
+  .choose .cp{font-size:1rem}
+}
 </style>
 </head>
 <body>
