@@ -4,13 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>数秘＆カラー｜パーソナルカラー診断 新潟｜Seed of Color -Micoliss-</title>
-<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の内面メニュー「数秘＆カラー」。生年月日から導く数秘と色で、あなたの本質や強みをひも解く内面のセッションです。">
+<meta name="description" content="【新潟市西区・新潟市】Seed of Color -Micoliss- の内面メニュー「数秘＆カラー」。現代数秘学×色のメソッドで、生年月日とお名前から導く数字を“色”とともに読み解き、生まれ持った本質・才能から「なりたい未来」まで描くセッション。ヴィジョニング・ファシリテーター資格。約90分14,300円。">
 <link rel="canonical" href="https://micoliss-hp.vercel.app/shuhi.html">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="geo.region" content="JP-15">
 <meta name="geo.placename" content="新潟市西区">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"数秘＆カラー","serviceType":"パーソナルカラー診断・イメージコンサルティング（新潟市西区）","provider":{"@type":"BeautySalon","name":"Seed of Color -Micoliss-","address":{"@type":"PostalAddress","addressLocality":"新潟市西区","addressRegion":"新潟県","postalCode":"950-2024","addressCountry":"JP"}},"areaServed":["新潟市","新潟市西区","新潟県"],"url":"https://micoliss-hp.vercel.app/shuhi.html"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://micoliss-hp.vercel.app/"},{"@type":"ListItem","position":2,"name":"メニュー","item":"https://micoliss-hp.vercel.app/#menu"},{"@type":"ListItem","position":3,"name":"数秘＆カラー","item":"https://micoliss-hp.vercel.app/shuhi.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"数秘＆カラーは占いですか？","acceptedAnswer":{"@type":"Answer","text":"当てものの占いというより、生年月日とお名前をもとに“自分を知る”ためのツールです。数字が持つ意味を色とともに読み解くことで、生まれ持った本質や才能、今の時期のテーマを、直感的に感じていただけます。"}},
+{"@type":"Question","name":"何を持って行けばいいですか？","acceptedAnswer":{"@type":"Answer","text":"計算に使う電卓（スマホの電卓でも大丈夫です）をご用意ください。診断は当日その場で、生年月日とお名前から数字を計算していくので、ご予約時に生年月日をお伝えいただく必要はありません。"}},
+{"@type":"Question","name":"パーソナルシードとどう違いますか？","acceptedAnswer":{"@type":"Answer","text":"どちらも内面を見つめるメニューです。パーソナルシードは生まれ持った気質や考え方のクセを立体的に見ます。数秘＆カラーは数字と色で本質・才能を知り、そこから『こうなりたい』という未来を描いていけるのが特徴です。"}},
+{"@type":"Question","name":"未来のこともわかりますか？","acceptedAnswer":{"@type":"Answer","text":"数秘＆カラーは、生まれ持った本質を知ったうえで、『こうなりたい』という将来のイメージ（ビジョン）を色とともに描いていくのが特徴です。当てものではなく、これからを前向きに考えるためのヒントとして活かせます。"}}
+]}</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,6 +84,20 @@ article b{color:var(--accent-dk);font-weight:500}
 .price-box dd{font-size:1.05rem;color:var(--ink);text-align:right;font-family:var(--serif)}
 .price-box .note{display:block;margin-top:16px;font-size:.78rem;color:#b08a6a;line-height:1.7;font-family:var(--sans)}
 
+/* FAQ */
+.faq-list{display:grid;gap:12px;margin:6px 0 22px}
+.faq-item{background:var(--white);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .25s,box-shadow .25s}
+.faq-item[open]{border-color:var(--accent);box-shadow:var(--shadow)}
+.faq-item summary{list-style:none;cursor:pointer;padding:17px 20px;display:flex;align-items:center;gap:12px;font-size:.93rem;letter-spacing:.02em}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary .q{font-family:var(--en);font-size:1.05rem;color:var(--accent);flex:none}
+.faq-item summary .ar{margin-left:auto;color:var(--accent);transition:transform .3s;flex:none}
+.faq-item[open] summary .ar{transform:rotate(180deg)}
+.faq-item .a{padding:0 20px 20px 46px;color:var(--ink-soft);font-size:.88rem;line-height:1.95}
+
+/* 資格バッジ */
+.badge{display:inline-block;background:var(--accent);color:#fff;font-size:.78rem;letter-spacing:.06em;padding:5px 14px;border-radius:999px;font-family:var(--sans);margin-bottom:14px}
+
 /* 締め */
 .closing{text-align:center;background:var(--bg-soft);border-radius:var(--radius);padding:40px 28px;margin-top:40px}
 .closing .seed{font-size:1.6rem;margin-bottom:8px}
@@ -120,15 +140,61 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
   <div class="hero-img"><img src="img/shuhi.jpg" alt="新潟市西区のパーソナルカラー診断｜数秘＆カラーのナンバーカード"></div>
 
   <article>
+    <p class="lead">数秘＆カラーは、あなたの<b>生年月日とお名前</b>から導き出す数字を、<b>“色”</b>とともに読み解く内面のセッションです。生まれ持った本質や才能を知り、そこから<b>「こうなりたい」という自分の未来</b>まで、直感的に描いていけます。</p>
 
-    <p class="lead">数秘＆カラーは、生年月日から導く<b>数秘と色</b>で、あなたの本質や強みをひも解く内面のセッションです。自分らしさを知り、毎日をもっと前向きに。</p>
+    <h3>数秘＆カラーとは</h3>
+    <span class="badge">ヴィジョニング・ファシリテーター資格</span>
+    <p>数秘＆カラーは、「数は宇宙のエネルギーを表す」という<b>現代数秘学</b>（古代ギリシャのピタゴラスの考えがルーツ）に、<b>色</b>を融合させたメソッドです。生年月日やお名前から<b>あなただけの数字</b>を導き出し、その意味を色のイメージとともに<b>直感的に</b>受け取れるのが特徴。当てものの占いではなく、“自分を知る”ためのツールです。</p>
+    <p>Micolissでは<b>ヴィジョニング・ファシリテーター資格</b>を取得。生年月日から、あなたの<b>本質や使命</b>をひも解いていきます。</p>
 
-    <h3>こんな方におすすめ</h3>
+    <h3>数秘＆カラーでわかること</h3>
     <ul class="checklist">
-      <li>自分の本質や強みを知りたい方</li>
-      <li>これからの自分の方向性を整理したい方</li>
-      <li>外見だけでなく内面からも整えたい方</li>
+      <li>生まれ持った本質・才能・持ち味</li>
+      <li>お名前からわかる、より深い一面</li>
+      <li>人との関わり方・コミュニケーションのヒント</li>
+      <li>「こうなりたい」という将来のイメージ（ビジョン）</li>
+      <li>今の自分を後押ししてくれる色</li>
     </ul>
+
+    <h3>こんな方が受けています</h3>
+    <ul class="checklist">
+      <li>自分の強みや才能を知りたい方</li>
+      <li>直感的に・楽しく自分を知りたい方</li>
+      <li>「こうなりたい」という将来のイメージを描きたい方</li>
+      <li>節目や転機で、これからの指針がほしい方</li>
+      <li>外見だけでなく、内面からも自分を整えたい方</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h3>ご利用について</h3>
+    <p>数秘＆カラーは、<b>単体でも</b>受けていただけます。診断は当日その場で、あなたの生年月日とお名前から数字を計算していきます。<b>ご予約時に生年月日をお伝えいただく必要はありません。</b>計算に使う<b>電卓</b>を使いますので、ご用意ください（スマホの電卓でも大丈夫です）。外見メニュー（パーソナルカラー・顔タイプ・骨格診断）が“見た目”を扱うのに対し、数秘＆カラーは“内面”を扱うメニューです。</p>
+
+    <h3>診断の流れ</h3>
+    <ol class="steps">
+      <li>当日その場で、あなたの生年月日とお名前から、あなただけの数字を導き出します。</li>
+      <li>数字が持つ意味を、対応する色とともにひとつずつ読み解きます。</li>
+      <li>生まれ持った本質・才能・大切にしている価値観をお伝えします。</li>
+      <li>そこから「こうなりたい」という将来のイメージ（ビジョン）を、色とともに一緒に描いていきます。</li>
+    </ol>
+
+    <h3>診断を受けたあとに</h3>
+    <p>数字と色で自分の本質が見えると、「これでいいんだ」と思える<b>安心感</b>が生まれます。さらに「こうなりたい」という未来を色とともに描くことで、迷ったときの支えや、一歩踏み出すきっかけになります。楽しみながら自分を知れた、というお声もいただいています。</p>
+
+    <div class="divider"></div>
+
+    <h3>よくあるご質問</h3>
+    <div class="faq-list">
+      <details class="faq-item"><summary><span class="q">Q</span>数秘＆カラーは占いですか？<span class="ar">⌄</span></summary><div class="a">当てものの占いというより、生年月日とお名前をもとに“自分を知る”ためのツールです。数字が持つ意味を色とともに読み解くことで、生まれ持った本質や才能、今の時期のテーマを、直感的に感じていただけます。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>何を持って行けばいいですか？<span class="ar">⌄</span></summary><div class="a">計算に使う電卓（スマホの電卓でも大丈夫です）をご用意ください。診断は当日その場で、生年月日とお名前から数字を計算していくので、ご予約時に生年月日をお伝えいただく必要はありません。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>パーソナルシードとどう違いますか？<span class="ar">⌄</span></summary><div class="a">どちらも内面を見つめるメニューです。パーソナルシードは生まれ持った気質や考え方のクセを立体的に見ます。数秘＆カラーは数字と色で、本質・才能や今の時期の流れを、直感的に感じられるのが特徴です。</div></details>
+      <details class="faq-item"><summary><span class="q">Q</span>未来のこともわかりますか？<span class="ar">⌄</span></summary><div class="a">数秘＆カラーは、生まれ持った本質を知ったうえで、「こうなりたい」という将来のイメージ（ビジョン）を色とともに描いていくのが特徴です。当てものではなく、これからを前向きに考えるためのヒントとして活かせます。</div></details>
+    </div>
+
+    <div class="divider"></div>
+
+    <h3>アクセス</h3>
+    <p>新潟市西区小新西のプライベートサロンです。小針駅から車で約8分、バス停「工業高校入り口」の目の前、赤い壁の建物・駐車場ありが目印。新潟市内はもちろん、県内各地からお越しいただいています。</p>
 
     <div class="divider"></div>
 
@@ -138,7 +204,7 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
         <dt>料金</dt><dd>¥14,300（税込）</dd>
         <dt>所要時間</dt><dd>約90分</dd>
       </dl>
-      <span class="note">※ 表示は税込価格です。</span>
+      <span class="note">※ 表示は税込価格です。当日、計算に使う電卓（スマホ可）をご用意ください。</span>
     </div>
 
     <div style="text-align:center;margin:6px 0 10px">
