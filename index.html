@@ -348,6 +348,9 @@ nav a:hover{color:var(--accent-dk)}
 .reserve-sns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:26px}
 .reserve-sns .btn{min-width:250px;justify-content:center}
 .reserve-sns .lead{width:100%;text-align:center;color:var(--ink-soft);font-size:.85rem;margin-bottom:2px}
+.ig-grid{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:6px auto 20px;max-width:920px}
+.ig-grid .instagram-media{min-width:0!important}
+@media(max-width:760px){.ig-grid{grid-template-columns:1fr;max-width:360px}}
 
 /* =================== アクセス / 営業時間 =================== */
 .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
@@ -889,7 +892,12 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
     <!-- SNS・各種予約ボタン -->
     <div class="reserve-sns reveal">
       <p class="lead">Instagramもぜひご覧ください</p>
-      <a href="https://www.instagram.com/seed.of.color.micoliss/" target="_blank" rel="noopener" class="btn btn-ig">📷 Instagramを見る</a>
+      <div class="ig-grid">
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DZ1v8ZjhbbE/" data-instgrm-version="14" style="background:#fff;border:0;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin:0;max-width:100%;min-width:0;width:100%;padding:0;"></blockquote>
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DUNOJ1NDjWM/" data-instgrm-version="14" style="background:#fff;border:0;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin:0;max-width:100%;min-width:0;width:100%;padding:0;"></blockquote>
+        <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/reel/DQn-FNKgSzc/" data-instgrm-version="14" style="background:#fff;border:0;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.08);margin:0;max-width:100%;min-width:0;width:100%;padding:0;"></blockquote>
+      </div>
+      <a href="https://www.instagram.com/seed.of.color.micoliss/" target="_blank" rel="noopener" class="btn btn-ig">📷 Instagramをフォローする</a>
     </div>
   </div>
 </section>
@@ -1054,5 +1062,6 @@ const io = new IntersectionObserver((entries) => {
 }, { threshold:.15 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
+<script async src="https://www.instagram.com/embed.js"></script>
 </body>
 </html>
