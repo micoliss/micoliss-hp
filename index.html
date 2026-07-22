@@ -20,12 +20,12 @@
 <meta property="og:title" content="パーソナルカラー診断 新潟｜Seed of Color -Micoliss-（新潟市西区）">
 <meta property="og:description" content="新潟市西区のパーソナルカラー診断サロン。骨格・顔タイプ・パーソナルカラー診断で「似合う」と「好き」を両立。延べ5,000名以上・駐車場あり・完全予約制。">
 <meta property="og:url" content="https://micoliss-hp.vercel.app/">
-<meta property="og:image" content="https://micoliss-hp.vercel.app/img/hero.jpg">
+<meta property="og:image" content="https://micoliss-hp.vercel.app/img/salon-real.jpg">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="パーソナルカラー診断 新潟｜Seed of Color -Micoliss-">
 <meta name="twitter:description" content="新潟市西区のパーソナルカラー診断サロン。延べ5,000名以上・駐車場あり・完全予約制。">
-<meta name="twitter:image" content="https://micoliss-hp.vercel.app/img/hero.jpg">
+<meta name="twitter:image" content="https://micoliss-hp.vercel.app/img/salon-real.jpg">
 
 <!-- ===== 構造化データ（Googleにサロン情報を伝える） ===== -->
 <script type="application/ld+json">
@@ -276,6 +276,13 @@ nav a:hover{color:var(--accent-dk)}
 .menu-tab:hover{border-color:var(--accent);color:var(--ink)}
 .menu-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .menu-tab.active .en{color:rgba(255,255,255,.85)}
+/* カテゴリ別の色（予約画面と統一：外見=ピンク／内面=ラベンダー／健康=グリーン） */
+.menu-tab[data-tab="look"].active,.flow-tab[data-flow="look"].active{background:#c98a9b;border-color:#c98a9b;color:#fff}
+.menu-tab[data-tab="inner"].active,.flow-tab[data-flow="inner"].active{background:#a17bb6;border-color:#a17bb6;color:#fff}
+.menu-tab[data-tab="health"].active,.flow-tab[data-flow="health"].active{background:#6fa287;border-color:#6fa287;color:#fff}
+.menu-tab[data-tab="look"]:hover,.flow-tab[data-flow="look"]:hover{border-color:#c98a9b}
+.menu-tab[data-tab="inner"]:hover,.flow-tab[data-flow="inner"]:hover{border-color:#a17bb6}
+.menu-tab[data-tab="health"]:hover,.flow-tab[data-flow="health"]:hover{border-color:#6fa287}
 .menu-panel{display:none}
 .menu-panel.active{display:block;animation:fadeUp .4s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -704,6 +711,7 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
     <div class="flow-tabs reveal">
       <button class="flow-tab active" data-flow="look">外見メニューの流れ</button>
       <button class="flow-tab" data-flow="inner">内面メニューの流れ</button>
+      <button class="flow-tab" data-flow="health">健康メニューの流れ</button>
     </div>
 
     <!-- 外見メニューの流れ -->
@@ -756,6 +764,30 @@ footer .copy{font-size:.72rem;color:#8c8478;letter-spacing:.08em}
           <div class="ic">🎓</div>
           <h3>講座・レッスンへ</h3>
           <p>もっと深めたい方へ。講座・レッスンで、学びをさらに広げていけます。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 健康メニューの流れ -->
+    <div class="flow-panel" id="flow-health">
+      <div class="flow-steps three">
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🗓️</div>
+          <h3>ご予約</h3>
+          <p>ネット予約で、気になるメニュー（かっさ／PEMF・テラヘルツ）と日時をお選びいただけます。ご不明点はLINEでもお気軽に。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">💬</div>
+          <h3>カウンセリング</h3>
+          <p>当日の体調や気になるところ、お過ごしの様子をお伺いし、無理のない心地よい内容にととのえます。</p>
+        </div>
+        <div class="flow-step reveal">
+          <span class="num"></span>
+          <div class="ic">🌿</div>
+          <h3>リラクゼーション</h3>
+          <p>かっさやコンディションケアで、ゆったりとリラックスできるひとときを。おうちでのセルフケアもご案内します。</p>
         </div>
       </div>
     </div>
