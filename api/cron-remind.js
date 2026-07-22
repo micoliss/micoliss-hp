@@ -2,7 +2,7 @@
 // 送信可否・時刻・文面はすべて reminder_settings テーブル（管理ページで編集）を読む。
 // 各予約の rem_* フラグで、1日に何度叩かれても二重送信しない。
 
-const { SUPABASE_URL, pushLineMessages, svcHeaders, renderTemplate, buildText, fetchSettings, buildPayload } = require('../lib/line');
+const { SUPABASE_URL, pushLineMessages, svcHeaders, renderTemplate, buildText, fetchSettings, buildPayload, settingsKey } = require('../lib/line');
 const { sendMail, buildSubject } = require('../lib/mail');
 
 // 1件のリマインドを届ける。LINE連携済みならLINE、メール登録があればメール、両方あれば両方へ送る。
@@ -20,6 +20,8 @@ async function deliver(type, r, text, imageUrls) {
 const DEFAULTS = {
   soon:   { enabled: true, offset_min: 60 },
   prev:   { enabled: true, send_time: '18:00' },
+  prev_inner:  { enabled: true },   // 内面メニューの前日リマインド（文面は buildText、送信時刻は prev に従う）
+  prev_health: { enabled: true },   // 健康メニューの前日リマインド（文面は buildText、送信時刻は prev に従う）
   today:  { enabled: false, send_time: '08:00' },  // 当日8時リマインドは廃止（直前リマインドで十分なため）
   thanks: { enabled: true, send_time: '10:00' },
   follow: { enabled: true, send_time: '10:00', offset_days: 14 },
@@ -56,7 +58,7 @@ module.exports = async (req, res) => {
     const q = `${SUPABASE_URL}/rest/v1/reservations?date=eq.${dateStr}`
       + `&status=neq.cancelled&${col}=is.false`
       + `&or=(line_user_id.not.is.null,mail.not.is.null)`
-      + `&select=id,name,date,time,menu_name,line_user_id,mail`;
+      + `&select=id,name,date,time,menu_id,menu_name,line_user_id,mail`;
     const rows = await (await fetch(q, { headers: h })).json();
     if (!Array.isArray(rows)) return;
     for (const r of rows) {
@@ -65,8 +67,12 @@ module.exports = async (req, res) => {
         const [hh, mm] = String(r.time || '').slice(0, 5).split(':').map(Number);
         if ((hh || 0) * 60 + (mm || 0) <= nowMin) continue;
       }
-      const text = s.template ? renderTemplate(s.template, r) : buildText(type, r);
-      const pr = await deliver(type, r, text, s.image_urls);
+      // 前日リマインドは予約メニューのカテゴリ（外見/内面/健康）で文面を出し分ける
+      const sk = settingsKey(type, r.menu_id);
+      const rs = cfg(sk);
+      if (rs.enabled === false) continue;   // そのカテゴリの前日リマインドがオフなら送らない
+      const text = rs.template ? renderTemplate(rs.template, r) : buildText(sk, r);
+      const pr = await deliver(type, r, text, rs.image_urls);
       if (pr.ok) {
         await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${encodeURIComponent(r.id)}`, {
           method: 'PATCH', headers: h, body: JSON.stringify({ [col]: true }),

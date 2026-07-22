@@ -772,7 +772,7 @@ async function sendReminder(id,type){
   const chan=(r.line_user_id&&r.mail)?'LINEとメール':(r.line_user_id?'LINE':'メール');
   if(!confirm(`${r.name}様に「${rt.label}」を${chan}で送信します。よろしいですか？`)) return;
   const res=await fetch('/api/send-reminder',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({to:r.line_user_id||undefined,mail:r.mail||undefined,type,name:r.name,date:r.date,time:r.time,menu_name:r.menu_name})
+    body:JSON.stringify({to:r.line_user_id||undefined,mail:r.mail||undefined,type,name:r.name,date:r.date,time:r.time,menu_id:r.menu_id,menu_name:r.menu_name})
   }).then(x=>x.json()).catch(()=>({ok:false}));
   if(!res.ok){ alert('送信できませんでした。時間をおいて、もう一度お試しください。'); return; }
   // 送信できたら「送信済み」を記録
@@ -784,13 +784,51 @@ async function sendReminder(id,type){
 /* ===== リマインド設定（オン/オフ・時刻・文面） ===== */
 // 各リマインドの定義（timing: min=何分前 / time=送信時刻 / time+days=何日後の何時）
 const RS_DEF=[
-  {type:'prev',  label:'前日リマインド', timing:'time'},
+  {type:'prev',       label:'前日リマインド（外見メニュー）', timing:'time'},
+  {type:'prev_inner', label:'前日リマインド（内面メニュー）', timing:'', sampleMenu:'パーソナルシード診断'},
+  {type:'prev_health',label:'前日リマインド（健康メニュー）', timing:'', sampleMenu:'やすらぎかっさセラピー'},
   {type:'soon',  label:'直前リマインド', timing:'min'},
   {type:'thanks',label:'お礼メッセージ', timing:'time'},
   {type:'follow',label:'再来フォロー',   timing:'time+days'},
 ];
+// 前日リマインド（内面・健康）の初期文面。管理ページで保存すればDBに入り、以後はそちらが優先。
+const PREV_INNER_TPL=`{name}様
+
+明日はご予約日です🌿
+
+📅 {date}〜
+💠 {menu}
+
+━━━━━━━━━━━━━
+● セッションでは、その場で計算やメモをとることがあります。電卓・筆記用具をお持ちください（スマートフォンの電卓でもOKです）。
+● 生年月日など、鑑定に必要な情報はご予約時に伺っております。
+━━━━━━━━━━━━━
+
+お気をつけてお越しくださいませ。
+変更・キャンセルはこのままご返信ください。
+
+Seed of Color -Micoliss-`;
+const PREV_HEALTH_TPL=`{name}様
+
+明日はご予約日です🌿
+
+📅 {date}〜
+💠 {menu}
+
+━━━━━━━━━━━━━
+● リラックスできる、ゆったりとした服装でお越しください。かっさでは首元にオイルを塗布しますので、首元がゆったりとしたお洋服（ボタンで開けられるものなど）がおすすめです。
+● 施術前後は、激しい運動やお酒を控えめにされるとより心地よくお過ごしいただけます。
+● 妊娠中の方、ペースメーカーをご使用の方、通院・持病のある方は、当日お知らせください。
+━━━━━━━━━━━━━
+
+お気をつけてお越しくださいませ。
+変更・キャンセルはこのままご返信ください。
+
+Seed of Color -Micoliss-`;
 const RS_FALLBACK={
   prev:{enabled:true,send_time:'18:00'},
+  prev_inner:{enabled:true,template:PREV_INNER_TPL},
+  prev_health:{enabled:true,template:PREV_HEALTH_TPL},
   today:{enabled:true,send_time:'08:00'},
   soon:{enabled:true,offset_min:60}, thanks:{enabled:true,send_time:'10:00'},
   follow:{enabled:true,send_time:'10:00',offset_days:14},
@@ -820,6 +858,8 @@ function renderReminderSettings(){
       timing=`送信時刻 <input type="time" id="rs-time-${def.type}" value="${s.send_time||'09:00'}">`;
     else if(def.timing==='time+days')
       timing=`来店 <input type="number" class="rs-num" id="rs-days-${def.type}" min="1" max="90" value="${s.offset_days||14}"> 日後の <input type="time" id="rs-time-${def.type}" value="${s.send_time||'10:00'}"> に送信`;
+    else if(def.type==='prev_inner'||def.type==='prev_health')
+      timing=`<span style="font-size:.78rem;color:var(--ink-soft)">送信時刻は「前日リマインド（外見メニュー）」に合わせて自動送信</span>`;
     return `<div class="rs-card ${on?'':'off'}" id="rs-card-${def.type}">
       <div class="rs-row">
         <label class="rs-tog"><input type="checkbox" id="rs-en-${def.type}" ${on?'checked':''}
@@ -861,7 +901,9 @@ function rsPreview(type){
   if(!ta||!pv) return;
   const tpl=ta.value.trim();
   if(!tpl){ pv.className='bubble empty'; pv.textContent='（文面が空です。保存すると既定の文章が送られます）'; return; }
-  pv.className='bubble'; pv.textContent=rsFill(ta.value, RS_SAMPLE);
+  const def=RS_DEF.find(d=>d.type===type);
+  const sample=def&&def.sampleMenu?Object.assign({},RS_SAMPLE,{menu_name:def.sampleMenu}):RS_SAMPLE;
+  pv.className='bubble'; pv.textContent=rsFill(ta.value, sample);
 }
 // 添付画像のサムネイル一覧を描き直す
 function rsRenderThumbs(type){
