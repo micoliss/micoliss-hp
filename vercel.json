@@ -1,6 +1,8 @@
 {
   "crons": [
     { "path": "/api/cron-remind?slot=eve", "schedule": "0 9 * * *" },
-    { "path": "/api/cron-remind?slot=morning", "schedule": "0 23 * * *" }
+    { "path": "/api/cron-remind?slot=morning", "schedule": "0 23 * * *" },
+    { "path": "/api/cron-post-thread?slot=morning", "schedule": "0 21 * * *" },
+    { "path": "/api/cron-post-thread?slot=evening", "schedule": "0 11 * * *" }
   ]
 }
